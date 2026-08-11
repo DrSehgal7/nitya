@@ -31,17 +31,19 @@ function NumericDraftInput({
   min,
   max,
   step = 1,
+  integer = false,
   onValueChange,
 }: {
   value: number;
   min?: number;
   max?: number;
   step?: number;
+  integer?: boolean;
   onValueChange: (value: number) => void;
 }) {
   const [draft, setDraft] = useState(String(value));
   const focused = useRef(false);
-  const parsed = parseNumberDraft(draft, { min, max });
+  const parsed = parseNumberDraft(draft, { min, max, integer });
 
   useEffect(() => {
     if (!focused.current) setDraft(String(value));
@@ -62,12 +64,12 @@ function NumericDraftInput({
       onChange={(event) => {
         const nextDraft = event.target.value;
         setDraft(nextDraft);
-        const nextValue = parseNumberDraft(nextDraft, { min, max });
+        const nextValue = parseNumberDraft(nextDraft, { min, max, integer });
         if (nextValue !== null) onValueChange(nextValue);
       }}
       onBlur={() => {
         focused.current = false;
-        const nextValue = parseNumberDraft(draft, { min, max });
+        const nextValue = parseNumberDraft(draft, { min, max, integer });
         setDraft(String(nextValue ?? value));
       }}
     />
@@ -233,6 +235,7 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                   <NumericDraftInput
                     min={0}
                     step={1}
+                    integer
                     value={entry.savedRupees}
                     onValueChange={(savedRupees) => updateLedger(index, { savedRupees })}
                   />
@@ -242,6 +245,7 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                   <NumericDraftInput
                     min={0}
                     step={1}
+                    integer
                     value={entry.peopleImpacted}
                     onValueChange={(peopleImpacted) => updateLedger(index, { peopleImpacted })}
                   />
@@ -348,6 +352,7 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                   <NumericDraftInput
                     min={0}
                     step={1}
+                    integer
                     value={habit.savedRupees ?? 0}
                     onValueChange={(savedRupees) => updateHabit(index, { savedRupees })}
                   />
@@ -358,6 +363,7 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                     min={0}
                     max={100}
                     step={1}
+                    integer
                     value={habit.progress}
                     onValueChange={(progress) => updateHabit(index, { progress })}
                   />
@@ -480,6 +486,7 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                     min={0}
                     max={100}
                     step={1}
+                    integer
                     value={goal.progress}
                     onValueChange={(progress) => updateGoal(index, { progress })}
                   />

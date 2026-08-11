@@ -17,4 +17,9 @@ describe("owner numeric drafts", () => {
     expect(parseNumberDraft("101", { min: 0, max: 100 })).toBeNull();
     expect(parseNumberDraft("Infinity")).toBeNull();
   });
+
+  it("rejects fractions for whole-number fields", () => {
+    expect(parseNumberDraft("1.5", { min: 0, integer: true })).toBeNull();
+    expect(parseNumberDraft("2", { min: 0, integer: true })).toBe(2);
+  });
 });

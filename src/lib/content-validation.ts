@@ -19,6 +19,11 @@ function numberIn(value: unknown, min: number, max: number): number | null {
     : null;
 }
 
+function integerIn(value: unknown, min: number, max: number): number | null {
+  const parsed = numberIn(value, min, max);
+  return parsed !== null && Number.isInteger(parsed) ? parsed : null;
+}
+
 function date(value: unknown): string | null {
   const clean = text(value, 10);
   return clean && isoDate.test(clean) && !Number.isNaN(Date.parse(`${clean}T00:00:00Z`))
@@ -43,8 +48,8 @@ function habit(value: unknown, index: number): Habit | null {
   const description = text(item.description, 240);
   const icon = text(item.icon, 12);
   const status = statuses.has(item.status as WorkStatus) ? (item.status as WorkStatus) : null;
-  const progress = numberIn(item.progress, 0, 100);
-  const savedRupees = numberIn(item.savedRupees, 0, 100_000_000);
+  const progress = integerIn(item.progress, 0, 100);
+  const savedRupees = integerIn(item.savedRupees, 0, 100_000_000);
   const lastUpdated = date(item.lastUpdated);
   if (
     !title ||
@@ -78,7 +83,7 @@ function goal(value: unknown, index: number): PublicGoal | null {
     ? (item.category as PublicGoal["category"])
     : null;
   const status = statuses.has(item.status as WorkStatus) ? (item.status as WorkStatus) : null;
-  const progress = numberIn(item.progress, 0, 100);
+  const progress = integerIn(item.progress, 0, 100);
   const lastUpdated = date(item.lastUpdated);
   if (
     !title ||
@@ -106,8 +111,8 @@ function ledgerEntry(value: unknown): LedgerEntry | null {
   if (!value || typeof value !== "object") return null;
   const item = value as Partial<LedgerEntry>;
   const month = text(item.month, 30);
-  const savedRupees = numberIn(item.savedRupees, 0, 100_000_000);
-  const peopleImpacted = numberIn(item.peopleImpacted, 0, 1_000_000);
+  const savedRupees = integerIn(item.savedRupees, 0, 100_000_000);
+  const peopleImpacted = integerIn(item.peopleImpacted, 0, 1_000_000);
   if (!month || savedRupees === null || peopleImpacted === null) return null;
   return { month, savedRupees, peopleImpacted };
 }
