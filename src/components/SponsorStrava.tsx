@@ -1,13 +1,13 @@
 import { Activity, ArrowUpRight, Mountain, RefreshCw, Timer } from "lucide-react";
-import { runningSnapshot } from "@/data/content";
 import stravaRaw from "@/data/strava.generated.json";
 import { formatDate, formatDateTime, formatDistance, formatDuration } from "@/lib/format";
 import type { StravaSnapshot } from "@/types/strava";
+import type { RunningSnapshot } from "@/types/content";
 import { SponsorCalculator } from "./SponsorCalculator";
 
 const strava = stravaRaw as StravaSnapshot;
 
-export function SponsorStrava() {
+export function SponsorStrava({ runningSnapshot }: { runningSnapshot: RunningSnapshot }) {
   const latestRun = strava.activities[0];
   const runningDistance = strava.connected ? strava.stats.distanceKm : runningSnapshot.distanceKm;
   const runningAsOf =

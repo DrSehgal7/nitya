@@ -75,16 +75,13 @@ test("public habits are read-only and owner controls are reserved for the dashbo
   const habits = page.locator("#habits");
   await expect(habits.getByRole("textbox")).toHaveCount(0);
   await habits.getByRole("link", { name: /owner editing/i }).click();
-  await expect(page).toHaveURL(/\/owner$/);
-  await expect(page.getByRole("heading", { name: /private controls/i })).toBeVisible();
-  await expect(page.getByText(/controls stay disabled until/i)).toBeVisible();
-  await expect(page.getByRole("button", { name: /add/i })).toHaveCount(2);
-  await expect(page.getByRole("button", { name: /edit eat what/i })).toBeDisabled();
-  await expect(page.getByRole("button", { name: /delete deadlift/i })).toBeDisabled();
-  await expect(page.getByRole("link", { name: /edit running total/i })).toHaveCount(0);
+  await expect(page).toHaveURL(/\/owner\/sign-in/);
+  await expect(page.getByRole("heading", { name: /sign in to update nitya/i })).toBeVisible();
+  await expect(page.getByText(/authentication is not available/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /continue with google/i })).toHaveCount(0);
 });
 
-test("restored motion, race voting, and habit challenge work", async ({ page }) => {
+test("restored motion, race voting, and habit challenge work", async ({ page }, testInfo) => {
   await page.goto("./");
   const motionCounter = page.locator(".sectionMotionCounter");
   const expectedDays = projectDaysSince(project.startedOn);
@@ -102,28 +99,33 @@ test("restored motion, race voting, and habit challenge work", async ({ page }) 
   await expect(page.getByText(/stylised placeholder/i)).toBeVisible();
   await expect(page.getByRole("heading", { name: "Plan food better" })).toBeVisible();
 
-  await expect(page.getByRole("heading", { name: "No race suggestions yet." })).toBeVisible();
-
   const suggestRace = async (name: string, location: string) => {
     await page.getByLabel("Race or challenge name").fill(name);
     await page.getByLabel("Race location").fill(location);
     await page.getByRole("button", { name: "Suggest", exact: true }).click();
   };
 
-  await suggestRace("Solo Test Race", "Delhi");
-  const soloRace = page.locator(".raceIdeaCard").filter({ hasText: "Solo Test Race" });
-  await expect(soloRace).toContainText("1vote");
-  await soloRace.getByRole("button", { name: /delete solo test race/i }).click();
-  await expect(page.getByRole("heading", { name: "No race suggestions yet." })).toBeVisible();
+  const suffix = `${testInfo.project.name.replace(/[^a-z]+/gi, " ").trim()} ${Date.now().toString(36)}`;
+  const soloName = `Solo Test Race ${suffix}`;
+  const mountainName = `Test Mountain Challenge ${suffix}`;
 
-  await suggestRace("Test Mountain Challenge", "Himachal");
-  await suggestRace("  test mountain challenge  ", "himachal");
-  const raceCard = page.locator(".raceIdeaCard").filter({ hasText: "Test Mountain Challenge" });
+  await suggestRace(soloName, "Delhi");
+  const soloRace = page.locator(".raceIdeaCard").filter({ hasText: soloName });
+  await expect(soloRace).toContainText("1vote");
+  await soloRace.getByRole("button", { name: new RegExp(`delete ${soloName}`, "i") }).click();
+  await expect(page.locator(".raceIdeaCard").filter({ hasText: soloName })).toHaveCount(0);
+
+  await suggestRace(mountainName, "Himachal");
+  await expect(page.locator(".raceIdeaCard").filter({ hasText: mountainName })).toContainText(
+    "1vote",
+  );
+  await suggestRace(`  ${mountainName.toLocaleLowerCase("en-IN")}  `, "himachal");
+  const raceCard = page.locator(".raceIdeaCard").filter({ hasText: mountainName });
   await expect(raceCard).toHaveCount(1);
   await expect(raceCard).toContainText("2votes");
   await expect(page.getByText(/already here.*upvote/i)).toBeVisible();
   await page.reload();
-  await expect(
-    page.locator(".raceIdeaCard").filter({ hasText: "Test Mountain Challenge" }),
-  ).toContainText("2votes");
+  await expect(page.locator(".raceIdeaCard").filter({ hasText: mountainName })).toContainText(
+    "2votes",
+  );
 });

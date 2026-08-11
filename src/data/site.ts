@@ -3,7 +3,7 @@ export const site = {
   devanagariName: "नित्य",
   tagline: "A small daily mission",
   founder: "Hritik सरोच",
-  email: "hritiksaroch@gmail.com",
+  email: "sarojhritik@gmail.com",
   instagramUrl: "https://www.instagram.com/hritik_saroch/",
   instagramHandle: "@hritik_saroch",
   stravaUrl: "https://www.strava.com/athletes/127677454",

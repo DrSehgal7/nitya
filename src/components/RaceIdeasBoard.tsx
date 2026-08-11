@@ -2,21 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import type { PublicRaceIdea, RaceIdeaType } from "@/types/content";
 
-type RaceIdeaType = "trail" | "road" | "hyrox" | "ultra" | "triathlon" | "fun";
-
-interface RaceIdea {
-  id: string;
-  creatorId: string;
-  name: string;
-  location: string;
-  type: RaceIdeaType;
-  votes: number;
-}
-
-const IDEAS_KEY = "nitya-race-ideas-v2";
-const CREATOR_KEY = "nitya-race-creator-v1";
-const raceTypes = new Set<RaceIdeaType>(["trail", "road", "hyrox", "ultra", "triathlon", "fun"]);
+const CREATOR_KEY = "nitya-race-creator-v2";
 
 const glyphs: Record<RaceIdeaType, string> = {
   trail: "⛰️",
@@ -27,113 +15,71 @@ const glyphs: Record<RaceIdeaType, string> = {
   fun: "🎲",
 };
 
-function normalise(value: string): string {
-  return value.trim().toLocaleLowerCase("en-IN").replace(/\s+/g, " ");
-}
-
-function readIdeas(value: string | null): RaceIdea[] {
-  if (!value) return [];
-
-  try {
-    const parsed = JSON.parse(value) as unknown;
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter((idea): idea is RaceIdea => {
-      if (!idea || typeof idea !== "object") return false;
-      const candidate = idea as Partial<RaceIdea>;
-      return (
-        typeof candidate.id === "string" &&
-        typeof candidate.creatorId === "string" &&
-        typeof candidate.name === "string" &&
-        typeof candidate.location === "string" &&
-        typeof candidate.type === "string" &&
-        raceTypes.has(candidate.type as RaceIdeaType) &&
-        typeof candidate.votes === "number" &&
-        candidate.votes >= 1
-      );
-    });
-  } catch {
-    return [];
-  }
-}
-
 export function RaceIdeasBoard() {
-  const [ideas, setIdeas] = useState<RaceIdea[]>([]);
-  const [creatorId, setCreatorId] = useState("");
+  const [ideas, setIdeas] = useState<PublicRaceIdea[]>([]);
+  const [visitorId, setVisitorId] = useState("");
   const [ready, setReady] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const storedCreator = window.localStorage.getItem(CREATOR_KEY);
-    const currentCreator = storedCreator || window.crypto.randomUUID();
-    if (!storedCreator) window.localStorage.setItem(CREATOR_KEY, currentCreator);
+    const stored = window.localStorage.getItem(CREATOR_KEY);
+    const id = stored || window.crypto.randomUUID();
+    if (!stored) window.localStorage.setItem(CREATOR_KEY, id);
+    setVisitorId(id);
 
-    setCreatorId(currentCreator);
-    setIdeas(readIdeas(window.localStorage.getItem(IDEAS_KEY)));
-    setReady(true);
-
-    const syncOpenTabs = (event: StorageEvent) => {
-      if (event.key === IDEAS_KEY) setIdeas(readIdeas(event.newValue));
-    };
-    window.addEventListener("storage", syncOpenTabs);
-    return () => window.removeEventListener("storage", syncOpenTabs);
+    void fetch("/api/race-ideas", { headers: { "x-nitya-visitor-id": id } })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Race ideas are temporarily unavailable.");
+        return (await response.json()) as PublicRaceIdea[];
+      })
+      .then(setIdeas)
+      .catch((error: unknown) =>
+        setMessage(
+          error instanceof Error ? error.message : "Race ideas are temporarily unavailable.",
+        ),
+      )
+      .finally(() => setReady(true));
   }, []);
 
-  useEffect(() => {
-    if (ready) window.localStorage.setItem(IDEAS_KEY, JSON.stringify(ideas));
-  }, [ideas, ready]);
+  async function update(body: Record<string, unknown>) {
+    if (!visitorId || busy) return null;
+    setBusy(true);
+    try {
+      const response = await fetch("/api/race-ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-nitya-visitor-id": visitorId },
+        body: JSON.stringify(body),
+      });
+      const result = (await response.json()) as {
+        ideas?: PublicRaceIdea[];
+        message?: string;
+        error?: string;
+      };
+      if (!response.ok || !result.ideas)
+        throw new Error(result.error || "Unable to save that change.");
+      setIdeas(result.ideas);
+      if (result.message) setMessage(result.message);
+      return result;
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Unable to save that change.");
+      return null;
+    } finally {
+      setBusy(false);
+    }
+  }
 
-  function suggest(event: FormEvent<HTMLFormElement>) {
+  async function suggest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    const name = String(data.get("name") ?? "").trim();
-    const location = String(data.get("location") ?? "").trim();
-    const type = String(data.get("type") ?? "trail") as RaceIdeaType;
-    if (!name || !location || !raceTypes.has(type) || !creatorId) return;
-
-    const duplicate = ideas.find(
-      (idea) =>
-        normalise(idea.name) === normalise(name) &&
-        normalise(idea.location) === normalise(location),
-    );
-
-    if (duplicate) {
-      setIdeas((current) =>
-        current.map((idea) =>
-          idea.id === duplicate.id ? { ...idea, votes: idea.votes + 1 } : idea,
-        ),
-      );
-      setMessage(`${duplicate.name} was already here, so your suggestion became an upvote.`);
-    } else {
-      setIdeas((current) => [
-        {
-          id: window.crypto.randomUUID(),
-          creatorId,
-          name,
-          location,
-          type,
-          votes: 1,
-        },
-        ...current,
-      ]);
-      setMessage(`${name} was added with one vote.`);
-    }
-
-    form.reset();
-  }
-
-  function vote(id: string) {
-    setIdeas((current) =>
-      current.map((idea) => (idea.id === id ? { ...idea, votes: idea.votes + 1 } : idea)),
-    );
-  }
-
-  function remove(id: string) {
-    const idea = ideas.find((candidate) => candidate.id === id);
-    if (!idea || idea.creatorId !== creatorId || idea.votes !== 1) return;
-    setIdeas((current) => current.filter((candidate) => candidate.id !== id));
-    setMessage(`${idea.name} was removed.`);
+    const result = await update({
+      action: "suggest",
+      name: data.get("name"),
+      location: data.get("location"),
+      type: data.get("type"),
+    });
+    if (result) form.reset();
   }
 
   return (
@@ -161,10 +107,13 @@ export function RaceIdeasBoard() {
           <option value="triathlon">Triathlon</option>
           <option value="fun">Fun challenge</option>
         </select>
-        <button type="submit">Suggest</button>
+        <button type="submit" disabled={busy}>
+          {busy ? "Saving…" : "Suggest"}
+        </button>
       </form>
       <p className="raceIdeaMessage" aria-live="polite">
-        {message || "No database: ideas are saved in this browser and sync live across its tabs."}
+        {message ||
+          "Suggestions and votes are shared across visitors; each browser gets one vote per idea."}
       </p>
 
       {ready && ideas.length === 0 ? (
@@ -175,44 +124,43 @@ export function RaceIdeasBoard() {
         </div>
       ) : (
         <div className="raceIdeaGrid">
-          {ideas.map((idea) => {
-            const canDelete = idea.creatorId === creatorId && idea.votes === 1;
-            return (
-              <article className="raceIdeaCard" key={idea.id}>
-                <span className="raceIdeaGlyph" aria-hidden="true">
-                  {glyphs[idea.type]}
-                </span>
-                <h3>{idea.name}</h3>
-                <p>
-                  {idea.location} · {idea.type}
-                </p>
-                <div className="ideaRunnerTrack" aria-hidden="true">
-                  <i>🏃‍➡️</i>
-                </div>
-                <div className="ideaVoteRow">
-                  <strong>{idea.votes}</strong>
-                  <span>{idea.votes === 1 ? "vote" : "votes"}</span>
-                  {canDelete && (
-                    <button
-                      className="ideaDeleteButton"
-                      type="button"
-                      onClick={() => remove(idea.id)}
-                      aria-label={`Delete ${idea.name}`}
-                    >
-                      Delete
-                    </button>
-                  )}
+          {ideas.map((idea) => (
+            <article className="raceIdeaCard" key={idea.id}>
+              <span className="raceIdeaGlyph" aria-hidden="true">
+                {glyphs[idea.type]}
+              </span>
+              <h3>{idea.name}</h3>
+              <p>
+                {idea.location} · {idea.type}
+              </p>
+              <div className="ideaRunnerTrack" aria-hidden="true">
+                <i>🏃‍➡️</i>
+              </div>
+              <div className="ideaVoteRow">
+                <strong>{idea.votes}</strong>
+                <span>{idea.votes === 1 ? "vote" : "votes"}</span>
+                {idea.canDelete && (
                   <button
+                    className="ideaDeleteButton"
                     type="button"
-                    onClick={() => vote(idea.id)}
-                    aria-label={`Vote for ${idea.name}`}
+                    disabled={busy}
+                    aria-label={`Delete ${idea.name}`}
+                    onClick={() => void update({ action: "delete", id: idea.id })}
                   >
-                    ▲ Vote
+                    Delete
                   </button>
-                </div>
-              </article>
-            );
-          })}
+                )}
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void update({ action: "vote", id: idea.id })}
+                  aria-label={`Vote for ${idea.name}`}
+                >
+                  ▲ Vote
+                </button>
+              </div>
+            </article>
+          ))}
         </div>
       )}
     </div>

@@ -1,35 +1,39 @@
 # Owner dashboard
 
-Nitya is moving from static GitHub Pages to a server-capable Vercel deployment. The goal is for Hritik to update public information from `/owner` without opening or editing repository files.
+`/owner` is the private publishing studio for Nitya. Unauthenticated visitors are redirected to `/owner/sign-in`; Google sign-in succeeds only when the returned email exactly matches `OWNER_EMAIL`.
 
-## Current transition state
+## Editable content
 
-- `/owner` is reserved for the private dashboard.
-- No public browser-side edit controls or client-side PIN exist.
-- The dashboard form remains unavailable until authentication and persistence are configured.
-- The existing source values remain read-only public fallbacks during the transition.
+- Annual running kilometres and the as-of date.
+- Monthly savings and people positively impacted.
+- Habits, including icon, description, status, saved amount, progress, and last update.
+- Public goals, including category, status, current update, progress, and last update.
+- Race-calendar checkpoints, dates, distance, location, status, official link, and note.
 
-## First owner-managed record
+The private ₹X commitment is intentionally absent from the editable public ledger.
 
-The first dashboard form will update:
+## Persistence
 
-- Total running kilometres.
-- The date through which the total is accurate.
+Owner content is validated by `src/lib/content-validation.ts` and stored as immutable JSON snapshots in the private `nitya-content` Vercel Blob store. The newest valid snapshot becomes the public source of truth. Checked-in values in `src/data/content.ts` and `src/data/races.ts` remain safe fallbacks for local development or temporary storage failure.
 
-The public sponsorship/Strava card and `Run 1,000 km this year` goal will read the same validated record and show a small dated note below the total.
+Race suggestions use a separate private snapshot so a stale owner form cannot overwrite community votes.
 
-## Planned owner flow
+## Required Vercel configuration
 
-1. Open `/owner`.
-2. Sign in with the single approved owner identity.
-3. Edit values through validated form controls.
-4. Review the exact public result.
-5. Save and publish.
+```text
+AUTH_GOOGLE_ID=<Google OAuth client ID>
+AUTH_GOOGLE_SECRET=<Google OAuth client secret>
+AUTH_SECRET=<random server secret>
+OWNER_EMAIL=sarojhritik@gmail.com
+NEXT_PUBLIC_SITE_URL=https://nitya-project.vercel.app
+```
 
-Authentication will be checked on the server for every read and write. Hiding a button in the browser is not authorization.
+The connected Blob store supplies `BLOB_STORE_ID` and Vercel's short-lived OIDC credentials. None of these values may use a `NEXT_PUBLIC_` prefix except the canonical site URL.
 
-## Extending the dashboard
+Google's authorized production callback is:
 
-Habits, goals, initiatives, confirmed races, and public numbers can use the same owner boundary later. Their fields and validation should be agreed before persistence is implemented so the storage format does not need repeated migrations.
+```text
+https://nitya-project.vercel.app/api/auth/callback/google
+```
 
-Service credentials and authentication secrets belong in Vercel environment variables and must never use a `NEXT_PUBLIC_` prefix.
+After changing any environment variable, create a new deployment. Existing deployments do not inherit later variable changes.

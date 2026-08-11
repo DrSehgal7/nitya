@@ -2298,6 +2298,252 @@ h3 {
   white-space: nowrap;
 }
 
+.ownerPage {
+  display: block;
+  min-height: calc(100vh - 76px);
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.ownerStudioHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.ownerStudioHeader h1,
+.ownerLoginCard h1 {
+  font-size: clamp(2.8rem, 7vw, 5.7rem);
+}
+
+.ownerStudioHeader p:not(.eyebrow),
+.ownerLoginCard > p:not(.eyebrow) {
+  color: var(--text-soft);
+}
+
+.ownerStudio {
+  display: grid;
+  gap: 1rem;
+}
+
+.ownerSaveBar {
+  position: sticky;
+  z-index: 15;
+  top: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  gap: 1rem;
+}
+
+.ownerSaveBar p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.68rem;
+}
+
+.ownerSaveBarBottom {
+  position: static;
+  margin-top: 0.5rem;
+}
+
+.ownerEditorSection {
+  overflow: clip;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.ownerEditorSection > summary {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+
+.ownerEditorSection[open] > summary {
+  border-color: var(--line);
+}
+
+.ownerFieldGrid,
+.ownerEditorList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ownerFieldGrid {
+  padding: 1rem 1.25rem;
+}
+
+.ownerFieldGridTwo {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.ownerFieldGridThree {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0;
+}
+.ownerFieldGridFour {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0;
+}
+.ownerFieldWide {
+  grid-column: span 2;
+}
+
+.ownerFieldGrid label {
+  display: grid;
+  align-content: start;
+  color: var(--text-soft);
+  font-size: 0.6rem;
+  font-weight: 800;
+  gap: 0.35rem;
+  letter-spacing: 0.04em;
+}
+
+.ownerFieldGrid input,
+.ownerFieldGrid select,
+.ownerFieldGrid textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 0.65rem 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  outline: none;
+  background: var(--bg-soft);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 550;
+  letter-spacing: 0;
+}
+
+.ownerFieldGrid textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.ownerFieldGrid input:focus,
+.ownerFieldGrid select:focus,
+.ownerFieldGrid textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 13%, transparent);
+}
+
+.ownerEditorList {
+  padding: 1rem 1.25rem 0;
+}
+
+.ownerEditorCard,
+.ownerEditorRow {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--bg-soft);
+}
+
+.ownerEditorCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.8rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
+  gap: 1rem;
+}
+
+.ownerDelete,
+.ownerAdd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text-soft);
+  cursor: pointer;
+  gap: 0.35rem;
+}
+
+.ownerDelete:hover {
+  border-color: #d86161;
+  color: #e87979;
+}
+
+.ownerAdd {
+  margin: 1rem 1.25rem 1.25rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.ownerSectionHint {
+  padding: 0 1.25rem;
+  margin: 1rem 0 0;
+  color: var(--text-soft);
+  font-size: 0.64rem;
+}
+
+.ownerLoginPage {
+  display: grid;
+  min-height: calc(100vh - 76px);
+  padding: 2rem;
+  place-items: center;
+}
+
+.ownerLoginCard {
+  width: min(100%, 620px);
+  padding: clamp(2rem, 6vw, 4rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.ownerLoginMark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1.2rem;
+  border-radius: 13px;
+  background: var(--accent);
+  color: #fff9f0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  place-items: center;
+}
+
+.ownerLoginCard form {
+  margin-block: 1.5rem;
+}
+.ownerLoginCard > a {
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+.ownerLoginError {
+  padding: 0.8rem;
+  border: 1px solid #8b4f42;
+  border-radius: 10px;
+  background: #5f2f251f;
+}
+.raceExperienceEmpty {
+  padding: 2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
 .sectionSticker {
   display: inline-flex;
   width: max-content;
@@ -4646,6 +4892,28 @@ h3 {
 
   .raceContent h2 {
     margin-top: 1rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .ownerStudioHeader,
+  .ownerSaveBar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ownerSaveBar {
+    top: 68px;
+  }
+
+  .ownerFieldGridTwo,
+  .ownerFieldGridThree,
+  .ownerFieldGridFour {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerFieldWide {
+    grid-column: auto;
   }
 }
 

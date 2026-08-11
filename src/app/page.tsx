@@ -16,24 +16,19 @@ import { RunnerScene } from "@/components/RunnerScene";
 import { SectionMotion } from "@/components/SectionMotion";
 import { SpendingAnalyzer } from "@/components/SpendingAnalyzer";
 import { SponsorStrava } from "@/components/SponsorStrava";
-import {
-  goals,
-  habits,
-  initiatives,
-  ledger,
-  principles,
-  project,
-  runningSnapshot,
-  statusLabel,
-} from "@/data/content";
+import { initiatives, principles, project, statusLabel } from "@/data/content";
 import { site } from "@/data/site";
 import stravaRaw from "@/data/strava.generated.json";
+import { getSiteContent } from "@/lib/content-store";
 import { formatDate } from "@/lib/format";
 import type { StravaSnapshot } from "@/types/strava";
 
 const strava = stravaRaw as StravaSnapshot;
 
-export default function HomePage() {
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const { goals, habits, ledger, races, runningSnapshot } = await getSiteContent();
   const pledgeLabel =
     project.baselinePledge !== null ? `₹${project.baselinePledge.toLocaleString("en-IN")}` : "₹X";
   const runningDistance = strava.connected ? strava.stats.distanceKm : runningSnapshot.distanceKm;
@@ -94,7 +89,7 @@ export default function HomePage() {
             </div>
             <div className="artifactRing" aria-hidden="true">
               <div>
-                <strong>{project.verifiedLives}</strong>
+                <strong>{peopleTotal}</strong>
                 <span>of my first {project.firstImpactGoal}</span>
               </div>
             </div>
@@ -506,7 +501,7 @@ export default function HomePage() {
 
           <div id="races" className="homeRaceSection motionHost">
             <SectionMotion />
-            <RaceTrail />
+            <RaceTrail races={races} />
           </div>
         </div>
       </section>
@@ -534,7 +529,7 @@ export default function HomePage() {
             to attach impact to something I already love doing. It is always optional, and it sits{" "}
             <strong>on top of my own {pledgeLabel} commitment</strong>.
           </p>
-          <SponsorStrava />
+          <SponsorStrava runningSnapshot={runningSnapshot} />
         </div>
       </section>
 

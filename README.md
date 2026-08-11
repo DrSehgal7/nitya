@@ -2,7 +2,7 @@
 
 A small daily mission: improve life deliberately, give without guilt, and keep the numbers honest.
 
-This repository contains a **Next.js + TypeScript** application prepared for Vercel. It includes a fixed animated Project Nitya counter, an inline trail-style race calendar, a browser-persistent race-idea board, a read-only public habit challenge, dark and light themes, a browser-only spending exercise, and an email-based collaboration form. Server support is enabled so an authenticated owner dashboard can be added without exposing credentials in the browser.
+This repository contains a **Next.js + TypeScript** application deployed on Vercel. It includes a fixed animated Project Nitya counter, an inline trail-style race calendar, a shared race-idea board, a read-only public habit challenge, dark and light themes, a browser-only spending exercise, an email-based collaboration form, and a Google-authenticated owner studio backed by private Vercel Blob storage.
 
 ## Run locally
 
@@ -38,30 +38,30 @@ npm run test:e2e:local
 - Homepage composition: `src/app/page.tsx`
 - Race track and trail: `src/components/RaceTrail.tsx`
 - Animated section treatment: `src/components/SectionMotion.tsx`
-- Race suggestions and voting preview: `src/components/RaceIdeasBoard.tsx`
+- Shared race suggestions and voting: `src/components/RaceIdeasBoard.tsx`
 - Public habit challenge: `src/components/HabitChallenge.tsx`
 - Contact/profile details: `src/data/site.ts`
 - Confirmed races and race suggestion: `src/data/races.ts`
 - Strava snapshot: `src/data/strava.generated.json`
 - Global design and themes: `src/app/globals.css`
 
-Public money, impact, and running totals begin at zero. These values remain read-only fallbacks until the authenticated owner dashboard becomes the write path.
+Public money, impact, and running totals begin at zero. Checked-in values are safe fallbacks; successful saves from `/owner` become the production source of truth.
 
 ## Contact form
 
-The coffee/help form sends submissions to `hritiksaroch@gmail.com` through [FormSubmit](https://formsubmit.co/). The first real submission triggers a one-time activation email. Approve that email before publicly launching the form.
+The coffee/help form sends submissions to `sarojhritik@gmail.com` through [FormSubmit](https://formsubmit.co/). The first real submission triggers a one-time activation email. Approve that email before publicly launching the form.
 
 ## Strava
 
 The page currently uses the dated manual running snapshot and links to Hritik's public profile. Gmail authentication alone does not authorize API access. The dormant sync script is retained for a possible future server-side Strava connection, but no scheduled workflow currently runs it. See [the Strava setup notes](docs/strava-setup.md).
 
-## Race ideas without a database
+## Race ideas without a traditional database
 
-The race board intentionally starts empty. Suggestions persist in the visitor's browser, duplicate race/location submissions become upvotes, and the creator can delete a one-vote suggestion. Storage events keep multiple tabs of that browser synchronized. Cross-device, cross-visitor voting is not technically possible without a shared persistence layer; use a small server-backed store or a GitHub-authenticated issues workflow when that becomes a launch requirement.
+The race board starts empty. Suggestions and votes are shared across visitors through a separate private Blob snapshot. Duplicate race/location submissions become upvotes, and the originating browser can delete its suggestion while it still has one vote. Creator identifiers remain private and are never returned by the public API.
 
 ## Owner dashboard
 
-The app no longer sends the owner to source-file editing. `/owner` is reserved for a secure, server-authenticated dashboard. Its form remains unavailable until the Vercel project and owner authentication are connected. Running distance/date will be the first editable record; the data model will expand after the remaining owner-managed fields are agreed. See [the owner dashboard guide](docs/content-editing.md).
+`/owner` is protected by Google authentication and an exact server-side `OWNER_EMAIL` check. The studio edits running distance/date, monthly savings and people impacted, habits, goals, and confirmed races. Every write is authenticated, validated, and saved to private Blob storage. See [the owner dashboard guide](docs/content-editing.md).
 
 ## Deploy
 

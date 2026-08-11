@@ -2,16 +2,18 @@
 
 import { ArrowUpRight, LockKeyhole } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { races } from "@/data/races";
+import type { Race } from "@/data/races";
 import { millisecondsUntilNextIndiaMidnight } from "@/lib/project-time";
 import { daysUntilIndiaDate, nextDatedItemIndex } from "@/lib/race-time";
 
-const trailPoints = [
-  { x: 7, y: 67 },
-  { x: 34, y: 47 },
-  { x: 63, y: 46 },
-  { x: 91, y: 30 },
-] as const;
+const trailHeights = [67, 47, 46, 30] as const;
+
+function racePoint(index: number, total: number) {
+  return {
+    x: 7 + (index / Math.max(1, total - 1)) * 84,
+    y: trailHeights[index % trailHeights.length] ?? 47,
+  };
+}
 
 function shortDate(date: string): string {
   return new Intl.DateTimeFormat("en-IN", {
@@ -21,7 +23,7 @@ function shortDate(date: string): string {
   }).format(new Date(`${date}T00:00:00+05:30`));
 }
 
-export function RaceTrail() {
+export function RaceTrail({ races }: { races: Race[] }) {
   const [today, setToday] = useState<number | null>(null);
 
   useEffect(() => {
@@ -39,9 +41,18 @@ export function RaceTrail() {
     if (today === null) return 0;
     return nextDatedItemIndex(races, today);
   }, [today]);
-  const nextRace = races[nextRaceIndex]!;
+  const nextRace = races[nextRaceIndex] ?? races[0];
+  if (!nextRace) {
+    return (
+      <div className="raceExperience raceExperienceEmpty">
+        <p className="eyebrow">Next on the start line</p>
+        <h3>My race calendar</h3>
+        <p>No races are on the calendar yet. The next owner-added race will appear here.</p>
+      </div>
+    );
+  }
   const daysToGo = today === null ? null : daysUntilIndiaDate(nextRace.date, today);
-  const runnerPoint = trailPoints[nextRaceIndex] ?? trailPoints[0]!;
+  const runnerPoint = racePoint(nextRaceIndex, races.length);
 
   return (
     <div className="raceExperience">
@@ -131,7 +142,7 @@ export function RaceTrail() {
         <i className="trailMountain trailMountainTwo" aria-hidden="true" />
         <i className="trailMountain trailMountainThree" aria-hidden="true" />
         {races.map((race, index) => {
-          const point = trailPoints[index] ?? trailPoints[trailPoints.length - 1]!;
+          const point = racePoint(index, races.length);
           const state =
             index < nextRaceIndex ? "done" : index === nextRaceIndex ? "next" : "future";
           return (
