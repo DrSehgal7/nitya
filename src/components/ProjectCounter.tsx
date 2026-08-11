@@ -23,7 +23,7 @@ export function ProjectCounter() {
       <span>Project Nitya · in motion</span>
       <div>
         <strong>{days?.toLocaleString("en-IN") ?? "—"}</strong>
-        <small>days since start</small>
+        <small>{days === 1 ? "day since start" : "days since start"}</small>
       </div>
       <div className="counterTrack" aria-hidden="true">
         <i />

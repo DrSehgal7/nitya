@@ -3,7 +3,7 @@ const INDIA_OFFSET_MS = 5.5 * 60 * 60 * 1000;
 
 export function projectDaysSince(startedOn: string, now = Date.now()): number {
   const start = new Date(`${startedOn}T00:00:00+05:30`).getTime();
-  return Math.max(0, Math.floor((now - start) / DAY_MS));
+  return Math.max(0, Math.floor((now - start) / DAY_MS) + 1);
 }
 
 export function millisecondsUntilNextIndiaMidnight(now = Date.now()): number {

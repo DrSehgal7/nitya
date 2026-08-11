@@ -72,7 +72,7 @@ export function SectionMotion({ persistent = false }: SectionMotionProps) {
           <div className="motionCountValue">
             <strong>{days?.toLocaleString("en-IN") ?? "—"}</strong>
             <b>
-              days
+              {days === 1 ? "day" : "days"}
               <br />
               since start
             </b>

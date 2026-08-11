@@ -19,9 +19,11 @@ describe("format helpers", () => {
 });
 
 describe("project time helpers", () => {
-  it("starts at zero and increments on India midnight", () => {
-    expect(projectDaysSince("2026-08-09", Date.parse("2026-08-09T18:29:59Z"))).toBe(0);
-    expect(projectDaysSince("2026-08-09", Date.parse("2026-08-09T18:30:00Z"))).toBe(1);
+  it("uses inclusive day numbers and increments on India midnight", () => {
+    expect(projectDaysSince("2026-08-09", Date.parse("2026-08-08T18:29:59Z"))).toBe(0);
+    expect(projectDaysSince("2026-08-09", Date.parse("2026-08-08T18:30:00Z"))).toBe(1);
+    expect(projectDaysSince("2026-08-09", Date.parse("2026-08-09T18:29:59Z"))).toBe(1);
+    expect(projectDaysSince("2026-08-09", Date.parse("2026-08-09T18:30:00Z"))).toBe(2);
   });
 
   it("schedules the next refresh for India midnight", () => {
