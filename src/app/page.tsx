@@ -32,10 +32,6 @@ export default async function HomePage() {
   const pledgeLabel =
     project.baselinePledge !== null ? `₹${project.baselinePledge.toLocaleString("en-IN")}` : "₹X";
   const runningDistance = strava.connected ? strava.stats.distanceKm : runningSnapshot.distanceKm;
-  const runningAsOf =
-    strava.connected && strava.syncedAt
-      ? formatDate(strava.syncedAt)
-      : formatDate(runningSnapshot.asOf);
   const savedTotal = ledger.reduce((total, entry) => total + entry.savedRupees, 0);
   const peopleTotal = ledger.reduce((total, entry) => total + entry.peopleImpacted, 0);
   const maxMonthlySavings = Math.max(1, ...ledger.map(({ savedRupees }) => savedRupees));
@@ -93,7 +89,6 @@ export default async function HomePage() {
                 <span>of my first {project.firstImpactGoal}</span>
               </div>
             </div>
-            <p>{project.impactMethodology}</p>
           </aside>
         </div>
       </section>
@@ -453,7 +448,7 @@ export default async function HomePage() {
                   ? Math.min(100, Math.round((runningDistance / 1000) * 100))
                   : goal.progress;
                 const currentLabel = isRunGoal
-                  ? `${runningDistance.toFixed(1)} / 1,000 km · as of ${runningAsOf}`
+                  ? `${runningDistance.toFixed(1)} / 1,000 km`
                   : goal.currentLabel;
                 return (
                   <article className="artifactGoalCard" key={goal.id}>

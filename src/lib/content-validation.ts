@@ -1,5 +1,5 @@
 import type { Habit, LedgerEntry, PublicGoal, WorkStatus } from "@/data/content";
-import type { Race, RaceStatus } from "@/data/races";
+import { hyroxDelhi2026, type Race, type RaceStatus } from "../data/races";
 import type { SiteContent } from "@/types/content";
 
 const statuses = new Set<WorkStatus>(["not-started", "in-progress", "done"]);
@@ -166,7 +166,14 @@ export function parseSiteContent(value: unknown): SiteContent | null {
   const habits = Array.isArray(input.habits) ? input.habits.map(habit) : [];
   const goals = Array.isArray(input.goals) ? input.goals.map(goal) : [];
   const ledger = Array.isArray(input.ledger) ? input.ledger.map(ledgerEntry) : [];
+  const inputVersion = input.version === 2 ? 2 : 1;
   const races = Array.isArray(input.races) ? input.races.map(race) : [];
+
+  // Version 2 adds Hritik's completed HYROX Delhi race to existing version 1 Blob snapshots.
+  // Once an owner saves version 2, the race can still be edited or deleted normally.
+  if (inputVersion < 2 && !races.some((item) => item?.slug === hyroxDelhi2026.slug)) {
+    races.push(structuredClone(hyroxDelhi2026));
+  }
 
   if (
     distanceKm === null ||
@@ -191,7 +198,7 @@ export function parseSiteContent(value: unknown): SiteContent | null {
     return null;
 
   return {
-    version: 1,
+    version: 2,
     updatedAt: new Date().toISOString(),
     runningSnapshot: { distanceKm, asOf },
     ledger: ledger as LedgerEntry[],

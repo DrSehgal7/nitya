@@ -14,6 +14,7 @@ test("shows the artifact story, contact form, and inline race trail", async ({
   await expect(page.getByRole("heading", { name: /collaboration—or coffee/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Send my note" })).toBeVisible();
   await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toBeVisible();
+  await expect(page.locator(".goalCurrent").filter({ hasText: "0.0 / 1,000 km" })).toBeVisible();
 
   if (process.env.CAPTURE_SCREENSHOT) {
     await page.screenshot({

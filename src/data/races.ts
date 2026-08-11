@@ -42,7 +42,21 @@ export function validateRaceCalendar(calendar: Race[]): string[] {
   return errors;
 }
 
+export const hyroxDelhi2026: Race = {
+  slug: "hyrox-delhi-open-solo-2026",
+  name: "HYROX Delhi Open Solo",
+  shortName: "HYROX Delhi",
+  distanceKm: 8,
+  location: "New Delhi",
+  date: "2026-07-25",
+  status: "confirmed",
+  registrationStatus: "Completed",
+  officialUrl: "https://hyrox.com/find-my-race/",
+  note: "My completed Open Solo race.",
+};
+
 export const races: Race[] = [
+  hyroxDelhi2026,
   {
     slug: "ladakh-marathon-2026",
     name: "Ladakh Marathon",

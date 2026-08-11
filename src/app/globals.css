@@ -2410,6 +2410,14 @@ h3 {
   letter-spacing: 0.04em;
 }
 
+.ownerFieldGrid label > small {
+  color: var(--muted);
+  font-size: 0.58rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
 .ownerFieldGrid input,
 .ownerFieldGrid select,
 .ownerFieldGrid textarea {

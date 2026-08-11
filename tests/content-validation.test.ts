@@ -6,7 +6,7 @@ import type { SiteContent } from "../src/types/content";
 
 const validContent = (): SiteContent =>
   structuredClone<SiteContent>({
-    version: 1,
+    version: 2,
     updatedAt: "2026-08-12T00:00:00.000Z",
     runningSnapshot: { ...runningSnapshot },
     ledger,
@@ -21,6 +21,15 @@ describe("owner content validation", () => {
     expect(parsed).not.toBeNull();
     expect(parsed?.races.map((race) => race.date)).toEqual(
       [...races].sort((a, b) => a.date.localeCompare(b.date)).map((race) => race.date),
+    );
+  });
+
+  it("adds the completed HYROX race once when an old Blob snapshot is loaded", () => {
+    const legacy = { ...validContent(), version: 1, races: races.slice(1) };
+    const parsed = parseSiteContent(legacy);
+    expect(parsed?.version).toBe(2);
+    expect(parsed?.races.filter((race) => race.slug === "hyrox-delhi-open-solo-2026")).toHaveLength(
+      1,
     );
   });
 

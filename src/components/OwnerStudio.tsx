@@ -16,8 +16,20 @@ function freshId(prefix: string): string {
   return `${prefix}-${window.crypto.randomUUID()}`;
 }
 
+function todayInIndia(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
 export function OwnerStudio({ initialContent }: { initialContent: SiteContent }) {
   const [content, setContent] = useState<SiteContent>(initialContent);
+  const [runningKmDraft, setRunningKmDraft] = useState(
+    String(initialContent.runningSnapshot.distanceKm),
+  );
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("All fields below are private controls until you save.");
 
@@ -58,17 +70,28 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
   }
 
   async function save() {
+    const distanceKm = Number(runningKmDraft.trim());
+    if (runningKmDraft.trim() === "" || !Number.isFinite(distanceKm) || distanceKm < 0) {
+      setMessage("Enter a valid running total of 0 km or more.");
+      return;
+    }
+
+    const payload: SiteContent = {
+      ...content,
+      runningSnapshot: { ...content.runningSnapshot, distanceKm },
+    };
     setSaving(true);
     setMessage("Saving securely…");
     try {
       const response = await fetch("/api/owner/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(content),
+        body: JSON.stringify(payload),
       });
       const result = (await response.json()) as SiteContent & { error?: string };
       if (!response.ok) throw new Error(result.error || "Unable to save your changes.");
       setContent(result);
+      setRunningKmDraft(String(result.runningSnapshot.distanceKm));
       setMessage(`Saved successfully at ${new Date(result.updatedAt).toLocaleString("en-IN")}.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to save your changes.");
@@ -100,17 +123,28 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
               type="number"
               min="0"
               step="0.01"
-              value={content.runningSnapshot.distanceKm}
-              onChange={(event) =>
+              inputMode="decimal"
+              placeholder="For example, 42.5"
+              value={runningKmDraft}
+              aria-describedby="running-km-help"
+              onChange={(event) => {
+                const nextValue = event.target.value;
+                setRunningKmDraft(nextValue);
+                if (nextValue.trim() === "") return;
+                const nextDistance = Number(nextValue);
+                if (!Number.isFinite(nextDistance) || nextDistance < 0) return;
                 setContent((current) => ({
                   ...current,
                   runningSnapshot: {
-                    ...current.runningSnapshot,
-                    distanceKm: Number(event.target.value),
+                    distanceKm: nextDistance,
+                    asOf: todayInIndia(),
                   },
-                }))
-              }
+                }));
+              }}
             />
+            <small id="running-km-help">
+              Enter the cumulative total for this year. Decimals such as 42.5 are supported.
+            </small>
           </label>
           <label>
             Updated as of

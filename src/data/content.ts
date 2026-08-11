@@ -43,7 +43,6 @@ export const project = {
   firstImpactGoal: 100,
   verifiedLives: ledger.reduce((total, entry) => total + entry.peopleImpacted, 0) as number | null,
   baselinePledge: null as number | null,
-  impactMethodology: "Every ₹1,500 given ≈ one life helped. First goal: 100—then as many as I can.",
 } as const;
 
 // Update these after your weekend run. A connected Strava sync takes precedence automatically.
