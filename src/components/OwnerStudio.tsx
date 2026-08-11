@@ -1,9 +1,10 @@
 "use client";
 
 import { Plus, Save, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Habit, LedgerEntry, PublicGoal } from "@/data/content";
 import type { Race } from "@/data/races";
+import { parseNumberDraft } from "@/lib/number-input";
 import type { SiteContent } from "@/types/content";
 
 const statusOptions = [
@@ -23,6 +24,54 @@ function todayInIndia(): string {
     month: "2-digit",
     day: "2-digit",
   }).format(new Date());
+}
+
+function NumericDraftInput({
+  value,
+  min,
+  max,
+  step = 1,
+  onValueChange,
+}: {
+  value: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  onValueChange: (value: number) => void;
+}) {
+  const [draft, setDraft] = useState(String(value));
+  const focused = useRef(false);
+  const parsed = parseNumberDraft(draft, { min, max });
+
+  useEffect(() => {
+    if (!focused.current) setDraft(String(value));
+  }, [value]);
+
+  return (
+    <input
+      type="number"
+      inputMode={Number.isInteger(step) ? "numeric" : "decimal"}
+      min={min}
+      max={max}
+      step={step}
+      value={draft}
+      aria-invalid={parsed === null}
+      onFocus={() => {
+        focused.current = true;
+      }}
+      onChange={(event) => {
+        const nextDraft = event.target.value;
+        setDraft(nextDraft);
+        const nextValue = parseNumberDraft(nextDraft, { min, max });
+        if (nextValue !== null) onValueChange(nextValue);
+      }}
+      onBlur={() => {
+        focused.current = false;
+        const nextValue = parseNumberDraft(draft, { min, max });
+        setDraft(String(nextValue ?? value));
+      }}
+    />
+  );
 }
 
 export function OwnerStudio({ initialContent }: { initialContent: SiteContent }) {
@@ -181,26 +230,20 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                 </label>
                 <label>
                   Savings (₹)
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
+                  <NumericDraftInput
+                    min={0}
+                    step={1}
                     value={entry.savedRupees}
-                    onChange={(event) =>
-                      updateLedger(index, { savedRupees: Number(event.target.value) })
-                    }
+                    onValueChange={(savedRupees) => updateLedger(index, { savedRupees })}
                   />
                 </label>
                 <label>
                   People impacted
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
+                  <NumericDraftInput
+                    min={0}
+                    step={1}
                     value={entry.peopleImpacted}
-                    onChange={(event) =>
-                      updateLedger(index, { peopleImpacted: Number(event.target.value) })
-                    }
+                    onValueChange={(peopleImpacted) => updateLedger(index, { peopleImpacted })}
                   />
                 </label>
               </div>
@@ -302,26 +345,21 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                 </label>
                 <label>
                   Saved (₹)
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
+                  <NumericDraftInput
+                    min={0}
+                    step={1}
                     value={habit.savedRupees ?? 0}
-                    onChange={(event) =>
-                      updateHabit(index, { savedRupees: Number(event.target.value) })
-                    }
+                    onValueChange={(savedRupees) => updateHabit(index, { savedRupees })}
                   />
                 </label>
                 <label>
                   Progress %
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
+                  <NumericDraftInput
+                    min={0}
+                    max={100}
+                    step={1}
                     value={habit.progress}
-                    onChange={(event) =>
-                      updateHabit(index, { progress: Number(event.target.value) })
-                    }
+                    onValueChange={(progress) => updateHabit(index, { progress })}
                   />
                 </label>
                 <label>
@@ -438,14 +476,12 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                 </label>
                 <label>
                   Progress %
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
+                  <NumericDraftInput
+                    min={0}
+                    max={100}
+                    step={1}
                     value={goal.progress}
-                    onChange={(event) =>
-                      updateGoal(index, { progress: Number(event.target.value) })
-                    }
+                    onValueChange={(progress) => updateGoal(index, { progress })}
                   />
                 </label>
                 <label>
@@ -537,14 +573,11 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
                 </label>
                 <label>
                   Distance (km)
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.001"
+                  <NumericDraftInput
+                    min={0.1}
+                    step={0.001}
                     value={race.distanceKm}
-                    onChange={(event) =>
-                      updateRace(index, { distanceKm: Number(event.target.value) })
-                    }
+                    onValueChange={(distanceKm) => updateRace(index, { distanceKm })}
                   />
                 </label>
                 <label>
