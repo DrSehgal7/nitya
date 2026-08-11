@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { ContactForm } from "@/components/ContactForm";
 import { HabitChallenge } from "@/components/HabitChallenge";
@@ -189,15 +190,36 @@ export default async function HomePage() {
           <h2 className="artifactSectionTitle">Why Nitya—and why me</h2>
           <div className="aboutGrid">
             <article className="profileCard">
-              <div className="profileMark" aria-hidden="true">
-                Hस
-              </div>
+              <figure className="profilePortrait">
+                <Image
+                  src="/images/hritik-saroch.jpg"
+                  alt="Hritik Saroch smiling beside a snowy mountain stream"
+                  width={1200}
+                  height={1600}
+                  sizes="(max-width: 920px) min(100vw - 3rem, 520px), 360px"
+                />
+                <figcaption>Average hybrid athlete · runner · always exploring</figcaption>
+              </figure>
               <h3>
                 Hritik <span lang="hi">सरोच</span>
               </h3>
               <p>
                 Hritik <span lang="hi">सरोच</span> · Gurugram, India
               </p>
+              <a
+                className="profileInstagram"
+                href={site.instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Message ${site.founder} on Instagram at ${site.instagramHandle}`}
+              >
+                <AtSign aria-hidden="true" size={18} strokeWidth={1.8} />
+                <span>
+                  <small>Say hello on Instagram</small>
+                  <strong>{site.instagramHandle}</strong>
+                </span>
+                <ArrowRight aria-hidden="true" size={17} />
+              </a>
               <ul>
                 <li>Software engineer by day</li>
                 <li>Average athlete by night</li>

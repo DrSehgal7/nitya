@@ -623,17 +623,46 @@ h3 {
   text-align: center;
 }
 
-.profileMark {
-  display: grid;
-  width: 84px;
-  margin: 0 auto 1.25rem;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 23px;
-  background: var(--accent);
-  color: white;
-  font-family: var(--font-display);
-  font-size: 2rem;
+.profilePortrait {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 1.5rem;
+  aspect-ratio: 3 / 4;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  border-radius: calc(var(--radius) - 5px);
+  background: var(--surface-soft);
+}
+
+.profilePortrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.profilePortrait::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 44%;
+  background: linear-gradient(transparent, rgb(10 15 18 / 86%));
+  content: "";
+  pointer-events: none;
+}
+
+.profilePortrait figcaption {
+  position: absolute;
+  z-index: 1;
+  right: 1rem;
+  bottom: 0.9rem;
+  left: 1rem;
+  color: #f5f1e9;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 .profileCard h3 {
@@ -645,10 +674,65 @@ h3 {
   font-size: 0.76rem;
 }
 
+.profileInstagram {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.78rem 0.85rem;
+  margin-top: 1.15rem;
+  gap: 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--text);
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.profileInstagram:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  transform: translateY(-2px);
+}
+
+.profileInstagram > svg:first-child {
+  color: var(--accent);
+}
+
+.profileInstagram > svg:last-child {
+  transition: transform 180ms ease;
+}
+
+.profileInstagram:hover > svg:last-child {
+  transform: translateX(3px);
+}
+
+.profileInstagram span,
+.profileInstagram small,
+.profileInstagram strong {
+  display: block;
+}
+
+.profileInstagram small {
+  margin-bottom: 0.12rem;
+  color: var(--text-soft);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.profileInstagram strong {
+  font-size: 0.72rem;
+}
+
 .profileCard ul {
   display: grid;
   padding: 0;
-  margin: 1.5rem 0 0;
+  margin: 1rem 0 0;
   gap: 0.55rem;
   list-style: none;
 }

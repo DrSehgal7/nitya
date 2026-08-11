@@ -13,6 +13,13 @@ test("shows the artifact story, contact form, and inline race trail", async ({
   await expect(page.getByRole("heading", { name: "The numbers, kept honest" })).toBeVisible();
   await expect(page.getByRole("heading", { name: /collaboration—or coffee/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Send my note" })).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: /Hritik Saroch smiling beside a snowy mountain stream/i }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /message Hritik.*Instagram/i })).toHaveAttribute(
+    "href",
+    "https://www.instagram.com/hritik_saroch/",
+  );
   await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toBeVisible();
   await expect(page.locator(".goalCurrent").filter({ hasText: "0.0 / 1,000 km" })).toBeVisible();
 
@@ -97,7 +104,7 @@ test("restored motion, race voting, and habit challenge work", async ({ page }, 
   const counterAfterScroll = await motionCounter.boundingBox();
   expect(Math.abs((counterBeforeScroll?.y ?? 0) - (counterAfterScroll?.y ?? 0))).toBeLessThan(2);
 
-  await expect(page.getByText(/stylised placeholder/i)).toBeVisible();
+  await expect(page.getByText(/average hybrid athlete · runner · always exploring/i)).toBeVisible();
   await expect(page.getByRole("heading", { name: "Plan food better" })).toBeVisible();
 
   const suggestRace = async (name: string, location: string) => {
