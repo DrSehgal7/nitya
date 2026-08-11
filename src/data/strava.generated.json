@@ -1,0 +1,13 @@
+{
+  "connected": false,
+  "profileUrl": "https://www.strava.com/athletes/127677454",
+  "syncedAt": null,
+  "statusMessage": "The secure Strava sync is ready for API credentials.",
+  "stats": {
+    "runCount": 0,
+    "distanceKm": 0,
+    "movingTimeSeconds": 0,
+    "elevationGainM": 0
+  },
+  "activities": []
+}

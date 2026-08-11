@@ -1,0 +1,43 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Nitya//Hrithik Race Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Hrithik's race calendar
+BEGIN:VEVENT
+UID:ladakh-marathon-2026@nitya
+DTSTAMP:20260808T000000Z
+DTSTART;VALUE=DATE:20260913
+DTEND;VALUE=DATE:20260914
+SUMMARY:Ladakh Marathon — 42.195 km
+LOCATION:Leh\, Ladakh
+URL:https://ladakhmarathon.com/races/marathon/
+END:VEVENT
+BEGIN:VEVENT
+UID:vedanta-delhi-half-2026@nitya
+DTSTAMP:20260808T000000Z
+DTSTART;VALUE=DATE:20261018
+DTEND;VALUE=DATE:20261019
+SUMMARY:Vedanta Delhi Half Marathon — 21.097 km
+LOCATION:New Delhi
+URL:https://vedantadelhihalfmarathon.procam.in/race-categories/half-marathon/information
+END:VEVENT
+BEGIN:VEVENT
+UID:tata-steel-world-25k-2026@nitya
+DTSTAMP:20260808T000000Z
+DTSTART;VALUE=DATE:20261220
+DTEND;VALUE=DATE:20261221
+SUMMARY:Tata Steel World 25K — 25 km
+LOCATION:Kolkata
+URL:https://tatasteelworld25k.procam.in/
+END:VEVENT
+BEGIN:VEVENT
+UID:tata-mumbai-marathon-2027@nitya
+DTSTAMP:20260808T000000Z
+DTSTART;VALUE=DATE:20270117
+DTEND;VALUE=DATE:20270118
+SUMMARY:Tata Mumbai Marathon — 42.195 km
+LOCATION:Mumbai
+URL:https://tatamumbaimarathon.procam.in/
+END:VEVENT
+END:VCALENDAR
