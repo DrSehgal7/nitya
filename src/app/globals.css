@@ -745,6 +745,31 @@ h3 {
   font-size: 0.7rem;
 }
 
+.profileCard .profileBioList {
+  gap: 0;
+  text-align: left;
+}
+
+.profileCard .profileBioList li {
+  display: grid;
+  align-items: start;
+  padding: 0.72rem 0.1rem;
+  grid-template-columns: 1.65rem 1fr;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  line-height: 1.55;
+}
+
+.profileCard .profileBioList li:last-child {
+  border-bottom: 0;
+}
+
+.profileBioList li > span {
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
 .aboutStory {
   max-width: 700px;
   font-size: 1.05rem;
@@ -3225,6 +3250,12 @@ h3 {
   text-align: right;
 }
 
+.trailCheckpoint-end .checkpointCard {
+  right: 34px;
+  left: auto;
+  text-align: right;
+}
+
 .checkpointCard strong,
 .checkpointCard small,
 .checkpointCard em {
@@ -3542,130 +3573,44 @@ h3 {
 
 .avatarStage {
   position: relative;
-  display: grid;
-  min-height: 390px;
-  place-items: center;
   overflow: hidden;
+  margin: 0;
+  aspect-ratio: 4 / 5;
   border: 1px solid var(--line-strong);
   border-radius: 22px;
   background: var(--surface);
   box-shadow: var(--shadow-small);
 }
 
-.avatarStage > span {
+.avatarStage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 66%;
+}
+
+.avatarStage::after {
   position: absolute;
+  inset: auto 0 0;
+  height: 36%;
+  background: linear-gradient(transparent, rgb(10 15 18 / 88%));
+  content: "";
+  pointer-events: none;
+}
+
+.avatarStage > figcaption {
+  position: absolute;
+  z-index: 1;
   right: 1.2rem;
   bottom: 1rem;
   left: 1.2rem;
-  color: var(--text-soft);
+  color: #f5f1e9;
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.13em;
+  line-height: 1.45;
   text-transform: uppercase;
-}
-
-.nityaAvatar {
-  position: relative;
-  width: 210px;
-  height: 300px;
-  margin-top: -1rem;
-}
-
-.nityaAvatar i {
-  position: absolute;
-  display: block;
-}
-
-.avatarHair {
-  z-index: 1;
-  top: 13px;
-  left: 66px;
-  width: 82px;
-  height: 48px;
-  border-radius: 50% 50% 30% 30%;
-  background: #252a2d;
-}
-
-.avatarHead {
-  z-index: 2;
-  top: 24px;
-  left: 59px;
-  width: 94px;
-  height: 116px;
-  border: 4px solid #273239;
-  border-radius: 48% 48% 44% 44%;
-  background: #cb926e;
-}
-
-.avatarGlasses {
-  z-index: 3;
-  top: 69px;
-  left: 72px;
-  width: 69px;
-  height: 31px;
-  border-top: 4px solid #273239;
-}
-
-.avatarGlasses::before,
-.avatarGlasses::after {
-  position: absolute;
-  top: -8px;
-  width: 29px;
-  height: 28px;
-  border: 4px solid #273239;
-  border-radius: 5px;
-  content: "";
-}
-
-.avatarGlasses::before {
-  left: -4px;
-}
-.avatarGlasses::after {
-  right: -4px;
-}
-
-.avatarBody {
-  z-index: 2;
-  top: 132px;
-  left: 45px;
-  width: 122px;
-  height: 120px;
-  border-radius: 25px 25px 8px 8px;
-  background: linear-gradient(#34434b, #26343c);
-}
-
-.avatarArm {
-  z-index: 1;
-  top: 157px;
-  width: 38px;
-  height: 112px;
-  border-radius: 22px;
-  background: #cb926e;
-}
-
-.avatarArmLeft {
-  left: 26px;
-  transform: rotate(11deg);
-}
-.avatarArmRight {
-  right: 25px;
-  transform: rotate(-11deg);
-}
-
-.avatarLeg {
-  z-index: 1;
-  top: 238px;
-  width: 42px;
-  height: 72px;
-  border-radius: 22px;
-  background: #242b2f;
-}
-
-.avatarLegLeft {
-  left: 53px;
-}
-.avatarLegRight {
-  right: 52px;
 }
 
 .baselinePanel .pledgeStack {
@@ -3719,7 +3664,7 @@ h3 {
 }
 
 .artifactGoalCard h4 {
-  margin-top: 1.3rem;
+  margin-top: 0;
   font-family: var(--font-body);
   font-size: 1.35rem;
   font-weight: 770;
@@ -3730,8 +3675,10 @@ h3 {
 }
 
 .artifactGoalCard .goalTop {
-  justify-content: flex-end;
-  margin-bottom: 0;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+  flex-wrap: wrap;
 }
 
 .artifactGoalCard .goalTop > span:first-child {
@@ -3741,9 +3688,7 @@ h3 {
 }
 
 .artifactGoalCard .goalTop .workStatus {
-  position: absolute;
-  top: 6.7rem;
-  left: 1.8rem;
+  position: static;
 }
 
 .goalUpdatePreview {

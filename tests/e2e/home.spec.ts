@@ -16,6 +16,9 @@ test("shows the artifact story, contact form, and inline race trail", async ({
   await expect(
     page.getByRole("img", { name: /Hritik Saroch smiling beside a snowy mountain stream/i }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: /Hritik Saroch playfully leaning into a snowy chai break/i }),
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: /message Hritik.*Instagram/i })).toHaveAttribute(
     "href",
     "https://www.instagram.com/hritik_saroch/",
@@ -105,7 +108,30 @@ test("restored motion, race voting, and habit challenge work", async ({ page }, 
   expect(Math.abs((counterBeforeScroll?.y ?? 0) - (counterAfterScroll?.y ?? 0))).toBeLessThan(2);
 
   await expect(page.getByText(/average hybrid athlete · runner · always exploring/i)).toBeVisible();
+  await expect(page.getByText(/mango espresso tonics/i)).toBeVisible();
   await expect(page.getByRole("heading", { name: "Plan food better" })).toBeVisible();
+
+  const runGoal = page.locator(".artifactGoalCard").filter({
+    has: page.getByRole("heading", { name: "Run 1,000 km this year" }),
+  });
+  const statusBox = await runGoal.locator(".workStatus").boundingBox();
+  const descriptionBox = await runGoal
+    .getByText(/Public Strava runs update this goal/i)
+    .boundingBox();
+  expect((statusBox?.y ?? 0) + (statusBox?.height ?? 0)).toBeLessThanOrEqual(
+    (descriptionBox?.y ?? 0) + 1,
+  );
+
+  const trailMap = page.locator(".trailMap");
+  const mumbaiCard = trailMap
+    .getByRole("link", { name: /Tata Mumbai Marathon/i })
+    .locator(".checkpointCard");
+  await mumbaiCard.scrollIntoViewIfNeeded();
+  const trailBox = await trailMap.boundingBox();
+  const mumbaiBox = await mumbaiCard.boundingBox();
+  expect((mumbaiBox?.x ?? 0) + (mumbaiBox?.width ?? 0)).toBeLessThanOrEqual(
+    (trailBox?.x ?? 0) + (trailBox?.width ?? 0) + 1,
+  );
 
   const suggestRace = async (name: string, location: string) => {
     await page.getByLabel("Race or challenge name").fill(name);

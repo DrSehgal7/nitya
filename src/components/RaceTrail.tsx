@@ -147,7 +147,9 @@ export function RaceTrail({ races }: { races: Race[] }) {
             index < nextRaceIndex ? "done" : index === nextRaceIndex ? "next" : "future";
           return (
             <a
-              className={`trailCheckpoint trailCheckpoint-${state}`}
+              className={`trailCheckpoint trailCheckpoint-${state}${
+                index === races.length - 1 ? " trailCheckpoint-end" : ""
+              }`}
               href={race.officialUrl}
               target="_blank"
               rel="noreferrer"

@@ -116,26 +116,23 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section commitmentSection motionHost">
+      <section className="section commitmentSection motionHost" id="commitment">
         <SectionMotion />
         <div className="shell">
           <p className="sectionSticker">🤝 My baseline</p>
           <p className="eyebrow">The commitment</p>
           <h2 className="baselineTitle">My money first. Everything else goes on top.</h2>
           <div className="baselinePanel">
-            <div className="avatarStage" aria-label="Stylised placeholder avatar">
-              <div className="nityaAvatar" aria-hidden="true">
-                <i className="avatarHair" />
-                <i className="avatarHead" />
-                <i className="avatarGlasses" />
-                <i className="avatarBody" />
-                <i className="avatarArm avatarArmLeft" />
-                <i className="avatarArm avatarArmRight" />
-                <i className="avatarLeg avatarLegLeft" />
-                <i className="avatarLeg avatarLegRight" />
-              </div>
-              <span>Stylised placeholder · upload your photo for likeness</span>
-            </div>
+            <figure className="avatarStage">
+              <Image
+                src="/images/hritik-snow-tea.jpg"
+                alt="Hritik Saroch playfully leaning into a snowy chai break"
+                width={900}
+                height={1600}
+                sizes="(max-width: 920px) min(100vw - 3rem, 560px), 420px"
+              />
+              <figcaption>A serious mission, an unserious chai break.</figcaption>
+            </figure>
             <div className="commitmentCopy">
               <p>
                 I don&apos;t want Nitya to depend on asking other people to fund something I believe
@@ -220,11 +217,35 @@ export default async function HomePage() {
                 </span>
                 <ArrowRight aria-hidden="true" size={17} />
               </a>
-              <ul>
-                <li>Software engineer by day</li>
-                <li>Average athlete by night</li>
-                <li>Can help you unlock your first pull-up</li>
-                <li>Forever exploring new things</li>
+              <ul className="profileBioList">
+                <li>
+                  <span aria-hidden="true">💻</span> Software engineer by day; average hybrid
+                  athlete after hours.
+                </li>
+                <li>
+                  <span aria-hidden="true">🏃</span> Exploring my physical limits, one run and
+                  strength session at a time.
+                </li>
+                <li>
+                  <span aria-hidden="true">🍳</span> Occasional chef. “Average cook” is probably
+                  more accurate.
+                </li>
+                <li>
+                  <span aria-hidden="true">☕</span> Mixing coffee, cocktails and ideas—currently
+                  testing coconut, orange and mango espresso tonics.
+                </li>
+                <li>
+                  <span aria-hidden="true">💪</span> I can help you unlock your first kilometre,
+                  chin-up or pull-up.
+                </li>
+                <li>
+                  <span aria-hidden="true">🎯</span> Always up for a fun challenge—tech, sport or
+                  something in between.
+                </li>
+                <li>
+                  <span aria-hidden="true">🎬</span> Crime and sports documentaries are my comfort
+                  watch.
+                </li>
               </ul>
             </article>
             <div className="aboutStory">
