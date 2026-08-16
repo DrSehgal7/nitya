@@ -15,9 +15,10 @@ export default function PrivacyPage() {
 
       <h2>Contact form</h2>
       <p>
-        If you submit the contact form, the name, email, Instagram handle, interest, and message you
-        choose to provide are sent through FormSubmit to {site.email}. They are used only to reply
-        to you. You can email that address to ask for your message to be deleted.
+        If you submit the contact form, your name and note are saved in Nitya&apos;s private Vercel
+        Blob storage. Email, Instagram handle, and reason for writing are optional. Only Hritik can
+        open the private owner inbox, and the details are used only to read and reply to your note.
+        You can email {site.email} to ask for your message to be deleted.
       </p>
 
       <h2>Strava</h2>
@@ -37,8 +38,8 @@ export default function PrivacyPage() {
 
       <h2>External links</h2>
       <p>
-        Links to Instagram, Strava, GitHub, FormSubmit, and race organisers take you to services
-        with their own privacy practices. Nitya cannot control those services.
+        Links to Instagram, Strava, GitHub, and race organisers take you to services with their own
+        privacy practices. Nitya cannot control those services.
       </p>
     </main>
   );

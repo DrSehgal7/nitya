@@ -49,6 +49,28 @@ test("shows the artifact story, contact form, and inline race trail", async ({
   expect(viewport.scrollWidth).toBeLessThanOrEqual(viewport.innerWidth + 1);
 });
 
+test("contact form requires only name and note and confirms private delivery", async ({ page }) => {
+  await page.goto("./#contact");
+  const form = page.locator(".contactForm");
+  await expect(form.locator("[required]")).toHaveCount(2);
+  await expect(form.getByLabel("Your email optional")).not.toHaveAttribute("required", "");
+  await expect(form.getByLabel("What brings you here? optional")).not.toHaveAttribute(
+    "required",
+    "",
+  );
+
+  await form.getByLabel("Your name").fill("Local test visitor");
+  await form.getByLabel("Your note").fill("Checking the private Nitya inbox flow.");
+  await form.getByRole("button", { name: "Send my note" }).click();
+  await expect(form.getByRole("status")).toContainText("private inbox");
+  await expect(form.getByLabel("Your name")).toHaveValue("");
+  await expect(form.getByLabel("Your note")).toHaveValue("");
+
+  const privateInbox = await page.request.get("./api/contact");
+  expect(privateInbox.status()).toBe(401);
+  await expect(privateInbox.json()).resolves.toEqual({ error: "Owner access required." });
+});
+
 test("mobile navigation opens and reaches the race calendar", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.startsWith("mobile"), "Mobile-only navigation check");
   await page.goto("./");

@@ -2,6 +2,12 @@
 
 `/owner` is the private publishing studio for Nitya. Unauthenticated visitors are redirected to `/owner/sign-in`; Google sign-in succeeds only when the returned email exactly matches `OWNER_EMAIL`.
 
+## Messages inbox
+
+Public contact-form notes appear at the top of `/owner` under **Messages**. Only name and note are required; email, Instagram, and reason for writing may be blank. Use **Refresh inbox** to load new submissions without leaving the page. Deleting a message permanently removes its private Blob record.
+
+The previous FormSubmit handoff is no longer used. Notes submitted before this inbox was deployed are not imported; if FormSubmit accepted one, it would only be in the configured email account.
+
 ## Editable content
 
 - Annual running kilometres and the as-of date.

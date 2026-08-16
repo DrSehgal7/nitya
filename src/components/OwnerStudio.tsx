@@ -1,11 +1,11 @@
 "use client";
 
-import { Plus, Save, Trash2 } from "lucide-react";
+import { Mail, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Habit, LedgerEntry, PublicGoal } from "@/data/content";
 import type { Race } from "@/data/races";
 import { parseNumberDraft } from "@/lib/number-input";
-import type { SiteContent } from "@/types/content";
+import type { ContactSubmission, SiteContent } from "@/types/content";
 
 const statusOptions = [
   ["not-started", "Yet to pick up"],
@@ -76,13 +76,67 @@ function NumericDraftInput({
   );
 }
 
-export function OwnerStudio({ initialContent }: { initialContent: SiteContent }) {
+export function OwnerStudio({
+  initialContent,
+  initialSubmissions,
+}: {
+  initialContent: SiteContent;
+  initialSubmissions: ContactSubmission[];
+}) {
   const [content, setContent] = useState<SiteContent>(initialContent);
+  const [submissions, setSubmissions] = useState<ContactSubmission[]>(initialSubmissions);
+  const [inboxLoading, setInboxLoading] = useState(false);
+  const [inboxMessage, setInboxMessage] = useState(
+    initialSubmissions.length
+      ? "Newest notes appear first."
+      : "No notes yet. New form submissions will appear here.",
+  );
   const [runningKmDraft, setRunningKmDraft] = useState(
     String(initialContent.runningSnapshot.distanceKm),
   );
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("All fields below are private controls until you save.");
+
+  async function refreshInbox() {
+    setInboxLoading(true);
+    setInboxMessage("Checking for new notes…");
+    try {
+      const response = await fetch("/api/contact", { cache: "no-store" });
+      const result = (await response.json()) as {
+        submissions?: ContactSubmission[];
+        error?: string;
+      };
+      if (!response.ok) throw new Error(result.error || "Unable to refresh the inbox.");
+      const next = result.submissions ?? [];
+      setSubmissions(next);
+      setInboxMessage(next.length ? "Inbox refreshed." : "No notes yet.");
+    } catch (error) {
+      setInboxMessage(error instanceof Error ? error.message : "Unable to refresh the inbox.");
+    } finally {
+      setInboxLoading(false);
+    }
+  }
+
+  async function deleteMessage(id: string) {
+    if (!window.confirm("Delete this message permanently?")) return;
+    setInboxLoading(true);
+    setInboxMessage("Deleting note…");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok) throw new Error(result.error || "Unable to delete this note.");
+      setSubmissions((current) => current.filter((submission) => submission.id !== id));
+      setInboxMessage("Note deleted.");
+    } catch (error) {
+      setInboxMessage(error instanceof Error ? error.message : "Unable to delete this note.");
+    } finally {
+      setInboxLoading(false);
+    }
+  }
 
   function updateHabit(index: number, patch: Partial<Habit>) {
     setContent((current) => ({
@@ -153,6 +207,84 @@ export function OwnerStudio({ initialContent }: { initialContent: SiteContent })
 
   return (
     <section className="shell ownerStudio">
+      <details className="ownerEditorSection ownerInbox" open>
+        <summary>
+          <span>
+            <Mail size={19} aria-hidden="true" /> Messages ({submissions.length})
+          </span>
+        </summary>
+        <div className="ownerInboxToolbar">
+          <p aria-live="polite">{inboxMessage}</p>
+          <button
+            className="ownerAdd ownerInboxRefresh"
+            type="button"
+            disabled={inboxLoading}
+            onClick={() => void refreshInbox()}
+          >
+            <RefreshCw size={15} aria-hidden="true" />
+            {inboxLoading ? "Working…" : "Refresh inbox"}
+          </button>
+        </div>
+        {submissions.length === 0 ? (
+          <div className="ownerInboxEmpty">
+            <Mail size={22} aria-hidden="true" />
+            <p>
+              Submitted notes will appear here. The sender only has to provide their name and note.
+            </p>
+          </div>
+        ) : (
+          <div className="ownerMessageList">
+            {submissions.map((submission) => (
+              <article className="ownerMessageCard" key={submission.id}>
+                <div className="ownerEditorCardHead">
+                  <div>
+                    <strong>{submission.name}</strong>
+                    <time dateTime={submission.submittedAt}>
+                      {new Date(submission.submittedAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </time>
+                  </div>
+                  <button
+                    className="ownerDelete"
+                    type="button"
+                    disabled={inboxLoading}
+                    aria-label={`Delete note from ${submission.name}`}
+                    onClick={() => void deleteMessage(submission.id)}
+                  >
+                    <Trash2 size={15} aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="ownerMessageNote">{submission.note}</p>
+                <dl className="ownerMessageMeta">
+                  {submission.email && (
+                    <div>
+                      <dt>Email</dt>
+                      <dd>
+                        <a href={`mailto:${submission.email}`}>{submission.email}</a>
+                      </dd>
+                    </div>
+                  )}
+                  {submission.instagram && (
+                    <div>
+                      <dt>Instagram</dt>
+                      <dd>{submission.instagram}</dd>
+                    </div>
+                  )}
+                  {submission.interest && (
+                    <div>
+                      <dt>Reason</dt>
+                      <dd>{submission.interest}</dd>
+                    </div>
+                  )}
+                </dl>
+              </article>
+            ))}
+          </div>
+        )}
+      </details>
+
       <div className="ownerSaveBar">
         <p aria-live="polite">{message}</p>
         <button

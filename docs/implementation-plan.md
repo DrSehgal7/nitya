@@ -49,7 +49,7 @@ Suggested follow-up: TCS World 10K Bengaluru on 25 April 2027—a shorter speed-
 - CSS custom properties for persistent light/dark themes, with dark as the first-visit default.
 - Dated manual running snapshot with the dormant privacy-filtered Strava sync retained for later.
 - Reserved owner dashboard with server-side authorization to be implemented after Vercel setup and field review.
-- FormSubmit email delivery with honeypot and direct Instagram/email alternatives.
+- Private owner-inbox delivery through one Blob record per note, with a honeypot and direct Instagram/email alternatives.
 - Vitest unit tests and Playwright desktop/mobile smoke tests.
 - GitHub Actions verification plus Vercel Git deployments and previews.
 
@@ -59,7 +59,7 @@ Suggested follow-up: TCS World 10K Bengaluru on 25 April 2027—a shorter speed-
 2. **Real-data review:** replace blank ledger values only with verified records and an agreed methodology.
 3. **Vercel connection:** import the repository, set the canonical production URL, and review the generated domain.
 4. **Owner dashboard:** agree all owner-managed fields, then add the single-owner login, validated forms, and persistence.
-5. **Integration activation:** approve FormSubmit's activation email; keep Strava manual until its API access is available.
+5. **Integration review:** submit and review a note in the private owner inbox; keep Strava manual until its API access is available.
 6. **Release candidate:** test the Vercel production URL, authentication boundary, links, metadata, form, and mobile layouts.
 7. **Public launch:** owner explicitly approves the content and data; tag the reviewed commit.
 

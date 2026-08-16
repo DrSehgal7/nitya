@@ -2,7 +2,7 @@
 
 A small daily mission: improve life deliberately, give without guilt, and keep the numbers honest.
 
-This repository contains a **Next.js + TypeScript** application deployed on Vercel. It includes a fixed animated Project Nitya counter, an inline trail-style race calendar, a shared race-idea board, a read-only public habit challenge, dark and light themes, a browser-only spending exercise, an email-based collaboration form, and a Google-authenticated owner studio backed by private Vercel Blob storage.
+This repository contains a **Next.js + TypeScript** application deployed on Vercel. It includes a fixed animated Project Nitya counter, an inline trail-style race calendar, a shared race-idea board, a read-only public habit challenge, dark and light themes, a browser-only spending exercise, a private collaboration inbox, and a Google-authenticated owner studio backed by private Vercel Blob storage.
 
 ## Run locally
 
@@ -49,7 +49,7 @@ Public money, impact, and running totals begin at zero. Checked-in values are sa
 
 ## Contact form
 
-The coffee/help form sends submissions to `sarojhritik@gmail.com` through [FormSubmit](https://formsubmit.co/). The first real submission triggers a one-time activation email. Approve that email before publicly launching the form.
+The coffee/help form requires only a name and note. Email, Instagram, and reason for writing are optional. Each note is saved as a separate private Blob record and appears under **Messages** at `/owner`; nothing is published publicly. Hritik can refresh and delete notes from that inbox.
 
 ## Strava
 
@@ -65,7 +65,7 @@ Each challenge habit has an account-protected thumbs-up toggle and a shared part
 
 ## Owner dashboard
 
-`/owner` is protected by Google authentication and an exact server-side `OWNER_EMAIL` check. The studio edits running distance/date, monthly savings and people impacted, habits, goals, and confirmed races. Every write is authenticated, validated, and saved to private Blob storage. See [the owner dashboard guide](docs/content-editing.md).
+`/owner` is protected by Google authentication and an exact server-side `OWNER_EMAIL` check. The studio includes the private Messages inbox and edits running distance/date, monthly savings and people impacted, habits, goals, and confirmed races. Every write is authenticated, validated, and saved to private Blob storage. See [the owner dashboard guide](docs/content-editing.md).
 
 ## Deploy
 

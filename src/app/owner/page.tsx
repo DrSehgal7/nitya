@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, authConfigured, isOwnerEmail, signOut } from "@/auth";
 import { OwnerStudio } from "@/components/OwnerStudio";
+import { getContactSubmissions } from "@/lib/contact-store";
 import { getSiteContent } from "@/lib/content-store";
 
 export const metadata: Metadata = {
@@ -15,7 +16,13 @@ export default async function OwnerPage() {
   if (!authConfigured) redirect("/owner/sign-in?error=Configuration");
   const session = await auth();
   if (!session?.user.owner || !isOwnerEmail(session.user.email)) redirect("/owner/sign-in");
-  const content = await getSiteContent();
+  const [content, submissions] = await Promise.all([
+    getSiteContent(),
+    getContactSubmissions().catch((error) => {
+      console.error("Unable to load the owner message inbox.", error);
+      return [];
+    }),
+  ]);
 
   return (
     <main id="main-content" className="ownerPage">
@@ -38,7 +45,7 @@ export default async function OwnerPage() {
           </button>
         </form>
       </section>
-      <OwnerStudio initialContent={content} />
+      <OwnerStudio initialContent={content} initialSubmissions={submissions} />
     </main>
   );
 }

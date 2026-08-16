@@ -43,3 +43,13 @@ export interface HabitJoinSummary {
   participantCount: number;
   joined: boolean;
 }
+
+export interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string | null;
+  instagram: string | null;
+  interest: string | null;
+  note: string;
+  submittedAt: string;
+}
