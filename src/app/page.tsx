@@ -571,7 +571,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section raceIdeasSection motionHost">
+      <section className="section raceIdeasSection motionHost" id="race-ideas">
         <SectionMotion />
         <div className="shell">
           <div>

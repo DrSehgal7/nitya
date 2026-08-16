@@ -26,8 +26,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Google],
   pages: { signIn: "/owner/sign-in" },
   callbacks: {
-    signIn({ user, profile }) {
-      return isOwnerEmail(profile?.email ?? user.email);
+    signIn({ user }) {
+      return Boolean(user.email);
     },
     jwt({ token, user }) {
       if (user?.email)

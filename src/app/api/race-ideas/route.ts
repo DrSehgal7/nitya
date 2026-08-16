@@ -1,4 +1,6 @@
+import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
+import { auth, authConfigured } from "@/auth";
 import {
   deleteRaceIdea,
   getPublicRaceIdeas,
@@ -8,21 +10,40 @@ import {
 
 export const dynamic = "force-dynamic";
 
-function visitorId(request: Request): string {
-  return request.headers.get("x-nitya-visitor-id")?.trim().slice(0, 100) ?? "";
+async function visitorId(): Promise<string> {
+  if (!authConfigured || !process.env.AUTH_SECRET) return "";
+  const session = await auth();
+  const email = session?.user.email?.trim().toLocaleLowerCase("en-IN");
+  if (!email) return "";
+  return createHmac("sha256", process.env.AUTH_SECRET)
+    .update(`nitya-race-voter:${email}`)
+    .digest("hex");
 }
 
-export async function GET(request: Request) {
-  return NextResponse.json(await getPublicRaceIdeas(visitorId(request)), {
-    headers: { "Cache-Control": "private, no-store" },
-  });
+export async function GET() {
+  const currentVisitor = await visitorId();
+  return NextResponse.json(
+    {
+      ideas: await getPublicRaceIdeas(currentVisitor),
+      authenticated: Boolean(currentVisitor),
+      authAvailable: authConfigured,
+    },
+    {
+      headers: { "Cache-Control": "private, no-store" },
+    },
+  );
 }
 
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
-    const currentVisitor = visitorId(request);
-    if (!currentVisitor) throw new Error("This browser could not be identified.");
+    const currentVisitor = await visitorId();
+    if (!currentVisitor) {
+      return NextResponse.json(
+        { error: "Sign in with Google to suggest a race or vote." },
+        { status: 401 },
+      );
+    }
 
     if (body.action === "suggest") {
       return NextResponse.json(
@@ -35,7 +56,7 @@ export async function POST(request: Request) {
       );
     }
     if (body.action === "vote") {
-      return NextResponse.json({ ideas: await voteForRaceIdea(body.id, currentVisitor) });
+      return NextResponse.json(await voteForRaceIdea(body.id, currentVisitor));
     }
     if (body.action === "delete") {
       return NextResponse.json({ ideas: await deleteRaceIdea(body.id, currentVisitor) });

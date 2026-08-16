@@ -92,7 +92,7 @@ test("public habits are read-only and owner controls are reserved for the dashbo
   await expect(page.getByRole("button", { name: /continue with google/i })).toHaveCount(0);
 });
 
-test("restored motion, race voting, and habit challenge work", async ({ page }, testInfo) => {
+test("restored motion, protected race voting, and habit challenge work", async ({ page }) => {
   await page.goto("./");
   const motionCounter = page.locator(".sectionMotionCounter");
   const expectedDays = projectDaysSince(project.startedOn);
@@ -133,33 +133,16 @@ test("restored motion, race voting, and habit challenge work", async ({ page }, 
     (trailBox?.x ?? 0) + (trailBox?.width ?? 0) + 1,
   );
 
-  const suggestRace = async (name: string, location: string) => {
-    await page.getByLabel("Race or challenge name").fill(name);
-    await page.getByLabel("Race location").fill(location);
-    await page.getByRole("button", { name: "Suggest", exact: true }).click();
-  };
+  await expect(page.getByText("One person. One vote.", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Race or challenge name")).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Suggest", exact: true })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /google sign-in unavailable/i })).toBeDisabled();
 
-  const suffix = `${testInfo.project.name.replace(/[^a-z]+/gi, " ").trim()} ${Date.now().toString(36)}`;
-  const soloName = `Solo Test Race ${suffix}`;
-  const mountainName = `Test Mountain Challenge ${suffix}`;
-
-  await suggestRace(soloName, "Delhi");
-  const soloRace = page.locator(".raceIdeaCard").filter({ hasText: soloName });
-  await expect(soloRace).toContainText("1vote");
-  await soloRace.getByRole("button", { name: new RegExp(`delete ${soloName}`, "i") }).click();
-  await expect(page.locator(".raceIdeaCard").filter({ hasText: soloName })).toHaveCount(0);
-
-  await suggestRace(mountainName, "Himachal");
-  await expect(page.locator(".raceIdeaCard").filter({ hasText: mountainName })).toContainText(
-    "1vote",
-  );
-  await suggestRace(`  ${mountainName.toLocaleLowerCase("en-IN")}  `, "himachal");
-  const raceCard = page.locator(".raceIdeaCard").filter({ hasText: mountainName });
-  await expect(raceCard).toHaveCount(1);
-  await expect(raceCard).toContainText("2votes");
-  await expect(page.getByText(/already here.*upvote/i)).toBeVisible();
-  await page.reload();
-  await expect(page.locator(".raceIdeaCard").filter({ hasText: mountainName })).toContainText(
-    "2votes",
-  );
+  const response = await page.request.post("./api/race-ideas", {
+    data: { action: "vote", id: "test-race" },
+  });
+  expect(response.status()).toBe(401);
+  await expect(response.json()).resolves.toEqual({
+    error: "Sign in with Google to suggest a race or vote.",
+  });
 });

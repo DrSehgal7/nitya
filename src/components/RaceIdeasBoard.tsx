@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import { signIn } from "next-auth/react";
 import type { PublicRaceIdea, RaceIdeaType } from "@/types/content";
-
-const CREATOR_KEY = "nitya-race-creator-v2";
 
 const glyphs: Record<RaceIdeaType, string> = {
   trail: "⛰️",
@@ -17,23 +16,27 @@ const glyphs: Record<RaceIdeaType, string> = {
 
 export function RaceIdeasBoard() {
   const [ideas, setIdeas] = useState<PublicRaceIdea[]>([]);
-  const [visitorId, setVisitorId] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authAvailable, setAuthAvailable] = useState(true);
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(CREATOR_KEY);
-    const id = stored || window.crypto.randomUUID();
-    if (!stored) window.localStorage.setItem(CREATOR_KEY, id);
-    setVisitorId(id);
-
-    void fetch("/api/race-ideas", { headers: { "x-nitya-visitor-id": id } })
+    void fetch("/api/race-ideas")
       .then(async (response) => {
         if (!response.ok) throw new Error("Race ideas are temporarily unavailable.");
-        return (await response.json()) as PublicRaceIdea[];
+        return (await response.json()) as {
+          ideas: PublicRaceIdea[];
+          authenticated: boolean;
+          authAvailable: boolean;
+        };
       })
-      .then(setIdeas)
+      .then((result) => {
+        setIdeas(result.ideas);
+        setAuthenticated(result.authenticated);
+        setAuthAvailable(result.authAvailable);
+      })
       .catch((error: unknown) =>
         setMessage(
           error instanceof Error ? error.message : "Race ideas are temporarily unavailable.",
@@ -43,12 +46,12 @@ export function RaceIdeasBoard() {
   }, []);
 
   async function update(body: Record<string, unknown>) {
-    if (!visitorId || busy) return null;
+    if (!authenticated || busy) return null;
     setBusy(true);
     try {
       const response = await fetch("/api/race-ideas", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-nitya-visitor-id": visitorId },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const result = (await response.json()) as {
@@ -56,6 +59,7 @@ export function RaceIdeasBoard() {
         message?: string;
         error?: string;
       };
+      if (response.status === 401) setAuthenticated(false);
       if (!response.ok || !result.ideas)
         throw new Error(result.error || "Unable to save that change.");
       setIdeas(result.ideas);
@@ -84,6 +88,25 @@ export function RaceIdeasBoard() {
 
   return (
     <div className="raceIdeasBoard">
+      <div className="raceVotingAccess">
+        <div>
+          <strong>{authenticated ? "You are signed in." : "One person. One vote."}</strong>
+          <span>
+            {authenticated
+              ? "Each Google account gets one vote per idea—even across browsers."
+              : "Sign in with Google to suggest a race or cast your one vote."}
+          </span>
+        </div>
+        {!authenticated && (
+          <button
+            type="button"
+            disabled={!authAvailable}
+            onClick={() => void signIn("google", { redirectTo: "/#race-ideas" })}
+          >
+            {authAvailable ? "Continue with Google" : "Google sign-in unavailable"}
+          </button>
+        )}
+      </div>
       <form className="raceIdeaForm" onSubmit={suggest}>
         <input
           name="name"
@@ -91,6 +114,7 @@ export function RaceIdeasBoard() {
           maxLength={80}
           placeholder="Race / challenge name"
           aria-label="Race or challenge name"
+          disabled={!authenticated || busy}
         />
         <input
           name="location"
@@ -98,8 +122,14 @@ export function RaceIdeasBoard() {
           maxLength={80}
           placeholder="Where?"
           aria-label="Race location"
+          disabled={!authenticated || busy}
         />
-        <select name="type" defaultValue="trail" aria-label="Race type">
+        <select
+          name="type"
+          defaultValue="trail"
+          aria-label="Race type"
+          disabled={!authenticated || busy}
+        >
           <option value="trail">Trail</option>
           <option value="road">Road</option>
           <option value="hyrox">Hybrid / HYROX</option>
@@ -107,13 +137,15 @@ export function RaceIdeasBoard() {
           <option value="triathlon">Triathlon</option>
           <option value="fun">Fun challenge</option>
         </select>
-        <button type="submit" disabled={busy}>
+        <button type="submit" disabled={!authenticated || busy}>
           {busy ? "Saving…" : "Suggest"}
         </button>
       </form>
       <p className="raceIdeaMessage" aria-live="polite">
         {message ||
-          "Suggestions and votes are shared across visitors; each browser gets one vote per idea."}
+          (authenticated
+            ? "Suggestions and votes are shared; your Google account gets one vote per idea."
+            : "Sign in is required so votes stay fair and cannot be repeated by refreshing.")}
       </p>
 
       {ready && ideas.length === 0 ? (
@@ -152,11 +184,13 @@ export function RaceIdeasBoard() {
                 )}
                 <button
                   type="button"
-                  disabled={busy}
+                  disabled={busy || !authenticated || idea.hasVoted}
                   onClick={() => void update({ action: "vote", id: idea.id })}
-                  aria-label={`Vote for ${idea.name}`}
+                  aria-label={
+                    idea.hasVoted ? `Already voted for ${idea.name}` : `Vote for ${idea.name}`
+                  }
                 >
-                  ▲ Vote
+                  {idea.hasVoted ? "✓ Voted" : "▲ Vote"}
                 </button>
               </div>
             </article>

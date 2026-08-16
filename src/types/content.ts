@@ -34,5 +34,6 @@ export interface PublicRaceIdea {
   location: string;
   type: RaceIdeaType;
   votes: number;
+  hasVoted: boolean;
   canDelete: boolean;
 }

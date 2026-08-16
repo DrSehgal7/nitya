@@ -2,6 +2,7 @@ import "server-only";
 
 import { get, list, put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
+import { addVoterOnce, uniqueVoterIds } from "@/lib/race-idea-votes";
 import type { PublicRaceIdea, RaceIdeaType, StoredRaceIdea } from "@/types/content";
 
 const IDEAS_PREFIX = "nitya-content/race-ideas-";
@@ -32,10 +33,10 @@ function normalise(value: string): string {
 
 function parseIdeas(value: unknown): StoredRaceIdea[] {
   if (!Array.isArray(value)) return [];
-  return value.filter((item): item is StoredRaceIdea => {
-    if (!item || typeof item !== "object") return false;
+  return value.flatMap((item): StoredRaceIdea[] => {
+    if (!item || typeof item !== "object") return [];
     const candidate = item as Partial<StoredRaceIdea>;
-    return (
+    const valid =
       typeof candidate.id === "string" &&
       typeof candidate.creatorId === "string" &&
       Array.isArray(candidate.voterIds) &&
@@ -43,8 +44,19 @@ function parseIdeas(value: unknown): StoredRaceIdea[] {
       typeof candidate.name === "string" &&
       typeof candidate.location === "string" &&
       raceTypes.has(candidate.type as RaceIdeaType) &&
-      typeof candidate.createdAt === "string"
-    );
+      typeof candidate.createdAt === "string";
+    if (!valid) return [];
+    return [
+      {
+        id: candidate.id as string,
+        creatorId: candidate.creatorId as string,
+        voterIds: uniqueVoterIds(candidate.voterIds as string[]),
+        name: candidate.name as string,
+        location: candidate.location as string,
+        type: candidate.type as RaceIdeaType,
+        createdAt: candidate.createdAt as string,
+      },
+    ];
   });
 }
 
@@ -82,14 +94,18 @@ async function writeIdeas(ideas: StoredRaceIdea[]): Promise<void> {
 
 export function publicIdeas(ideas: StoredRaceIdea[], visitorId: string): PublicRaceIdea[] {
   return ideas
-    .map((idea) => ({
-      id: idea.id,
-      name: idea.name,
-      location: idea.location,
-      type: idea.type,
-      votes: idea.voterIds.length,
-      canDelete: idea.creatorId === visitorId && idea.voterIds.length === 1,
-    }))
+    .map((idea) => {
+      const voterIds = uniqueVoterIds(idea.voterIds);
+      return {
+        id: idea.id,
+        name: idea.name,
+        location: idea.location,
+        type: idea.type,
+        votes: voterIds.length,
+        hasVoted: voterIds.includes(visitorId),
+        canDelete: idea.creatorId === visitorId && voterIds.length === 1,
+      };
+    })
     .sort((a, b) => b.votes - a.votes || a.name.localeCompare(b.name));
 }
 
@@ -122,8 +138,10 @@ export async function suggestRaceIdea(input: {
   );
   let message: string;
   if (duplicate) {
-    duplicate.voterIds.push(visitorId);
-    message = `${duplicate.name} was already here, so your suggestion became an upvote.`;
+    const added = addVoterOnce(duplicate.voterIds, visitorId);
+    message = added
+      ? `${duplicate.name} was already here, so your suggestion became an upvote.`
+      : `You have already voted for ${duplicate.name}.`;
   } else {
     ideas.unshift({
       id: randomUUID(),
@@ -136,23 +154,33 @@ export async function suggestRaceIdea(input: {
     });
     message = `${name} was added with one vote.`;
   }
-  await writeIdeas(ideas);
+  await writeIdeas(
+    ideas.map((idea) => ({
+      ...idea,
+      voterIds: uniqueVoterIds(idea.voterIds),
+    })),
+  );
   return { ideas: publicIdeas(ideas, visitorId), message };
 }
 
 export async function voteForRaceIdea(
   idValue: unknown,
   visitorValue: unknown,
-): Promise<PublicRaceIdea[]> {
+): Promise<{ ideas: PublicRaceIdea[]; message: string }> {
   const id = cleanText(idValue, 100);
   const visitorId = cleanText(visitorValue, 100);
   if (!id || !visitorId) throw new Error("Unable to record this vote.");
   const ideas = await readIdeas();
   const idea = ideas.find((candidate) => candidate.id === id);
   if (!idea) throw new Error("That race idea no longer exists.");
-  idea.voterIds.push(visitorId);
-  await writeIdeas(ideas);
-  return publicIdeas(ideas, visitorId);
+  const added = addVoterOnce(idea.voterIds, visitorId);
+  if (added) await writeIdeas(ideas);
+  return {
+    ideas: publicIdeas(ideas, visitorId),
+    message: added
+      ? `Your vote for ${idea.name} was recorded.`
+      : `You already voted for ${idea.name}.`,
+  };
 }
 
 export async function deleteRaceIdea(
@@ -164,8 +192,9 @@ export async function deleteRaceIdea(
   if (!id || !visitorId) throw new Error("Unable to remove this idea.");
   const ideas = await readIdeas();
   const idea = ideas.find((candidate) => candidate.id === id);
-  if (!idea || idea.creatorId !== visitorId || idea.voterIds.length !== 1) {
-    throw new Error("Only the original browser can delete its one-vote idea.");
+  const voterIds = uniqueVoterIds(idea?.voterIds ?? []);
+  if (!idea || idea.creatorId !== visitorId || voterIds.length !== 1) {
+    throw new Error("Only the account that suggested a one-vote idea can delete it.");
   }
   const next = ideas.filter((candidate) => candidate.id !== id);
   await writeIdeas(next);

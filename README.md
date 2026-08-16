@@ -57,7 +57,7 @@ The page currently uses the dated manual running snapshot and links to Hritik's 
 
 ## Race ideas without a traditional database
 
-The race board starts empty. Suggestions and votes are shared across visitors through a separate private Blob snapshot. Duplicate race/location submissions become upvotes, and the originating browser can delete its suggestion while it still has one vote. Creator identifiers remain private and are never returned by the public API.
+The race board starts empty. Suggestions and votes are shared across visitors through a separate private Blob snapshot. Google sign-in is required, and the API accepts at most one vote from each Google account for an idea. Duplicate race/location submissions become upvotes only when that account has not already voted. The suggesting account can delete its idea while it still has one vote. Emails are converted to keyed, non-reversible identifiers before storage and are never returned by the public API.
 
 ## Owner dashboard
 
