@@ -37,3 +37,9 @@ export interface PublicRaceIdea {
   hasVoted: boolean;
   canDelete: boolean;
 }
+
+export interface HabitJoinSummary {
+  habitId: string;
+  participantCount: number;
+  joined: boolean;
+}

@@ -1,6 +1,6 @@
-import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
-import { auth, authConfigured } from "@/auth";
+import { authConfigured } from "@/auth";
+import { signedInAccountId } from "@/lib/account-identity";
 import {
   deleteRaceIdea,
   getPublicRaceIdeas,
@@ -10,18 +10,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
-async function visitorId(): Promise<string> {
-  if (!authConfigured || !process.env.AUTH_SECRET) return "";
-  const session = await auth();
-  const email = session?.user.email?.trim().toLocaleLowerCase("en-IN");
-  if (!email) return "";
-  return createHmac("sha256", process.env.AUTH_SECRET)
-    .update(`nitya-race-voter:${email}`)
-    .digest("hex");
-}
-
 export async function GET() {
-  const currentVisitor = await visitorId();
+  const currentVisitor = await signedInAccountId("race-voter");
   return NextResponse.json(
     {
       ideas: await getPublicRaceIdeas(currentVisitor),
@@ -37,7 +27,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
-    const currentVisitor = await visitorId();
+    const currentVisitor = await signedInAccountId("race-voter");
     if (!currentVisitor) {
       return NextResponse.json(
         { error: "Sign in with Google to suggest a race or vote." },

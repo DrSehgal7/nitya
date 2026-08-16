@@ -59,6 +59,10 @@ The page currently uses the dated manual running snapshot and links to Hritik's 
 
 The race board starts empty. Suggestions and votes are shared across visitors through a separate private Blob snapshot. Google sign-in is required, and the API accepts at most one vote from each Google account for an idea. Duplicate race/location submissions become upvotes only when that account has not already voted. The suggesting account can delete its idea while it still has one vote. Emails are converted to keyed, non-reversible identifiers before storage and are never returned by the public API.
 
+## Habit participation
+
+Each challenge habit has an account-protected thumbs-up toggle and a shared participant count. The first click joins that habit and a second click leaves it. The private Blob snapshot stores only keyed, non-reversible account identifiers—not Google email addresses.
+
 ## Owner dashboard
 
 `/owner` is protected by Google authentication and an exact server-side `OWNER_EMAIL` check. The studio edits running distance/date, monthly savings and people impacted, habits, goals, and confirmed races. Every write is authenticated, validated, and saved to private Blob storage. See [the owner dashboard guide](docs/content-editing.md).

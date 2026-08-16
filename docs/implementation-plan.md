@@ -12,7 +12,7 @@ The implementation uses the supplied artifact as its editorial direction: oversi
 
 ## Implemented routes
 
-- `/` — the complete artifact story, repeated animated day counters and runners, illustrated commitment, founder story, initiatives, money handling and ledger, animated goals, horizontal race timeline, winding checkpoint trail, private spending analyser, live Strava/kilometre sponsor pairing, Google-account-protected race voting, six-card habit challenge, Instagram, and coffee/help form.
+- `/` — the complete artifact story, repeated animated day counters and runners, illustrated commitment, founder story, initiatives, money handling and ledger, animated goals, horizontal race timeline, winding checkpoint trail, private spending analyser, live Strava/kilometre sponsor pairing, Google-account-protected race voting, account-protected habit participation and live join counts, Instagram, and coffee/help form.
 - `/owner` — a no-index reserved owner dashboard; authentication and form persistence are the next implementation phase.
 - `/privacy/` — plain-language form, Strava, and external-link privacy details.
 - `/thanks/` — form success page.

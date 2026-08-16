@@ -92,6 +92,23 @@ test("public habits are read-only and owner controls are reserved for the dashbo
   await expect(page.getByRole("button", { name: /continue with google/i })).toHaveCount(0);
 });
 
+test("habit participation requires an account and exposes one toggle per habit", async ({
+  page,
+}) => {
+  await page.goto("./#habit-challenge");
+  await expect(page.getByText(/tap the thumbs-up on any habit/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /sign in to join/i })).toHaveCount(6);
+  await expect(page.getByText("0 people are joining")).toHaveCount(6);
+
+  const response = await page.request.post("./api/habit-joins", {
+    data: { habitId: "plan-food-better" },
+  });
+  expect(response.status()).toBe(401);
+  await expect(response.json()).resolves.toEqual({
+    error: "Sign in with Google to join a habit.",
+  });
+});
+
 test("restored motion, protected race voting, and habit challenge work", async ({ page }) => {
   await page.goto("./");
   const motionCounter = page.locator(".sectionMotionCounter");
