@@ -184,13 +184,13 @@ export function RaceIdeasBoard() {
                 )}
                 <button
                   type="button"
-                  disabled={busy || !authenticated || idea.hasVoted}
+                  disabled={busy || !authenticated}
                   onClick={() => void update({ action: "vote", id: idea.id })}
                   aria-label={
-                    idea.hasVoted ? `Already voted for ${idea.name}` : `Vote for ${idea.name}`
+                    idea.hasVoted ? `Remove vote from ${idea.name}` : `Vote for ${idea.name}`
                   }
                 >
-                  {idea.hasVoted ? "✓ Voted" : "▲ Vote"}
+                  {idea.hasVoted ? "✓ Voted · undo" : "▲ Vote"}
                 </button>
               </div>
             </article>

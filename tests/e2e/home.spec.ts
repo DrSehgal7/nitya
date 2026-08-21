@@ -24,7 +24,11 @@ test("shows the artifact story, contact form, and inline race trail", async ({
     "https://www.instagram.com/hritik_saroch/",
   );
   await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toBeVisible();
-  await expect(page.locator(".goalCurrent").filter({ hasText: "0.0 / 1,000 km" })).toBeVisible();
+  const runGoal = page.locator(".artifactGoalCard").filter({
+    has: page.getByRole("heading", { name: "Run 1,000 km this year" }),
+  });
+  await expect(runGoal.locator(".goalUpdatePreview")).toContainText(/\/ 1,000 km/);
+  await expect(runGoal.locator(".publicMilestones li")).toHaveCount(4);
 
   if (process.env.CAPTURE_SCREENSHOT) {
     await page.screenshot({
@@ -161,6 +165,9 @@ test("restored motion, protected race voting, and habit challenge work", async (
     (descriptionBox?.y ?? 0) + 1,
   );
 
+  await expect(page.locator('input[type="number"]')).toHaveCount(0);
+  await expect(page.getByText(/Brewing this section for you/)).toBeVisible();
+
   const trailMap = page.locator(".trailMap");
   const mumbaiCard = trailMap
     .getByRole("link", { name: /Tata Mumbai Marathon/i })
@@ -170,6 +177,18 @@ test("restored motion, protected race voting, and habit challenge work", async (
   const mumbaiBox = await mumbaiCard.boundingBox();
   expect((mumbaiBox?.x ?? 0) + (mumbaiBox?.width ?? 0)).toBeLessThanOrEqual(
     (trailBox?.x ?? 0) + (trailBox?.width ?? 0) + 1,
+  );
+
+  const trailRunnerBox = await trailMap.locator(".trailRunner").boundingBox();
+  const nextTrailCheckpointBox = await trailMap.locator(".trailCheckpoint-next").boundingBox();
+  expect((trailRunnerBox?.x ?? 0) + (trailRunnerBox?.width ?? 0) / 2).toBeLessThan(
+    (nextTrailCheckpointBox?.x ?? 0) + (nextTrailCheckpointBox?.width ?? 0) / 2,
+  );
+
+  const railRunnerBox = await page.locator(".railRunner").boundingBox();
+  const nextRailCheckpointBox = await page.locator(".railCheckpoint-next").boundingBox();
+  expect((railRunnerBox?.x ?? 0) + (railRunnerBox?.width ?? 0) / 2).toBeLessThan(
+    (nextRailCheckpointBox?.x ?? 0) + (nextRailCheckpointBox?.width ?? 0) / 2,
   );
 
   await expect(page.getByText("One person. One vote.", { exact: true })).toBeVisible();

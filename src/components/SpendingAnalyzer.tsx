@@ -91,15 +91,14 @@ export function SpendingAnalyzer() {
               <div className="currencyInput">
                 <span aria-hidden="true">₹</span>
                 <input
-                  type="number"
+                  type="text"
                   inputMode="numeric"
-                  min="0"
-                  step="100"
+                  pattern="[0-9]*"
                   value={value}
                   aria-label={`${index === 0 ? "Three" : index === 1 ? "Two" : "One"} months ago in rupees`}
                   onChange={(event) => {
                     const nextMonths = [...months];
-                    nextMonths[index] = event.target.value;
+                    nextMonths[index] = event.target.value.replace(/[^0-9]/g, "");
                     setMonths(nextMonths);
                     setAnalysed(false);
                   }}

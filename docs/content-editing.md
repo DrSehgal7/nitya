@@ -12,8 +12,10 @@ The previous FormSubmit handoff is no longer used. Notes submitted before this i
 
 - Annual running kilometres and the as-of date.
 - Monthly savings and people positively impacted.
-- Habits, including icon, description, status, saved amount, progress, and last update.
-- Public goals, including category, status, current update, progress, and last update.
+- Habits, including icon, description, a flexible status, saved amount, and last update. Habit
+  percentages are intentionally not collected or shown.
+- Public goals, including category, current update, last update, and any number of checklist
+  milestones. A goal's overall status and completion are calculated from those milestones.
 - Race-calendar checkpoints, dates, distance, location, status, official link, and note.
 
 The private ₹X commitment is intentionally absent from the editable public ledger.

@@ -29,3 +29,21 @@ export function nextDatedItemIndex<T extends { date: string }>(
   const index = items.findIndex(({ date }) => date >= today);
   return index === -1 ? items.length - 1 : index;
 }
+
+export function raceTimelineProgressIndex<T extends { date: string }>(
+  items: T[],
+  now = Date.now(),
+): number {
+  const nextIndex = nextDatedItemIndex(items, now);
+  if (nextIndex <= 0) return Math.max(-0.08, nextIndex - 0.08);
+
+  const previousAt = indiaDateStart(items[nextIndex - 1]!.date);
+  const nextAt = indiaDateStart(items[nextIndex]!.date);
+  const todayAt = indiaDateStart(indiaDateKey(now));
+  if (nextAt <= previousAt) return nextIndex - 0.08;
+
+  const elapsed = Math.max(0, Math.min(1, (todayAt - previousAt) / (nextAt - previousAt)));
+  // Stop just before the next flag until race day; reaching the flag means the race is due today.
+  const legProgress = elapsed < 1 ? Math.min(0.94, elapsed) : 1;
+  return nextIndex - 1 + legProgress;
+}

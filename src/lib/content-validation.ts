@@ -1,8 +1,25 @@
-import type { Habit, LedgerEntry, PublicGoal, WorkStatus } from "@/data/content";
+import {
+  goalProgressFromSubgoals,
+  goalStatusFromSubgoals,
+  type GoalSubgoal,
+  type Habit,
+  type HabitStatus,
+  type LedgerEntry,
+  type PublicGoal,
+  type WorkStatus,
+} from "../data/content";
 import { hyroxDelhi2026, type Race, type RaceStatus } from "../data/races";
-import type { SiteContent } from "@/types/content";
+import type { SiteContent } from "../types/content";
 
 const statuses = new Set<WorkStatus>(["not-started", "in-progress", "done"]);
+const habitStatuses = new Set<HabitStatus>([
+  "not-started",
+  "building",
+  "in-progress",
+  "maintaining",
+  "paused",
+  "done",
+]);
 const raceStatuses = new Set<RaceStatus>(["confirmed", "considering"]);
 const goalCategories = new Set<PublicGoal["category"]>(["Body", "Craft", "Money"]);
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
@@ -47,19 +64,12 @@ function habit(value: unknown, index: number): Habit | null {
   const title = text(item.title, 100);
   const description = text(item.description, 240);
   const icon = text(item.icon, 12);
-  const status = statuses.has(item.status as WorkStatus) ? (item.status as WorkStatus) : null;
-  const progress = integerIn(item.progress, 0, 100);
+  const status = habitStatuses.has(item.status as HabitStatus)
+    ? (item.status as HabitStatus)
+    : null;
   const savedRupees = integerIn(item.savedRupees, 0, 100_000_000);
   const lastUpdated = date(item.lastUpdated);
-  if (
-    !title ||
-    !description ||
-    !icon ||
-    !status ||
-    progress === null ||
-    savedRupees === null ||
-    !lastUpdated
-  )
+  if (!title || !description || !icon || !status || savedRupees === null || !lastUpdated)
     return null;
   return {
     id: slug(item.id, `habit-${index + 1}`),
@@ -67,10 +77,44 @@ function habit(value: unknown, index: number): Habit | null {
     title,
     description,
     status,
-    progress,
     savedRupees,
     lastUpdated,
   };
+}
+
+function subgoal(value: unknown, index: number): GoalSubgoal | null {
+  if (!value || typeof value !== "object") return null;
+  const item = value as Partial<GoalSubgoal>;
+  const title = text(item.title, 120);
+  if (!title || typeof item.completed !== "boolean") return null;
+  return {
+    id: slug(item.id, `milestone-${index + 1}`),
+    title,
+    completed: item.completed,
+  };
+}
+
+function migratedSubgoals(goalId: string, progress: number): GoalSubgoal[] {
+  const templates: Record<string, string[]> = {
+    "run-1000-km": ["Run 250 km", "Run 500 km", "Run 750 km", "Run 1,000 km"],
+    "deadlift-140": ["Deadlift 120 kg", "Deadlift 130 kg", "Deadlift 140 kg", "Deadlift 150 kg"],
+    "ship-nitya": [
+      "Finish the public design",
+      "Launch private owner controls",
+      "Publish the first real impact ledger",
+    ],
+    "safety-net": [
+      "Build a one-month buffer",
+      "Build a three-month buffer",
+      "Build a six-month buffer",
+    ],
+  };
+  const titles = templates[goalId] ?? [];
+  return titles.map((title, index) => ({
+    id: slug(`${goalId}-${title}`, `${goalId}-milestone-${index + 1}`),
+    title,
+    completed: progress >= Math.round(((index + 1) / titles.length) * 100),
+  }));
 }
 
 function goal(value: unknown, index: number): PublicGoal | null {
@@ -85,6 +129,8 @@ function goal(value: unknown, index: number): PublicGoal | null {
   const status = statuses.has(item.status as WorkStatus) ? (item.status as WorkStatus) : null;
   const progress = integerIn(item.progress, 0, 100);
   const lastUpdated = date(item.lastUpdated);
+  const id = slug(item.id, `goal-${index + 1}`);
+  const suppliedSubgoals = Array.isArray(item.subgoals) ? item.subgoals.map(subgoal) : null;
   if (
     !title ||
     !description ||
@@ -92,18 +138,24 @@ function goal(value: unknown, index: number): PublicGoal | null {
     !category ||
     !status ||
     progress === null ||
+    (suppliedSubgoals !== null &&
+      (suppliedSubgoals.length > 50 || suppliedSubgoals.some((entry) => entry === null))) ||
     !lastUpdated
   )
     return null;
+  const subgoals = (suppliedSubgoals as GoalSubgoal[] | null) ?? migratedSubgoals(id, progress);
+  if (new Set(subgoals.map((entry) => entry.id)).size !== subgoals.length) return null;
+  const normalisedProgress = goalProgressFromSubgoals(subgoals, progress);
   return {
-    id: slug(item.id, `goal-${index + 1}`),
+    id,
     category,
     title,
     description,
-    status,
-    progress,
+    status: goalStatusFromSubgoals(subgoals, status),
+    progress: normalisedProgress,
     currentLabel,
     lastUpdated,
+    subgoals,
   };
 }
 
@@ -171,7 +223,8 @@ export function parseSiteContent(value: unknown): SiteContent | null {
   const habits = Array.isArray(input.habits) ? input.habits.map(habit) : [];
   const goals = Array.isArray(input.goals) ? input.goals.map(goal) : [];
   const ledger = Array.isArray(input.ledger) ? input.ledger.map(ledgerEntry) : [];
-  const inputVersion = input.version === 2 ? 2 : 1;
+  const rawVersion = (value as { version?: unknown }).version;
+  const inputVersion = rawVersion === 3 ? 3 : rawVersion === 2 ? 2 : 1;
   const races = Array.isArray(input.races) ? input.races.map(race) : [];
 
   // Version 2 adds Hritik's completed HYROX Delhi race to existing version 1 Blob snapshots.
@@ -202,13 +255,28 @@ export function parseSiteContent(value: unknown): SiteContent | null {
   if (!unique(habits as Habit[]) || !unique(goals as PublicGoal[]) || !unique(races as Race[]))
     return null;
 
+  const normalisedGoals = (goals as PublicGoal[]).map((item) => {
+    if (inputVersion >= 3 || item.id !== "run-1000-km") return item;
+    const thresholds = [250, 500, 750, 1_000];
+    const subgoals = item.subgoals.map((entry, index) => ({
+      ...entry,
+      completed: distanceKm >= (thresholds[index] ?? Number.POSITIVE_INFINITY),
+    }));
+    return {
+      ...item,
+      subgoals,
+      status: goalStatusFromSubgoals(subgoals, item.status),
+      progress: goalProgressFromSubgoals(subgoals, item.progress),
+    };
+  });
+
   return {
-    version: 2,
+    version: 3,
     updatedAt: new Date().toISOString(),
     runningSnapshot: { distanceKm, asOf },
     ledger: ledger as LedgerEntry[],
     habits: habits as Habit[],
-    goals: goals as PublicGoal[],
+    goals: normalisedGoals,
     races: (races as Race[]).sort((a, b) => a.date.localeCompare(b.date)),
   };
 }

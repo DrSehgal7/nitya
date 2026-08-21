@@ -2,14 +2,30 @@
 
 import { Mail, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { Habit, LedgerEntry, PublicGoal } from "@/data/content";
+import {
+  goalProgressFromSubgoals,
+  goalStatusFromSubgoals,
+  statusLabel,
+  type Habit,
+  type LedgerEntry,
+  type PublicGoal,
+} from "@/data/content";
 import type { Race } from "@/data/races";
 import { parseNumberDraft } from "@/lib/number-input";
 import type { ContactSubmission, SiteContent } from "@/types/content";
 
-const statusOptions = [
+const goalStatusOptions = [
   ["not-started", "Yet to pick up"],
   ["in-progress", "In progress"],
+  ["done", "Done"],
+] as const;
+
+const habitStatusOptions = [
+  ["not-started", "Yet to pick up"],
+  ["building", "Building"],
+  ["in-progress", "In progress"],
+  ["maintaining", "Maintaining"],
+  ["paused", "Paused"],
   ["done", "Done"],
 ] as const;
 
@@ -51,11 +67,8 @@ function NumericDraftInput({
 
   return (
     <input
-      type="number"
+      type="text"
       inputMode={Number.isInteger(step) ? "numeric" : "decimal"}
-      min={min}
-      max={max}
-      step={step}
       value={draft}
       aria-invalid={parsed === null}
       onFocus={() => {
@@ -150,9 +163,17 @@ export function OwnerStudio({
   function updateGoal(index: number, patch: Partial<PublicGoal>) {
     setContent((current) => ({
       ...current,
-      goals: current.goals.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, ...patch } : item,
-      ),
+      goals: current.goals.map((item, itemIndex) => {
+        if (itemIndex !== index) return item;
+        const next = { ...item, ...patch };
+        if (!patch.subgoals) return next;
+        return {
+          ...next,
+          status: goalStatusFromSubgoals(next.subgoals, next.status),
+          progress: goalProgressFromSubgoals(next.subgoals, next.progress),
+          lastUpdated: todayInIndia(),
+        };
+      }),
     }));
   }
 
@@ -303,9 +324,7 @@ export function OwnerStudio({
           <label>
             Distance this year (km)
             <input
-              type="number"
-              min="0"
-              step="0.01"
+              type="text"
               inputMode="decimal"
               placeholder="For example, 42.5"
               value={runningKmDraft}
@@ -464,7 +483,7 @@ export function OwnerStudio({
                       updateHabit(index, { status: event.target.value as Habit["status"] })
                     }
                   >
-                    {statusOptions.map(([value, label]) => (
+                    {habitStatusOptions.map(([value, label]) => (
                       <option value={value} key={value}>
                         {label}
                       </option>
@@ -487,17 +506,6 @@ export function OwnerStudio({
                     integer
                     value={habit.savedRupees ?? 0}
                     onValueChange={(savedRupees) => updateHabit(index, { savedRupees })}
-                  />
-                </label>
-                <label>
-                  Progress %
-                  <NumericDraftInput
-                    min={0}
-                    max={100}
-                    step={1}
-                    integer
-                    value={habit.progress}
-                    onValueChange={(progress) => updateHabit(index, { progress })}
                   />
                 </label>
                 <label>
@@ -526,7 +534,6 @@ export function OwnerStudio({
                   title: "New habit",
                   description: "Describe the habit.",
                   status: "not-started",
-                  progress: 0,
                   savedRupees: 0,
                   lastUpdated: new Date().toISOString().slice(0, 10),
                 },
@@ -581,21 +588,29 @@ export function OwnerStudio({
                     onChange={(event) => updateGoal(index, { title: event.target.value })}
                   />
                 </label>
-                <label>
-                  Status
-                  <select
-                    value={goal.status}
-                    onChange={(event) =>
-                      updateGoal(index, { status: event.target.value as PublicGoal["status"] })
-                    }
-                  >
-                    {statusOptions.map(([value, label]) => (
-                      <option value={value} key={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                {goal.subgoals.length === 0 ? (
+                  <label>
+                    Status
+                    <select
+                      value={goal.status}
+                      onChange={(event) =>
+                        updateGoal(index, { status: event.target.value as PublicGoal["status"] })
+                      }
+                    >
+                      {goalStatusOptions.map(([value, label]) => (
+                        <option value={value} key={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ) : (
+                  <div className="ownerCalculatedStatus">
+                    <span>Overall status</span>
+                    <strong>{statusLabel(goal.status)}</strong>
+                    <small>Calculated from the milestones below.</small>
+                  </div>
+                )}
                 <label>
                   Description
                   <textarea
@@ -613,17 +628,6 @@ export function OwnerStudio({
                   />
                 </label>
                 <label>
-                  Progress %
-                  <NumericDraftInput
-                    min={0}
-                    max={100}
-                    step={1}
-                    integer
-                    value={goal.progress}
-                    onValueChange={(progress) => updateGoal(index, { progress })}
-                  />
-                </label>
-                <label>
                   Last updated
                   <input
                     type="date"
@@ -631,6 +635,88 @@ export function OwnerStudio({
                     onChange={(event) => updateGoal(index, { lastUpdated: event.target.value })}
                   />
                 </label>
+              </div>
+              <div className="ownerMilestones">
+                <div className="ownerMilestonesHead">
+                  <div>
+                    <strong>Milestones</strong>
+                    <small>Complete every milestone and the goal is marked done.</small>
+                  </div>
+                  <button
+                    className="ownerAdd ownerAddCompact"
+                    type="button"
+                    onClick={() =>
+                      updateGoal(index, {
+                        subgoals: [
+                          ...goal.subgoals,
+                          {
+                            id: freshId("milestone"),
+                            title: `Milestone ${goal.subgoals.length + 1}`,
+                            completed: false,
+                          },
+                        ],
+                      })
+                    }
+                  >
+                    <Plus size={14} aria-hidden="true" /> Add milestone
+                  </button>
+                </div>
+                {goal.subgoals.length === 0 ? (
+                  <p className="ownerMilestonesEmpty">
+                    Add a milestone to turn this goal into a dynamic checklist.
+                  </p>
+                ) : (
+                  <div className="ownerMilestoneList">
+                    {goal.subgoals.map((subgoal, subgoalIndex) => (
+                      <div className="ownerMilestoneRow" key={subgoal.id}>
+                        <label className="ownerMilestoneCheck">
+                          <input
+                            type="checkbox"
+                            checked={subgoal.completed}
+                            onChange={(event) =>
+                              updateGoal(index, {
+                                subgoals: goal.subgoals.map((entry, entryIndex) =>
+                                  entryIndex === subgoalIndex
+                                    ? { ...entry, completed: event.target.checked }
+                                    : entry,
+                                ),
+                              })
+                            }
+                          />
+                          <span>{subgoal.completed ? "Completed" : "Not completed"}</span>
+                        </label>
+                        <input
+                          value={subgoal.title}
+                          maxLength={120}
+                          aria-label={`Milestone ${subgoalIndex + 1}`}
+                          onChange={(event) =>
+                            updateGoal(index, {
+                              subgoals: goal.subgoals.map((entry, entryIndex) =>
+                                entryIndex === subgoalIndex
+                                  ? { ...entry, title: event.target.value }
+                                  : entry,
+                              ),
+                            })
+                          }
+                        />
+                        <button
+                          className="ownerDelete"
+                          type="button"
+                          aria-label={`Delete ${subgoal.title}`}
+                          onClick={() =>
+                            updateGoal(index, {
+                              subgoals: goal.subgoals.filter(
+                                (_, entryIndex) => entryIndex !== subgoalIndex,
+                              ),
+                            })
+                          }
+                        >
+                          <Trash2 size={14} aria-hidden="true" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </article>
           ))}
@@ -652,6 +738,7 @@ export function OwnerStudio({
                   progress: 0,
                   currentLabel: "Starting point",
                   lastUpdated: new Date().toISOString().slice(0, 10),
+                  subgoals: [],
                 },
               ],
             }))

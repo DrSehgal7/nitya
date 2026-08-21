@@ -1,12 +1,18 @@
 export type WorkStatus = "not-started" | "in-progress" | "done";
+export type HabitStatus = WorkStatus | "building" | "maintaining" | "paused";
+
+export interface GoalSubgoal {
+  id: string;
+  title: string;
+  completed: boolean;
+}
 
 export interface Habit {
   id: string;
   icon: string;
   title: string;
   description: string;
-  status: WorkStatus;
-  progress: number;
+  status: HabitStatus;
   savedRupees: number | null;
   lastUpdated: string;
 }
@@ -20,6 +26,7 @@ export interface PublicGoal {
   progress: number;
   currentLabel: string;
   lastUpdated: string;
+  subgoals: GoalSubgoal[];
 }
 
 export interface LedgerEntry {
@@ -97,7 +104,6 @@ export const habits: Habit[] = [
     title: "Eat what I actually need",
     description: "Plan the week, skip the impulse food orders.",
     status: "in-progress",
-    progress: 55,
     savedRupees: 0,
     lastUpdated: "2026-08-11",
   },
@@ -107,7 +113,6 @@ export const habits: Habit[] = [
     title: "File taxes like a grown-up",
     description: "Claim every deduction I’m owed, on time.",
     status: "in-progress",
-    progress: 78,
     savedRupees: 0,
     lastUpdated: "2026-08-11",
   },
@@ -117,7 +122,6 @@ export const habits: Habit[] = [
     title: "The 30-day clothes rule",
     description: "Wait 30 days before any non-essential buy.",
     status: "in-progress",
-    progress: 55,
     savedRupees: 0,
     lastUpdated: "2026-08-11",
   },
@@ -127,7 +131,6 @@ export const habits: Habit[] = [
     title: "Use the card, not the other way",
     description: "Pay in full, never carry a balance, bank rewards.",
     status: "in-progress",
-    progress: 50,
     savedRupees: 0,
     lastUpdated: "2026-08-11",
   },
@@ -143,16 +146,28 @@ export const goals: PublicGoal[] = [
     progress: 0,
     currentLabel: "0.0 / 1,000 km. Strava will update this after the first successful sync.",
     lastUpdated: "2026-08-11",
+    subgoals: [
+      { id: "run-250", title: "Run 250 km", completed: false },
+      { id: "run-500", title: "Run 500 km", completed: false },
+      { id: "run-750", title: "Run 750 km", completed: false },
+      { id: "run-1000", title: "Run 1,000 km", completed: false },
+    ],
   },
   {
     id: "deadlift-140",
     category: "Body",
-    title: "Deadlift 140 kg",
+    title: "Deadlift 150 kg",
     description: "Build strength steadily without letting the running disappear.",
     status: "in-progress",
     progress: 87,
-    currentLabel: "122 / 140 kg",
+    currentLabel: "Building towards 150 kg",
     lastUpdated: "2026-08-11",
+    subgoals: [
+      { id: "deadlift-120", title: "Deadlift 120 kg", completed: true },
+      { id: "deadlift-130", title: "Deadlift 130 kg", completed: true },
+      { id: "deadlift-140", title: "Deadlift 140 kg", completed: false },
+      { id: "deadlift-150", title: "Deadlift 150 kg", completed: false },
+    ],
   },
   {
     id: "ship-nitya",
@@ -163,6 +178,11 @@ export const goals: PublicGoal[] = [
     progress: 40,
     currentLabel: "Visual direction and production wiring in progress",
     lastUpdated: "2026-08-11",
+    subgoals: [
+      { id: "nitya-design", title: "Finish the public design", completed: true },
+      { id: "nitya-owner", title: "Launch private owner controls", completed: true },
+      { id: "nitya-ledger", title: "Publish the first real impact ledger", completed: false },
+    ],
   },
   {
     id: "safety-net",
@@ -173,11 +193,37 @@ export const goals: PublicGoal[] = [
     progress: 70,
     currentLabel: "Progress",
     lastUpdated: "2026-08-11",
+    subgoals: [
+      { id: "safety-1", title: "Build a one-month buffer", completed: true },
+      { id: "safety-3", title: "Build a three-month buffer", completed: false },
+      { id: "safety-6", title: "Build a six-month buffer", completed: false },
+    ],
   },
 ];
 
-export function statusLabel(status: WorkStatus): string {
+export function statusLabel(status: WorkStatus | HabitStatus): string {
   if (status === "done") return "Done";
   if (status === "in-progress") return "In progress";
+  if (status === "building") return "Building";
+  if (status === "maintaining") return "Maintaining";
+  if (status === "paused") return "Paused";
   return "Yet to pick up";
+}
+
+export function goalStatusFromSubgoals(
+  subgoals: GoalSubgoal[],
+  fallback: WorkStatus = "not-started",
+): WorkStatus {
+  if (subgoals.length === 0) return fallback;
+  const completed = subgoals.filter((subgoal) => subgoal.completed).length;
+  if (completed === subgoals.length) return "done";
+  if (completed > 0) return "in-progress";
+  return fallback === "in-progress" ? "in-progress" : "not-started";
+}
+
+export function goalProgressFromSubgoals(subgoals: GoalSubgoal[], fallback = 0): number {
+  if (subgoals.length === 0) return fallback;
+  return Math.round(
+    (subgoals.filter((subgoal) => subgoal.completed).length / subgoals.length) * 100,
+  );
 }

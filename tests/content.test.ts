@@ -8,10 +8,17 @@ describe("owner-managed public content", () => {
     expect(new Set(initiatives.map(({ title }) => title)).size).toBe(initiatives.length);
   });
 
-  it("keeps every public progress value within its visual range", () => {
-    for (const item of [...habits, ...goals]) {
+  it("keeps every goal progress value within its visual range", () => {
+    for (const item of goals) {
       expect(item.progress).toBeGreaterThanOrEqual(0);
       expect(item.progress).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it("gives each public goal a unique, editable milestone checklist", () => {
+    for (const goal of goals) {
+      expect(goal.subgoals.length).toBeGreaterThan(0);
+      expect(new Set(goal.subgoals.map(({ id }) => id)).size).toBe(goal.subgoals.length);
     }
   });
 

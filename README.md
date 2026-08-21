@@ -57,7 +57,7 @@ The page currently uses the dated manual running snapshot and links to Hritik's 
 
 ## Race ideas without a traditional database
 
-The race board starts empty. Suggestions and votes are shared across visitors through a separate private Blob snapshot. Google sign-in is required, and the API accepts at most one vote from each Google account for an idea. Duplicate race/location submissions become upvotes only when that account has not already voted. The suggesting account can delete its idea while it still has one vote. Emails are converted to keyed, non-reversible identifiers before storage and are never returned by the public API.
+The race board starts empty. Suggestions and votes are shared across visitors through a separate private Blob snapshot. Google sign-in is required, and the API accepts at most one vote from each Google account for an idea. The vote control is a toggle, so the same account can remove its own vote without affecting anyone else's. Duplicate race/location submissions become upvotes only when that account has not already voted. The suggesting account can delete its idea while it still has one vote. Emails are converted to keyed, non-reversible identifiers before storage and are never returned by the public API.
 
 ## Habit participation
 
@@ -65,7 +65,7 @@ Each challenge habit has an account-protected thumbs-up toggle and a shared part
 
 ## Owner dashboard
 
-`/owner` is protected by Google authentication and an exact server-side `OWNER_EMAIL` check. The studio includes the private Messages inbox and edits running distance/date, monthly savings and people impacted, habits, goals, and confirmed races. Every write is authenticated, validated, and saved to private Blob storage. See [the owner dashboard guide](docs/content-editing.md).
+`/owner` is protected by Google authentication and an exact server-side `OWNER_EMAIL` check. The studio includes the private Messages inbox and edits running distance/date, monthly savings and people impacted, habits, milestone-based goals, and confirmed races. Every write is authenticated, validated, and saved to private Blob storage. See [the owner dashboard guide](docs/content-editing.md).
 
 ## Deploy
 

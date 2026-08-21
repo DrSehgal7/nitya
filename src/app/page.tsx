@@ -17,7 +17,13 @@ import { RunnerScene } from "@/components/RunnerScene";
 import { SectionMotion } from "@/components/SectionMotion";
 import { SpendingAnalyzer } from "@/components/SpendingAnalyzer";
 import { SponsorStrava } from "@/components/SponsorStrava";
-import { initiatives, principles, project, statusLabel } from "@/data/content";
+import {
+  goalProgressFromSubgoals,
+  initiatives,
+  principles,
+  project,
+  statusLabel,
+} from "@/data/content";
 import { site } from "@/data/site";
 import stravaRaw from "@/data/strava.generated.json";
 import { getSiteContent } from "@/lib/content-store";
@@ -470,9 +476,6 @@ export default async function HomePage() {
                     <span>Saved</span>
                     <strong>₹{saved.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div className="activeTrack" aria-label={`${habit.progress}% progress`}>
-                    <span style={{ width: `${habit.progress}%` }} />
-                  </div>
                 </article>
               );
             })}
@@ -487,9 +490,7 @@ export default async function HomePage() {
             <div className="artifactGoalGrid">
               {goals.map((goal) => {
                 const isRunGoal = goal.id === "run-1000-km";
-                const progress = isRunGoal
-                  ? Math.min(100, Math.round((runningDistance / 1000) * 100))
-                  : goal.progress;
+                const progress = goalProgressFromSubgoals(goal.subgoals, goal.progress);
                 const currentLabel = isRunGoal
                   ? `${runningDistance.toFixed(1)} / 1,000 km`
                   : goal.currentLabel;
@@ -520,17 +521,34 @@ export default async function HomePage() {
                       <p>{currentLabel}</p>
                       <small>Last updated {formatDate(goal.lastUpdated)}</small>
                     </div>
+                    {goal.subgoals.length > 0 && (
+                      <div className="publicMilestones">
+                        <span className="publicMilestonesLabel">Milestones</span>
+                        <ul>
+                          {goal.subgoals.map((subgoal) => (
+                            <li className={subgoal.completed ? "isComplete" : ""} key={subgoal.id}>
+                              <span aria-hidden="true">
+                                {subgoal.completed ? <Check size={13} /> : null}
+                              </span>
+                              {subgoal.title}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                     <div className="goalCurrent">
-                      {isRunGoal
-                        ? `${runningDistance.toFixed(1)} / 1,000 km`
-                        : goal.id === "deadlift-140"
-                          ? "122 / 140 kg"
-                          : "Progress"}
+                      {goal.subgoals.length > 0
+                        ? `${goal.subgoals.filter((item) => item.completed).length} of ${goal.subgoals.length} milestones`
+                        : currentLabel}
                     </div>
-                    <div className="activeTrack" aria-label={`${progress}% progress`}>
-                      <span style={{ width: `${progress}%` }} />
-                    </div>
-                    <small className="goalPercent">{progress}%</small>
+                    {goal.subgoals.length > 0 && (
+                      <div
+                        className="activeTrack"
+                        aria-label={`${goal.subgoals.filter((item) => item.completed).length} of ${goal.subgoals.length} milestones completed`}
+                      >
+                        <span style={{ width: `${progress}%` }} />
+                      </div>
+                    )}
                   </article>
                 );
               })}
@@ -551,9 +569,16 @@ export default async function HomePage() {
             Tell me where the money leaks—I&apos;ll help you plug it
           </h2>
           <p className="sectionIntro">
-            Pick one thing to optimise, drop in your last three months, and get a plain analysis
-            with concrete steps to actually save. What you do with the savings is entirely yours.
+            Brewing this section for you :) The quick analyser below is an early draft for spotting
+            one useful next step. For immediate help, send me a note or message me directly and
+            we&apos;ll look at the leak together.
           </p>
+          <div className="toolContactLinks">
+            <a href="#contact">Leave me a note</a>
+            <a href={site.instagramUrl} target="_blank" rel="noreferrer">
+              Message me on Instagram
+            </a>
+          </div>
           <SpendingAnalyzer />
         </div>
       </section>

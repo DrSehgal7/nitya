@@ -21,10 +21,12 @@ export function SponsorCalculator({ initialDistance = 0 }: SponsorCalculatorProp
           <span>Distance</span>
           <div className="suffixInput">
             <input
-              type="number"
-              min="0"
+              type="text"
+              inputMode="decimal"
               value={distance}
-              onChange={(event) => setDistance(event.target.value)}
+              onChange={(event) =>
+                setDistance(event.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))
+              }
             />
             <span>km</span>
           </div>
@@ -34,10 +36,12 @@ export function SponsorCalculator({ initialDistance = 0 }: SponsorCalculatorProp
           <div className="prefixInput">
             <span>₹</span>
             <input
-              type="number"
-              min="0"
+              type="text"
+              inputMode="decimal"
               value={perKm}
-              onChange={(event) => setPerKm(event.target.value)}
+              onChange={(event) =>
+                setPerKm(event.target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))
+              }
             />
           </div>
         </label>

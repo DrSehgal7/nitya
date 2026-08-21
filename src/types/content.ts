@@ -7,7 +7,7 @@ export interface RunningSnapshot {
 }
 
 export interface SiteContent {
-  version: 2;
+  version: 3;
   updatedAt: string;
   runningSnapshot: RunningSnapshot;
   ledger: LedgerEntry[];

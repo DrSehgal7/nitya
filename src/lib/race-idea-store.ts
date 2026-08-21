@@ -2,7 +2,7 @@ import "server-only";
 
 import { get, list, put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
-import { addVoterOnce, uniqueVoterIds } from "@/lib/race-idea-votes";
+import { addVoterOnce, toggleVoter, uniqueVoterIds } from "@/lib/race-idea-votes";
 import type { PublicRaceIdea, RaceIdeaType, StoredRaceIdea } from "@/types/content";
 
 const IDEAS_PREFIX = "nitya-content/race-ideas-";
@@ -103,7 +103,7 @@ export function publicIdeas(ideas: StoredRaceIdea[], visitorId: string): PublicR
         type: idea.type,
         votes: voterIds.length,
         hasVoted: voterIds.includes(visitorId),
-        canDelete: idea.creatorId === visitorId && voterIds.length === 1,
+        canDelete: idea.creatorId === visitorId && voterIds.length <= 1,
       };
     })
     .sort((a, b) => b.votes - a.votes || a.name.localeCompare(b.name));
@@ -173,13 +173,14 @@ export async function voteForRaceIdea(
   const ideas = await readIdeas();
   const idea = ideas.find((candidate) => candidate.id === id);
   if (!idea) throw new Error("That race idea no longer exists.");
-  const added = addVoterOnce(idea.voterIds, visitorId);
-  if (added) await writeIdeas(ideas);
+  const change = toggleVoter(idea.voterIds, visitorId);
+  await writeIdeas(ideas);
   return {
     ideas: publicIdeas(ideas, visitorId),
-    message: added
-      ? `Your vote for ${idea.name} was recorded.`
-      : `You already voted for ${idea.name}.`,
+    message:
+      change === "added"
+        ? `Your vote for ${idea.name} was recorded.`
+        : `Your vote for ${idea.name} was removed.`,
   };
 }
 
@@ -193,8 +194,8 @@ export async function deleteRaceIdea(
   const ideas = await readIdeas();
   const idea = ideas.find((candidate) => candidate.id === id);
   const voterIds = uniqueVoterIds(idea?.voterIds ?? []);
-  if (!idea || idea.creatorId !== visitorId || voterIds.length !== 1) {
-    throw new Error("Only the account that suggested a one-vote idea can delete it.");
+  if (!idea || idea.creatorId !== visitorId || voterIds.length > 1) {
+    throw new Error("Only the account that suggested an idea with at most one vote can delete it.");
   }
   const next = ideas.filter((candidate) => candidate.id !== id);
   await writeIdeas(next);

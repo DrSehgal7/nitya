@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addVoterOnce, uniqueVoterIds } from "../src/lib/race-idea-votes";
+import { addVoterOnce, toggleVoter, uniqueVoterIds } from "../src/lib/race-idea-votes";
 
 describe("race idea voting", () => {
   it("deduplicates legacy repeated voter IDs", () => {
@@ -15,5 +15,13 @@ describe("race idea voting", () => {
     expect(voterIds).toEqual(["account-a"]);
     expect(addVoterOnce(voterIds, "account-b")).toBe(true);
     expect(voterIds).toEqual(["account-a", "account-b"]);
+  });
+
+  it("toggles the same account off without affecting anyone else's vote", () => {
+    const voterIds = ["account-a", "account-b"];
+    expect(toggleVoter(voterIds, "account-a")).toBe("removed");
+    expect(voterIds).toEqual(["account-b"]);
+    expect(toggleVoter(voterIds, "account-a")).toBe("added");
+    expect(voterIds).toEqual(["account-b", "account-a"]);
   });
 });

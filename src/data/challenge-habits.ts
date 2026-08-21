@@ -5,7 +5,6 @@ export const challengeHabits = [
     title: "Plan food better",
     text: "Order less randomly without making food boring.",
     saved: 0,
-    progress: 55,
     status: "In progress",
   },
   {
@@ -14,7 +13,6 @@ export const challengeHabits = [
     title: "30-day impulse rule",
     text: "Pause before buying things you probably don’t need.",
     saved: 0,
-    progress: 10,
     status: "Yet to pick up",
   },
   {
@@ -23,7 +21,6 @@ export const challengeHabits = [
     title: "Use cards properly",
     text: "Pay in full, avoid fees and actually use rewards.",
     saved: 0,
-    progress: 70,
     status: "In progress",
   },
   {
@@ -32,7 +29,6 @@ export const challengeHabits = [
     title: "Train consistently",
     text: "Run, lift and build routines that survive busy weeks.",
     saved: 0,
-    progress: 62,
     status: "In progress",
   },
   {
@@ -41,7 +37,6 @@ export const challengeHabits = [
     title: "Fix subscriptions",
     text: "Remove recurring things that add no real value.",
     saved: 0,
-    progress: 5,
     status: "Yet to pick up",
   },
   {
@@ -50,7 +45,6 @@ export const challengeHabits = [
     title: "Your own habit",
     text: "Choose something that makes your life tangibly better.",
     saved: 0,
-    progress: 0,
     status: "Yet to pick up",
   },
 ] as const;

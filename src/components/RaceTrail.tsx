@@ -4,7 +4,7 @@ import { ArrowUpRight, LockKeyhole } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { Race } from "@/data/races";
 import { millisecondsUntilNextIndiaMidnight } from "@/lib/project-time";
-import { daysUntilIndiaDate, nextDatedItemIndex } from "@/lib/race-time";
+import { daysUntilIndiaDate, nextDatedItemIndex, raceTimelineProgressIndex } from "@/lib/race-time";
 
 const trailHeights = [67, 47, 46, 30] as const;
 
@@ -12,6 +12,22 @@ function racePoint(index: number, total: number) {
   return {
     x: 7 + (index / Math.max(1, total - 1)) * 84,
     y: trailHeights[index % trailHeights.length] ?? 47,
+  };
+}
+
+function runnerPointAt(progressIndex: number, total: number) {
+  if (progressIndex < 0) {
+    const first = racePoint(0, total);
+    return { x: Math.max(2, first.x - 2.5), y: first.y + 2 };
+  }
+  const fromIndex = Math.floor(progressIndex);
+  const toIndex = Math.min(total - 1, Math.ceil(progressIndex));
+  const amount = progressIndex - fromIndex;
+  const from = racePoint(fromIndex, total);
+  const to = racePoint(toIndex, total);
+  return {
+    x: from.x + (to.x - from.x) * amount,
+    y: from.y + (to.y - from.y) * amount,
   };
 }
 
@@ -37,10 +53,11 @@ export function RaceTrail({ races }: { races: Race[] }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const nextRaceIndex = useMemo(() => {
-    if (today === null) return 0;
-    return nextDatedItemIndex(races, today);
-  }, [today]);
+  const effectiveToday = today ?? Date.now();
+  const nextRaceIndex = useMemo(
+    () => nextDatedItemIndex(races, effectiveToday),
+    [effectiveToday, races],
+  );
   const nextRace = races[nextRaceIndex] ?? races[0];
   if (!nextRace) {
     return (
@@ -51,8 +68,9 @@ export function RaceTrail({ races }: { races: Race[] }) {
       </div>
     );
   }
-  const daysToGo = today === null ? null : daysUntilIndiaDate(nextRace.date, today);
-  const runnerPoint = racePoint(nextRaceIndex, races.length);
+  const daysToGo = daysUntilIndiaDate(nextRace.date, effectiveToday);
+  const progressIndex = raceTimelineProgressIndex(races, effectiveToday);
+  const runnerPoint = runnerPointAt(progressIndex, races.length);
 
   return (
     <div className="raceExperience">
@@ -88,7 +106,7 @@ export function RaceTrail({ races }: { races: Race[] }) {
           })}
           <div
             className="railRunner"
-            style={{ left: `${7 + (nextRaceIndex / Math.max(1, races.length - 1)) * 86}%` }}
+            style={{ left: `${7 + (progressIndex / Math.max(1, races.length - 1)) * 86}%` }}
             aria-hidden="true"
           >
             🏃‍➡️

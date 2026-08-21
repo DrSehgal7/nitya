@@ -119,9 +119,6 @@ export function HabitChallenge() {
                 <div className="challengeMoney">
                   Money saved this month: <strong>₹{habit.saved.toLocaleString("en-IN")}</strong>
                 </div>
-                <div className="challengeProgress" aria-label={`${habit.progress}% progress`}>
-                  <span style={{ width: `${habit.progress}%` }} />
-                </div>
                 <div className="challengeControls" aria-label="Habit status">
                   <span>{habit.status}</span>
                   <span>{habit.status === "In progress" ? "Done" : "Start"}</span>
