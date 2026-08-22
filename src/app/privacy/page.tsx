@@ -9,8 +9,8 @@ export default function PrivacyPage() {
       <p className="eyebrow">Plain-language privacy</p>
       <h1>Small site, small data footprint.</h1>
       <p>
-        Nitya does not use advertising trackers or analytics. The spending exercise runs entirely in
-        your browser and its figures are not stored or transmitted.
+        Nitya does not use advertising trackers or analytics. The money-leaks section is currently
+        an informational preview and does not collect financial information.
       </p>
 
       <h2>Contact form</h2>
@@ -23,9 +23,11 @@ export default function PrivacyPage() {
 
       <h2>Strava</h2>
       <p>
-        The race page displays a build-time snapshot of Hritik&apos;s public running activities. It
-        does not expose maps, heart rate, private activities, or Strava credentials. Visiting the
-        embedded links takes you to Strava, where Strava&apos;s own privacy terms apply.
+        Nitya currently shows a total that Hritik updates manually from his public running record.
+        If automatic Strava sync is enabled later, the site will show only the public activity data
+        needed for the running total. It will not expose maps, heart rate, private activities, or
+        Strava credentials. Visiting a Strava link takes you to Strava, where its own privacy terms
+        apply.
       </p>
 
       <h2>Google sign-in and participation</h2>

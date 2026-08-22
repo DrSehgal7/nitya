@@ -33,8 +33,9 @@ export default async function RacesPage() {
           <p className="eyebrow">My race calendar</p>
           <h1>One trail. Every race a checkpoint.</h1>
           <p className="subpageLead">
-            Follow what I have finished, what I am training for and the exact countdown to the next
-            start line—then help me choose what comes after it.
+            This is my public race calendar. Completed races stay behind the runner, the next race
+            is marked as the current checkpoint, and its countdown updates every day. You can also
+            suggest and vote on what I should try next.
           </p>
         </div>
       </section>
@@ -65,8 +66,8 @@ export default async function RacesPage() {
             <h2 className="artifactSectionTitle">Suggest a race, challenge or weirdly fun idea.</h2>
             <p>
               Think I&apos;m missing a cool trail, hybrid race, ultra, city run or slightly
-              questionable challenge? Add it. People can vote and the most interesting ideas rise to
-              the top.
+              questionable challenge? Add it. A Google account gets one vote per idea; select “Voted
+              · undo” to remove your vote. The most popular ideas rise to the top.
             </p>
           </div>
           <RaceIdeasBoard />

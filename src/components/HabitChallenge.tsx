@@ -92,8 +92,9 @@ export function HabitChallenge() {
           <p className="eyebrow">How it works</p>
           <h2>Choose one small thing to do alongside me.</h2>
           <p>
-            Join a habit with one tap. Your choice stays attached to your Google account, and you
-            can tap again whenever you want to leave.
+            Joining adds one person to that habit&apos;s public count. Your name and email are not
+            displayed. The choice stays attached to your Google account, and you can tap again to
+            leave whenever you want.
           </p>
         </div>
         <ol className="habitGuideSteps">

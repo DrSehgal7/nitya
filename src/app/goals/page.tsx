@@ -14,7 +14,8 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Goals I’m chasing in public",
-  description: "Follow Hritik's public goals and the smaller milestones behind each one.",
+  description:
+    "Follow Hritik's personal goals, their smaller milestones, current status, and latest update.",
 };
 
 export default async function GoalsPage() {
@@ -39,8 +40,9 @@ export default async function GoalsPage() {
           <p className="eyebrow">Goals in motion</p>
           <h1>Goals I&apos;m chasing in public.</h1>
           <p className="subpageLead">
-            The big outcomes are easier to trust when the smaller steps are visible. Follow what is
-            done, what comes next and when each goal was last updated.
+            These are my larger personal goals—from running 1,000 km to building financial safety.
+            Each one is split into concrete milestones so you can see what is complete, what comes
+            next and when I last updated it.
           </p>
         </div>
       </section>

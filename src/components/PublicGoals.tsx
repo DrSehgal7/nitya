@@ -17,9 +17,9 @@ export function PublicGoals({ goals, runningDistance, pledgeLabel }: PublicGoals
           <p className="eyebrow">Goals in motion</p>
           <h2 className="artifactSectionTitle">Every big goal gets smaller checkpoints.</h2>
           <p className="sectionIntro">
-            Each milestone is visible, each update is dated, and completing a meaningful goal
-            unlocks an additional contribution from me—on top of the {pledgeLabel} already
-            committed.
+            These are Hritik&apos;s personal goals, broken into smaller milestones. He updates their
+            status and date from the owner dashboard. Completing a meaningful goal unlocks an extra
+            contribution on top of his private {pledgeLabel} baseline.
           </p>
         </div>
         <Link className="ownerEditLink" href="/owner/">

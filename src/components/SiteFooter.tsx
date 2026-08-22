@@ -7,7 +7,7 @@ export function SiteFooter() {
     <footer className="siteFooter">
       <div className="shell footerInner">
         <Logo />
-        <p>Small things, done daily. Publicly, carefully, without guilt.</p>
+        <p>A personal experiment in better habits, honest progress and measurable help.</p>
         <nav aria-label="Footer">
           <a href={site.instagramUrl} target="_blank" rel="noreferrer">
             Instagram

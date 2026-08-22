@@ -9,7 +9,8 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "What I’m working on",
-  description: "The everyday habits Hritik is testing in public through Project Nitya.",
+  description:
+    "See the everyday habits Hritik is testing, what they have saved, and when each one was last updated.",
 };
 
 export default async function WorkPage() {
@@ -31,8 +32,9 @@ export default async function WorkPage() {
           <p className="eyebrow">Habits, tested in public</p>
           <h1>What I&apos;m working on.</h1>
           <p className="subpageLead">
-            These are the small systems helping me waste less, live better and create a little more
-            room for impact. No perfect streaks—just honest updates.
+            This page is the public log of habits I am testing in my own life. I record what I am
+            changing, what it saves and when I last updated it. If you want to take part yourself,
+            the separate Habits page lets you join with one tap.
           </p>
         </div>
       </section>

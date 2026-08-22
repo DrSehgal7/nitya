@@ -8,7 +8,7 @@ import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
-  { href: "/#mission", label: "Mission" },
+  { href: "/#mission", label: "Start here" },
   { href: "/work", label: "Work" },
   { href: "/goals", label: "Goals" },
   { href: "/habits", label: "Habits" },

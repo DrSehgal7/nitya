@@ -15,8 +15,9 @@ export function WorkOverview({ habits }: WorkOverviewProps) {
           <p className="eyebrow">The engine</p>
           <h2 className="artifactSectionTitle">Habits that free up money</h2>
           <p className="sectionIntro">
-            Small, practical habits I am testing in public—what I am doing, where each one stands
-            and what it has helped me save.
+            These are Hritik&apos;s own habits, updated from the private owner dashboard. Each card
+            shows what he is changing, its current status, any estimated savings and the date of the
+            latest update.
           </p>
         </div>
         <Link className="ownerEditLink" href="/owner/">
@@ -49,6 +50,9 @@ export function WorkOverview({ habits }: WorkOverviewProps) {
           );
         })}
       </div>
+      <p className="publicPageNextStep">
+        Want to work on a habit yourself? <Link href="/habits">Choose one and join in.</Link>
+      </p>
     </div>
   );
 }

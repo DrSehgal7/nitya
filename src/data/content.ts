@@ -60,37 +60,37 @@ export const runningSnapshot = {
 
 export const principles = [
   {
-    title: "My money first",
-    text: "The public ledger begins at ₹0. My savings and anything this project unlocks are added transparently.",
+    title: "I commit first",
+    text: "A real baseline amount—shown publicly as ₹X—is already committed by me.",
   },
   {
-    title: "Giving stays optional",
-    text: "Not a fundraiser. Join, build a habit, and give exactly ₹0—that is genuinely welcome.",
+    title: "Better habits add more",
+    text: "I track genuine savings from reducing waste and can add that value on top of my baseline.",
   },
   {
-    title: "Your life counts first",
-    text: "Stay dedicated and your health, money and work improve. The first life impacted is yours.",
+    title: "Your participation is optional",
+    text: "Join a habit, offer a skill or simply follow along. No donation is required.",
   },
 ] as const;
 
 export const initiatives = [
   {
     icon: "🌱",
-    title: "Girl Child Future",
+    title: "A girl child’s future fund",
     description:
       "Create long-term financial security for a girl child in a way that is transparent, trackable and genuinely useful later in life.",
     goal: "Support a real future milestone, not just make a one-time donation.",
   },
   {
     icon: "📚",
-    title: "Girl Child Education",
+    title: "A girl child’s education",
     description:
       "Support a child’s education in a way that can be measured by a class, academic year or eventually a longer education journey.",
     goal: "Make the impact easy to understand—who was supported, for what, and for how long.",
   },
   {
     icon: "🏃‍➡️",
-    title: "Infra & Sports Building",
+    title: "Sports access for children",
     description:
       "Help underprivileged kids get better access to sports through equipment, training spaces, coaching opportunities or basic infrastructure.",
     goal: "Translate money into visible access—equipment, hours, children or facilities improved.",
@@ -141,7 +141,8 @@ export const goals: PublicGoal[] = [
     id: "run-1000-km",
     category: "Body",
     title: "Run 1,000 km this year",
-    description: "Public Strava runs update this goal during each site sync.",
+    description:
+      "Run a total of 1,000 km during the calendar year. The distance is updated from public Strava data or my latest manual entry.",
     status: "in-progress",
     progress: 0,
     currentLabel: "0.0 / 1,000 km. Strava will update this after the first successful sync.",
@@ -173,7 +174,8 @@ export const goals: PublicGoal[] = [
     id: "ship-nitya",
     category: "Craft",
     title: "Ship Nitya properly",
-    description: "This page → a real, public ledger next.",
+    description:
+      "Turn this early website into a reliable public record of savings, activity and impact.",
     status: "in-progress",
     progress: 40,
     currentLabel: "Visual direction and production wiring in progress",

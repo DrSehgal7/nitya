@@ -93,7 +93,7 @@ export function RaceIdeasBoard() {
           <strong>{authenticated ? "You are signed in." : "One person. One vote."}</strong>
           <span>
             {authenticated
-              ? "Each Google account gets one vote per idea—even across browsers."
+              ? "Each Google account gets one vote per idea—even across browsers. Tap Voted again to remove it."
               : "Sign in with Google to suggest a race or cast your one vote."}
           </span>
         </div>

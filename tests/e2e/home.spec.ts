@@ -7,7 +7,10 @@ test("shows the artifact story, contact form, and compact route directory", asyn
 }, testInfo) => {
   await page.goto("./");
 
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("See how far");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Build a better life");
+  await expect(page.getByText(/Nitya is my personal, public experiment/i)).toBeVisible();
+  await expect(page.getByText(/amount is real but intentionally private/i)).toBeVisible();
+  await expect(page.getByText(/not a charity or payment platform/i)).toBeVisible();
   await expect(page.getByText(/I'm Hritik सरोच/)).toBeVisible();
   await expect(page.getByText(/Sanskrit—daily, constant, eternal/)).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "The numbers, kept honest" })).toBeVisible();
@@ -51,6 +54,9 @@ test("shows the artifact story, contact form, and compact route directory", asyn
   ).toHaveAttribute("href", "/races");
   await expect(page.getByRole("heading", { name: "My race calendar" })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: /Sponsor a kilometre/i })).toBeVisible();
+  await expect(
+    page.getByText(/calculator only shows an amount; it does not take payment/i),
+  ).toBeVisible();
   const viewport = await page.evaluate(() => ({
     innerWidth: window.innerWidth,
     scrollWidth: document.documentElement.scrollWidth,
@@ -183,7 +189,7 @@ test("restored motion and focused work and goals pages work", async ({ page }) =
   });
   const statusBox = await runGoal.locator(".workStatus").boundingBox();
   const descriptionBox = await runGoal
-    .getByText(/Public Strava runs update this goal/i)
+    .getByText(/Run a total of 1,000 km during the calendar year/i)
     .boundingBox();
   expect((statusBox?.y ?? 0) + (statusBox?.height ?? 0)).toBeLessThanOrEqual(
     (descriptionBox?.y ?? 0) + 1,

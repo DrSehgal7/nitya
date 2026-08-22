@@ -40,32 +40,29 @@ export default async function HomePage() {
         <SectionMotion />
         <div className="shell artifactHeroGrid">
           <div className="artifactHeroCopy">
-            <p className="eyebrow">A small daily mission</p>
+            <p className="eyebrow">A public experiment in everyday impact</p>
             <h1>
-              See how far one life can <em>positively ripple into others</em>—while still building a
-              good life of my own.
+              Build a better life. Use what it frees up to <em>help someone else.</em>
             </h1>
             <p className="heroLead">
-              I&apos;m Hritik <span lang="hi">सरोच</span>. I want to see how many lives one ordinary
-              person can positively impact by being a little more intentional with money, time and
-              everyday habits. My first public milestone is <strong>100 lives</strong>—not because I
-              want to stop there, but because I need a starting line I can measure.
+              Nitya is my personal, public experiment in turning better everyday choices into more
+              money, time and skills that can help other people. I&apos;m Hritik{" "}
+              <span lang="hi">सरोच</span>, and my first measurable target is to positively impact{" "}
+              <strong>100 lives</strong>.
             </p>
             <p>
-              I&apos;ve already pledged <strong>{pledgeLabel} of my own money</strong>. That amount
-              is committed regardless of what anyone else contributes. From here, I want to optimise
-              my own life—plan better, waste less, earn better, use money smarter—and put the extra
-              savings I create <strong>on top of that {pledgeLabel}</strong>.
+              I have already committed <strong>{pledgeLabel} of my own money</strong>. The “X” means
+              the amount is real but intentionally private. It does not depend on donations or
+              public support.
             </p>
             <p>
-              The experiment is simple:{" "}
-              <strong>how far can I take this without making my own life miserable?</strong> I still
-              want to travel, race, eat well and enjoy the things I work for. The idea is to remove
-              waste, not joy—then redirect some of that recovered value.
+              Next, I track savings created by better habits and add what I can on top. Visitors can
+              join a habit, suggest a race, offer time or skills, or simply follow along. Nitya is
+              not a charity or payment platform, and contributing money is never required.
             </p>
             <div className="buttonRow">
-              <a className="button buttonPrimary" href="#optimise">
-                See what I’m brewing <ArrowRight size={17} aria-hidden="true" />
+              <a className="button buttonPrimary" href="#commitment">
+                See how it works <ArrowRight size={17} aria-hidden="true" />
               </a>
               <a className="button buttonGhost" href="#numbers">
                 See the numbers
@@ -75,7 +72,7 @@ export default async function HomePage() {
 
           <aside className="artifactImpactCard" aria-label="First impact milestone">
             <div className="impactCardTop">
-              <span>First milestone</span>
+              <span>Verified impact so far</span>
               <Sparkles size={17} aria-hidden="true" />
             </div>
             <div className="artifactRing" aria-hidden="true">
@@ -115,7 +112,7 @@ export default async function HomePage() {
         <div className="shell">
           <p className="sectionSticker">🤝 My baseline</p>
           <p className="eyebrow">The commitment</p>
-          <h2 className="baselineTitle">My money first. Everything else goes on top.</h2>
+          <h2 className="baselineTitle">The baseline starts with me.</h2>
           <div className="baselinePanel">
             <figure className="avatarStage">
               <Image
@@ -129,26 +126,27 @@ export default async function HomePage() {
             </figure>
             <div className="commitmentCopy">
               <p>
-                I don&apos;t want Nitya to depend on asking other people to fund something I believe
-                in. So the base starts with me: <strong>{pledgeLabel} is already pledged.</strong>
+                Nitya begins with money I have committed myself:{" "}
+                <strong>{pledgeLabel} is already pledged.</strong> I show it as ₹X because I want
+                the commitment to be real without making the private amount the story.
               </p>
               <p>
-                Then I want to test how much more I can create through smarter choices, better
-                planning, stronger professional growth, people voluntarily joining, and useful time
-                contributed by others.
+                Anything created through better planning, less waste or professional growth can be
+                added on top. Other people may join with money, time or skills, but the project does
+                not depend on them doing so.
               </p>
               <div className="pledgeStack">
                 <article>
                   <strong>{pledgeLabel}</strong>
-                  <span>my committed baseline</span>
+                  <span>my private committed baseline</span>
                 </article>
                 <article>
                   <strong>+ savings</strong>
-                  <span>created by optimisation</span>
+                  <span>extra value created by better habits</span>
                 </article>
                 <article>
                   <strong>+ people</strong>
-                  <span>optional money, time &amp; skills</span>
+                  <span>optional support, time or skills</span>
                 </article>
               </div>
             </div>
@@ -159,17 +157,17 @@ export default async function HomePage() {
       <section className="section experimentSection">
         <div className="shell narrowStory">
           <p className="sectionSticker">✨ The experiment</p>
-          <p className="eyebrow">Why this</p>
-          <h2>Because I genuinely think this is a very cool experiment.</h2>
+          <p className="eyebrow">The question I am testing</p>
+          <h2>Can improving my own systems create more capacity to help?</h2>
           <p>
-            I want to find my ceiling. Not my ceiling for donating once—my ceiling for building a
-            life where I keep getting fitter, better at work, more financially intentional and more
-            useful to people around me, while the amount of positive impact grows alongside it.
+            I want to keep getting fitter, better at work and more intentional with money—then see
+            whether those improvements leave me with more resources to share. The aim is to remove
+            waste, not joy, so I can still travel, race, eat well and enjoy what I work for.
           </p>
           <p>
             <strong>
-              If the experiment works, the interesting part is not that I gave {pledgeLabel}. It is
-              how much more value one person can create by improving his own systems first.
+              Success is not one large donation. It is a repeatable way to improve my life and make
+              someone else&apos;s life better at the same time.
             </strong>
           </p>
         </div>
@@ -248,16 +246,15 @@ export default async function HomePage() {
                   <span lang="hi">नित्य</span> · Nitya
                 </strong>
                 <p>
-                  I picked it because the change I believe in isn&apos;t one grand gesture.
-                  It&apos;s small things, done every single day.
+                  The name reflects the idea: meaningful change is usually not one grand gesture. It
+                  is small things, repeated every day.
                 </p>
               </aside>
               <p>
-                My personal goal is to positively impact <strong>100 lives first</strong>, through
-                causes I actually understand and care about. The direction right now is practical
-                and measurable: sports infrastructure for underprivileged kids, sponsoring a
-                child&apos;s education for a specific class, and eventually helping fund a
-                child&apos;s full primary education.
+                Nitya is a personal project, not a registered charity. My first goal is to
+                positively impact <strong>100 lives</strong> through practical, measurable support:
+                better access to sport for underprivileged children and specific education costs for
+                girls who need support.
               </p>
               <p>
                 I&apos;m not pretending I already know the perfect way to do this. Part of Nitya is
@@ -284,9 +281,8 @@ export default async function HomePage() {
             Start with a clear idea. Then make the impact measurable.
           </h2>
           <p className="sectionIntro">
-            These are the areas I want Nitya to work toward first. I&apos;m still finalising the
-            exact organisations, structure and execution. For now, the important part is the
-            direction and the outcome I want each initiative to create.
+            These are directions I am researching, not confirmed partnerships. Before money is
+            deployed, I want a clear recipient, a concrete use and an outcome I can report publicly.
           </p>
           <div className="initiativeGrid">
             {initiatives.map((initiative, index) => (
@@ -334,14 +330,14 @@ export default async function HomePage() {
         <div className="shell transparencyCard artifactMoneyCard">
           <div>
             <p className="eyebrow">The honest bit</p>
-            <h2>How the money is actually handled</h2>
+            <h2>Where the money sits before it is used</h2>
             <p>
               <strong>
-                For now, every rupee related to Nitya is being moved into my mother&apos;s account
-                and left untouched.
+                This website does not collect payments. For now, money I personally set aside for
+                Nitya is moved into my mother&apos;s account and left untouched.
               </strong>{" "}
-              I&apos;m still finalising exactly how and where the money should be deployed, so I
-              don&apos;t want it mixed with day-to-day spending or used casually.
+              I am still selecting the right organisations and uses, so the money stays separate
+              from my everyday spending until there is a clear, documented purpose.
             </p>
           </div>
           <div className="moneyFlow">
@@ -349,7 +345,7 @@ export default async function HomePage() {
               <span>₹</span>
               <div>
                 <strong>Money comes in</strong>
-                <p>My pledge, optimisation savings, and optional contributions.</p>
+                <p>My private pledge, plus savings I choose to add.</p>
               </div>
             </article>
             <article>
@@ -363,7 +359,7 @@ export default async function HomePage() {
               <span>📍</span>
               <div>
                 <strong>Deployed publicly later</strong>
-                <p>Every allocation and outcome will appear here.</p>
+                <p>The recipient, purpose and confirmed outcome will be recorded here.</p>
               </div>
             </article>
           </div>
@@ -377,9 +373,9 @@ export default async function HomePage() {
               <p className="eyebrow eyebrowLight">Out in the open</p>
               <h2 className="artifactSectionTitle">The numbers, kept honest</h2>
               <p className="sectionIntro">
-                What better habits have helped me save, and how many people this experiment has
-                positively impacted. My private ₹X commitment is intentionally not part of these
-                totals or charts.
+                These totals include only savings I have recorded and people who have received
+                confirmed help. The private ₹X baseline is excluded. A zero means no verified public
+                outcome has been recorded yet—not that the commitment disappeared.
               </p>
             </div>
             <Link className="ownerEditLink" href="/owner/">
@@ -434,8 +430,8 @@ export default async function HomePage() {
             Pick the part you came for.
           </h2>
           <p className="sectionIntro">
-            The longer interactive sections now have their own pages, so the homepage stays easier
-            to scan—especially on a phone.
+            Start with the part that interests you. Each page explains what you can view or do, so
+            you do not need to read the whole project first.
           </p>
           <div className="directoryGrid">
             <Link className="directoryCard directoryCardWork" href="/work">
@@ -444,7 +440,9 @@ export default async function HomePage() {
               </span>
               <span className="eyebrow">The engine</span>
               <strong>What I&apos;m working on.</strong>
-              <p>See the small habits I am testing, their current status and the latest update.</p>
+              <p>
+                See the habits I am testing myself, what they save and when I last updated them.
+              </p>
               <span className="directoryAction">
                 See the work <ArrowRight size={17} aria-hidden="true" />
               </span>
@@ -455,7 +453,7 @@ export default async function HomePage() {
               </span>
               <span className="eyebrow">Goals in motion</span>
               <strong>Goals I&apos;m chasing in public.</strong>
-              <p>Follow each big goal through its smaller, visible checkpoints.</p>
+              <p>Follow my larger personal goals through smaller milestones and dated updates.</p>
               <span className="directoryAction">
                 Follow the goals <ArrowRight size={17} aria-hidden="true" />
               </span>
@@ -522,10 +520,13 @@ export default async function HomePage() {
       <section className="section sponsorSection" id="sponsor">
         <div className="shell">
           <p className="eyebrow">Support · optional</p>
-          <h2 className="artifactSectionTitle">Sponsor a kilometre—I donate every rupee</h2>
+          <h2 className="artifactSectionTitle">
+            Sponsor a kilometre—every rupee goes to the cause
+          </h2>
           <p className="sectionIntro">
-            I&apos;m running these kilometres anyway. Sponsoring a kilometre is simply one fun way
-            to attach impact to something I already love doing. It is always optional, and it sits{" "}
+            This is an optional way to connect one of my runs with a contribution. The calculator
+            only shows an amount; it does not take payment. If you want to proceed, it opens a
+            conversation with me first. Any support sits{" "}
             <strong>on top of my own {pledgeLabel} commitment</strong>.
           </p>
           <SponsorStrava runningSnapshot={runningSnapshot} />

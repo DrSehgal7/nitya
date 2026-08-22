@@ -26,9 +26,9 @@ export default function HabitsPage() {
           <p className="eyebrow">Join me for the habits</p>
           <h1>Make your life better with me.</h1>
           <p className="subpageLead">
-            You don&apos;t need to donate anything to join Nitya. Pick one habit that makes your own
-            life better and work on it alongside me. If you contribute ₹0 and simply become
-            healthier, more organised or less wasteful, that is still a win for both of us.
+            Pick one small habit and work on it alongside me. Joining only adds you to the public
+            participant count; your identity is not shown. Google sign-in prevents duplicate joins,
+            and tapping the button again lets you leave. No donation is required.
           </p>
         </div>
       </section>

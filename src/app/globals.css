@@ -3313,6 +3313,20 @@ h3 {
   left: 1.35rem;
 }
 
+.publicPageNextStep {
+  margin: 1.25rem 0 0;
+  color: var(--text-soft);
+  font-size: 0.78rem;
+}
+
+.publicPageNextStep a {
+  color: var(--accent);
+  font-weight: 760;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+}
+
 .publicGoalNote {
   max-width: 760px;
   color: var(--text-soft);

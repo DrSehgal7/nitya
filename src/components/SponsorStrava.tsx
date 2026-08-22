@@ -91,11 +91,11 @@ export function SponsorStrava({ runningSnapshot }: { runningSnapshot: RunningSna
       </article>
 
       <article className="sponsorLiveCard">
-        <p className="eyebrow">Sponsor my kilometres</p>
-        <h3>Turn the latest run into a little momentum.</h3>
+        <p className="eyebrow">Optional kilometre sponsorship</p>
+        <h3>Estimate what sponsoring a run would look like.</h3>
         <p>
-          Choose the latest public distance—or any distance you like. Nothing is charged here; it
-          opens a conversation first.
+          Enter a distance and an amount per kilometre. This is only a calculator: nothing is
+          charged, and continuing simply opens a conversation with Hritik.
         </p>
         <SponsorCalculator initialDistance={latestRun?.distanceKm ?? 0} />
       </article>

@@ -119,8 +119,8 @@ export function RaceTrail({ races }: { races: Race[] }) {
           <p className="eyebrow">Dynamic race path</p>
           <h3>Every race becomes a checkpoint</h3>
           <p>
-            Add a race from the owner dashboard and it automatically joins this trail, gets a flag,
-            and updates the exact calendar-day countdown.
+            Past races appear behind the runner. The runner stops before the next unfinished race,
+            and future races continue along the trail. Dates and countdowns update automatically.
           </p>
         </div>
         <a className="ownerEditLink" href="/owner">
