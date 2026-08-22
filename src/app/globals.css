@@ -126,11 +126,11 @@ h4 {
 }
 
 h1 {
-  font-size: clamp(3.8rem, 7.6vw, 7.3rem);
+  font-size: clamp(3.5rem, 7vw, 6.7rem);
 }
 
 h2 {
-  font-size: clamp(3rem, 5.8vw, 5.6rem);
+  font-size: clamp(2.75rem, 5.3vw, 5.1rem);
 }
 
 h3 {
@@ -182,7 +182,7 @@ h3 {
 }
 
 .section {
-  padding-block: clamp(5.5rem, 10vw, 9.5rem);
+  padding-block: clamp(5rem, 8.5vw, 8rem);
 }
 
 .eyebrow {
@@ -1811,7 +1811,7 @@ h3 {
 
 .artifactHero h1 {
   margin-bottom: 1.5rem;
-  font-size: clamp(4.2rem, 8.1vw, 8.2rem);
+  font-size: clamp(3.9rem, 7.5vw, 7.5rem);
 }
 
 .artifactHero h1 em {
@@ -2124,6 +2124,8 @@ h3 {
   font-size: 1.5rem;
 }
 
+.artifactHabitCard h3,
+.artifactGoalCard h3,
 .artifactHabitCard h4,
 .artifactGoalCard h4 {
   margin: 0 0 0.45rem;
@@ -3265,7 +3267,7 @@ h3 {
   gap: 1rem;
 }
 
-.habitListCopy h4 {
+.habitListCopy h3 {
   margin: 0;
   font-family: var(--font-body);
   font-size: 1rem;
@@ -3869,7 +3871,17 @@ h3 {
   color: var(--blue);
 }
 
-/* Dedicated habits and races pages */
+.directoryCardWork .directoryIcon {
+  background: color-mix(in srgb, var(--green) 14%, var(--surface));
+  color: var(--green);
+}
+
+.directoryCardGoals .directoryIcon {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  color: var(--accent);
+}
+
+/* Dedicated experience pages */
 .subpageMain {
   min-height: 100vh;
 }
@@ -3921,7 +3933,7 @@ h3 {
 .subpageHero h1 {
   max-width: 1120px;
   margin: 0 0 1.5rem;
-  font-size: clamp(4rem, 10vw, 9.5rem);
+  font-size: clamp(3.6rem, 9vw, 8.4rem);
   line-height: 0.88;
 }
 
@@ -4274,7 +4286,7 @@ h3 {
   flex-direction: column;
 }
 
-.artifactGoalCard h4 {
+.artifactGoalCard h3 {
   margin-top: 0;
   font-family: var(--font-body);
   font-size: 1.35rem;
@@ -5470,7 +5482,7 @@ h3 {
   }
 
   .directoryCard > strong {
-    font-size: clamp(2.5rem, 14vw, 4rem);
+    font-size: clamp(2.25rem, 12vw, 3.6rem);
   }
 
   .subpageHero {
@@ -5483,7 +5495,7 @@ h3 {
 
   .subpageHero h1 {
     max-width: calc(100% - 0.25rem);
-    font-size: clamp(3.7rem, 17vw, 5.8rem);
+    font-size: clamp(3.2rem, 14vw, 5rem);
   }
 
   .standaloneExperience,
@@ -5808,7 +5820,7 @@ h3 {
   }
 
   .artifactHero h1 {
-    font-size: 3.65rem;
+    font-size: 3.3rem;
   }
 
   .artifactChart {

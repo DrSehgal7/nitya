@@ -24,12 +24,6 @@ test("shows the artifact story, contact form, and compact route directory", asyn
     "https://www.instagram.com/hritik_saroch/",
   );
   await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toBeVisible();
-  const runGoal = page.locator(".artifactGoalCard").filter({
-    has: page.getByRole("heading", { name: "Run 1,000 km this year" }),
-  });
-  await expect(runGoal.locator(".goalUpdatePreview")).toContainText(/\/ 1,000 km/);
-  await expect(runGoal.locator(".publicMilestones li")).toHaveCount(4);
-
   if (process.env.CAPTURE_SCREENSHOT) {
     await page.screenshot({
       path: `/tmp/nitya-home-top-${testInfo.project.name}.png`,
@@ -43,6 +37,14 @@ test("shows the artifact story, contact form, and compact route directory", asyn
   await expect(page.getByRole("link", { name: /Make your life better with me/i })).toHaveAttribute(
     "href",
     "/habits",
+  );
+  await expect(page.getByRole("link", { name: /What I'm working on/i })).toHaveAttribute(
+    "href",
+    "/work",
+  );
+  await expect(page.getByRole("link", { name: /Goals I'm chasing in public/i })).toHaveAttribute(
+    "href",
+    "/goals",
   );
   await expect(
     page.getByRole("link", { name: /Every race becomes a checkpoint/i }),
@@ -111,8 +113,8 @@ test("theme toggle starts in dark mode and can be changed", async ({ page }, tes
 test("public habits are read-only and owner controls are reserved for the dashboard", async ({
   page,
 }) => {
-  await page.goto("./");
-  const habits = page.locator("#habits");
+  await page.goto("./work/");
+  const habits = page.locator(".habitsSection");
   await expect(habits.getByRole("textbox")).toHaveCount(0);
   await habits.getByRole("link", { name: /owner editing/i }).click();
   await expect(page).toHaveURL(/\/owner\/sign-in/);
@@ -149,7 +151,7 @@ test("habit participation requires an account and exposes one toggle per habit",
   });
 });
 
-test("restored motion and homepage content work", async ({ page }) => {
+test("restored motion and focused work and goals pages work", async ({ page }) => {
   await page.goto("./");
   const motionCounter = page.locator(".sectionMotionCounter");
   const expectedDays = projectDaysSince(project.startedOn);
@@ -166,7 +168,15 @@ test("restored motion and homepage content work", async ({ page }) => {
 
   await expect(page.getByText(/average hybrid athlete · runner · always exploring/i)).toBeVisible();
   await expect(page.getByText(/mango espresso tonics/i)).toBeVisible();
+
+  await page.goto("./work/");
+  await expect(page.getByRole("heading", { level: 1, name: /What I'm working on/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Eat what I actually need" })).toBeVisible();
+
+  await page.goto("./goals/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: /Goals I'm chasing in public/i }),
+  ).toBeVisible();
 
   const runGoal = page.locator(".artifactGoalCard").filter({
     has: page.getByRole("heading", { name: "Run 1,000 km this year" }),
@@ -178,7 +188,10 @@ test("restored motion and homepage content work", async ({ page }) => {
   expect((statusBox?.y ?? 0) + (statusBox?.height ?? 0)).toBeLessThanOrEqual(
     (descriptionBox?.y ?? 0) + 1,
   );
+  await expect(runGoal.locator(".goalUpdatePreview")).toContainText(/\/ 1,000 km/);
+  await expect(runGoal.locator(".publicMilestones li")).toHaveCount(4);
 
+  await page.goto("./");
   await expect(page.locator('input[type="number"]')).toHaveCount(0);
   await expect(page.getByText(/Brewing this section for you/)).toBeVisible();
   await expect(page.getByRole("button", { name: /Analyse my spending/i })).toHaveCount(0);

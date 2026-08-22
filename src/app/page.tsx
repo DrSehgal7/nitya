@@ -5,9 +5,11 @@ import {
   Coffee,
   Flag,
   HeartHandshake,
+  ListChecks,
   LockKeyhole,
   ShieldCheck,
   Sparkles,
+  Target,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,28 +17,16 @@ import { ContactForm } from "@/components/ContactForm";
 import { RunnerScene } from "@/components/RunnerScene";
 import { SectionMotion } from "@/components/SectionMotion";
 import { SponsorStrava } from "@/components/SponsorStrava";
-import {
-  goalProgressFromSubgoals,
-  initiatives,
-  principles,
-  project,
-  statusLabel,
-} from "@/data/content";
+import { initiatives, principles, project } from "@/data/content";
 import { site } from "@/data/site";
-import stravaRaw from "@/data/strava.generated.json";
 import { getSiteContent } from "@/lib/content-store";
-import { formatDate } from "@/lib/format";
-import type { StravaSnapshot } from "@/types/strava";
-
-const strava = stravaRaw as StravaSnapshot;
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const { goals, habits, ledger, runningSnapshot } = await getSiteContent();
+  const { ledger, runningSnapshot } = await getSiteContent();
   const pledgeLabel =
     project.baselinePledge !== null ? `₹${project.baselinePledge.toLocaleString("en-IN")}` : "₹X";
-  const runningDistance = strava.connected ? strava.stats.distanceKm : runningSnapshot.distanceKm;
   const savedTotal = ledger.reduce((total, entry) => total + entry.savedRupees, 0);
   const peopleTotal = ledger.reduce((total, entry) => total + entry.peopleImpacted, 0);
   const maxMonthlySavings = Math.max(1, ...ledger.map(({ savedRupees }) => savedRupees));
@@ -435,126 +425,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section habitsSection motionHost" id="habits">
-        <SectionMotion />
-        <div className="shell">
-          <div className="ownerHeading">
-            <div>
-              <p className="eyebrow">The engine</p>
-              <h2 className="artifactSectionTitle">What I&apos;m working on</h2>
-              <p className="sectionIntro">
-                Two kinds of work: habits that cut waste and free up money, and goals that simply
-                make the life better. Both count.
-              </p>
-            </div>
-            <Link className="ownerEditLink" href="/owner/">
-              <LockKeyhole size={15} aria-hidden="true" /> Owner editing
-            </Link>
-          </div>
-          <h3 className="subsectionTitle">Habits that free up money</h3>
-          <div className="artifactHabitList">
-            {habits.map((habit) => {
-              const saved = habit.savedRupees ?? 0;
-              return (
-                <article className="artifactHabitCard" key={habit.id}>
-                  <span className="artifactHabitIcon" aria-hidden="true">
-                    {habit.icon}
-                  </span>
-                  <div className="habitListCopy">
-                    <div>
-                      <h4>{habit.title}</h4>
-                      <span className={`workStatus workStatus-${habit.status}`}>
-                        {statusLabel(habit.status)}
-                      </span>
-                    </div>
-                    <p>{habit.description}</p>
-                    <small>Last updated {formatDate(habit.lastUpdated)}</small>
-                  </div>
-                  <div className="habitSavedOnly">
-                    <span>Saved</span>
-                    <strong>₹{saved.toLocaleString("en-IN")}</strong>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-          <div className="goalMotionBlock motionHost">
-            <SectionMotion />
-            <h3 className="subsectionTitle goalsTitle">Goals I&apos;m chasing in public</h3>
-            <p className="publicGoalNote">
-              Every meaningful goal I hit unlocks an additional contribution from me—on top of the{" "}
-              {pledgeLabel} I&apos;ve already committed.
-            </p>
-            <div className="artifactGoalGrid">
-              {goals.map((goal) => {
-                const isRunGoal = goal.id === "run-1000-km";
-                const progress = goalProgressFromSubgoals(goal.subgoals, goal.progress);
-                const currentLabel = isRunGoal
-                  ? `${runningDistance.toFixed(1)} / 1,000 km`
-                  : goal.currentLabel;
-                return (
-                  <article className="artifactGoalCard" key={goal.id}>
-                    <div className="goalTop">
-                      <span>{goal.category}</span>
-                      <span className={`workStatus workStatus-${goal.status}`}>
-                        {statusLabel(goal.status)}
-                      </span>
-                    </div>
-                    <h4>{goal.title}</h4>
-                    <p>{goal.description}</p>
-                    <div
-                      className={`goalMotionVisual goalMotionVisual-${goal.id}`}
-                      aria-hidden="true"
-                    >
-                      {goal.id === "run-1000-km"
-                        ? "🏃‍➡️"
-                        : goal.id === "deadlift-140"
-                          ? "🏋️"
-                          : goal.id === "ship-nitya"
-                            ? "✦"
-                            : "₹"}
-                    </div>
-                    <div className="goalUpdatePreview">
-                      <span>Current update</span>
-                      <p>{currentLabel}</p>
-                      <small>Last updated {formatDate(goal.lastUpdated)}</small>
-                    </div>
-                    {goal.subgoals.length > 0 && (
-                      <div className="publicMilestones">
-                        <span className="publicMilestonesLabel">Milestones</span>
-                        <ul>
-                          {goal.subgoals.map((subgoal) => (
-                            <li className={subgoal.completed ? "isComplete" : ""} key={subgoal.id}>
-                              <span aria-hidden="true">
-                                {subgoal.completed ? <Check size={13} /> : null}
-                              </span>
-                              {subgoal.title}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    <div className="goalCurrent">
-                      {goal.subgoals.length > 0
-                        ? `${goal.subgoals.filter((item) => item.completed).length} of ${goal.subgoals.length} milestones`
-                        : currentLabel}
-                    </div>
-                    {goal.subgoals.length > 0 && (
-                      <div
-                        className="activeTrack"
-                        aria-label={`${goal.subgoals.filter((item) => item.completed).length} of ${goal.subgoals.length} milestones completed`}
-                      >
-                        <span style={{ width: `${progress}%` }} />
-                      </div>
-                    )}
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="section sectionDirectory motionHost" aria-labelledby="explore-nitya">
         <SectionMotion />
         <div className="shell">
@@ -568,6 +438,28 @@ export default async function HomePage() {
             to scan—especially on a phone.
           </p>
           <div className="directoryGrid">
+            <Link className="directoryCard directoryCardWork" href="/work">
+              <span className="directoryIcon" aria-hidden="true">
+                <ListChecks size={25} />
+              </span>
+              <span className="eyebrow">The engine</span>
+              <strong>What I&apos;m working on.</strong>
+              <p>See the small habits I am testing, their current status and the latest update.</p>
+              <span className="directoryAction">
+                See the work <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
+            <Link className="directoryCard directoryCardGoals" href="/goals">
+              <span className="directoryIcon" aria-hidden="true">
+                <Target size={25} />
+              </span>
+              <span className="eyebrow">Goals in motion</span>
+              <strong>Goals I&apos;m chasing in public.</strong>
+              <p>Follow each big goal through its smaller, visible checkpoints.</p>
+              <span className="directoryAction">
+                Follow the goals <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
             <Link className="directoryCard directoryCardHabits" href="/habits">
               <span className="directoryIcon" aria-hidden="true">
                 <HeartHandshake size={25} />
