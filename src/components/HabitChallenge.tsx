@@ -87,92 +87,111 @@ export function HabitChallenge() {
 
   return (
     <div className="habitChallengeLayout" id="habit-challenge">
-      <div>
+      <aside className="habitChallengeGuide">
+        <div>
+          <p className="eyebrow">How it works</p>
+          <h2>Choose one small thing to do alongside me.</h2>
+          <p>
+            Join a habit with one tap. Your choice stays attached to your Google account, and you
+            can tap again whenever you want to leave.
+          </p>
+        </div>
+        <ol className="habitGuideSteps">
+          <li>
+            <span>1</span> Pick a habit
+          </li>
+          <li>
+            <span>2</span> Join with Google
+          </li>
+          <li>
+            <span>3</span> Work on it with us
+          </li>
+        </ol>
+      </aside>
+
+      <div className="habitChallengeToolbar">
         <p className="habitJoinNotice" aria-live="polite">
           {message ||
             (authenticated
-              ? "Choose any habit. Tap again whenever you want to leave."
-              : "Sign in with Google, then tap the thumbs-up on any habit you want to join.")}
+              ? "Choose any habit. Tap Joined whenever you want to leave."
+              : authAvailable
+                ? "Choose a habit below. Google sign-in keeps every join to one real account."
+                : "Habit joining is unavailable until Google sign-in is configured.")}
         </p>
-        <div className="habitChallengeBoard" id="habit-cards">
-          {challengeHabits.map((habit, index) => {
-            const join = summaryFor(habit.id);
-            const participantLabel =
-              join.participantCount === 1 ? "person is joining" : "people are joining";
-            return (
-              <article
-                className={
-                  index === 0 ? "challengeHabitCard challengeHabitCardActive" : "challengeHabitCard"
-                }
-                key={habit.id}
-              >
-                <span
-                  className={`challengeStatus ${habit.status === "In progress" ? "challengeStatusActive" : ""}`}
-                >
-                  ● {habit.status}
-                </span>
+        <Link className="habitOwnerLink" href="/owner/">
+          <LockKeyhole size={13} aria-hidden="true" /> Owner edits
+        </Link>
+      </div>
+
+      <div className="habitChallengeBoard" id="habit-cards">
+        {challengeHabits.map((habit) => {
+          const join = summaryFor(habit.id);
+          const participantLabel =
+            join.participantCount === 0
+              ? "Be the first to join"
+              : join.participantCount === 1
+                ? "1 person is joining"
+                : `${join.participantCount.toLocaleString("en-IN")} people are joining`;
+          const statusLabel =
+            habit.status === "In progress" ? "Hritik is doing this" : "Open to start";
+
+          return (
+            <article
+              className={
+                join.joined ? "challengeHabitCard challengeHabitCardJoined" : "challengeHabitCard"
+              }
+              key={habit.id}
+            >
+              <div className="challengeHabitHead">
                 <span className="challengeHabitIcon" aria-hidden="true">
                   {habit.icon}
                 </span>
+                <span
+                  className={`challengeStatus ${habit.status === "In progress" ? "challengeStatusActive" : ""}`}
+                >
+                  <i aria-hidden="true" /> {statusLabel}
+                </span>
+              </div>
+              <div className="challengeHabitCopy">
                 <h3>{habit.title}</h3>
                 <p>{habit.text}</p>
-                <div className="challengeMoney">
-                  Money saved this month: <strong>₹{habit.saved.toLocaleString("en-IN")}</strong>
-                </div>
-                <div className="challengeControls" aria-label="Habit status">
-                  <span>{habit.status}</span>
-                  <span>{habit.status === "In progress" ? "Done" : "Start"}</span>
-                </div>
-                <div className="habitJoinControl">
-                  <button
-                    type="button"
-                    className={
-                      join.joined ? "habitJoinButton habitJoinButtonActive" : "habitJoinButton"
-                    }
-                    aria-pressed={join.joined}
-                    aria-label={
-                      join.joined
-                        ? `Leave ${habit.title}`
-                        : `${authenticated ? "Join" : "Sign in to join"} ${habit.title}`
-                    }
-                    disabled={Boolean(busyHabit) || !authAvailable}
-                    onClick={() => void toggleHabit(habit.id)}
-                  >
-                    <ThumbsUp
-                      size={17}
-                      fill={join.joined ? "currentColor" : "none"}
-                      aria-hidden="true"
-                    />
-                    {busyHabit === habit.id ? "Saving…" : join.joined ? "Joined" : "Join"}
-                  </button>
-                  <p>
-                    <strong>{join.participantCount.toLocaleString("en-IN")}</strong>{" "}
-                    {participantLabel}
-                  </p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+              </div>
+              <div className="habitJoinControl">
+                <button
+                  type="button"
+                  className={
+                    join.joined ? "habitJoinButton habitJoinButtonActive" : "habitJoinButton"
+                  }
+                  aria-pressed={join.joined}
+                  aria-label={
+                    join.joined
+                      ? `Leave ${habit.title}`
+                      : `${authenticated ? "Join" : "Sign in to join"} ${habit.title}`
+                  }
+                  disabled={Boolean(busyHabit) || !authAvailable}
+                  onClick={() => void toggleHabit(habit.id)}
+                >
+                  <ThumbsUp
+                    size={18}
+                    fill={join.joined ? "currentColor" : "none"}
+                    aria-hidden="true"
+                  />
+                  {busyHabit === habit.id
+                    ? "Saving…"
+                    : join.joined
+                      ? "Joined"
+                      : authenticated
+                        ? "Join this habit"
+                        : "Join with Google"}
+                </button>
+                <p className={join.participantCount > 0 ? "hasParticipants" : ""}>
+                  {participantLabel}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </div>
-      <aside className="habitWorstCase">
-        <p className="eyebrow">The worst-case outcome</p>
-        <h3>Your life improves.</h3>
-        <p>
-          You spend with more intention, get fitter, eat better, organise your money or build a
-          useful routine. That&apos;s already positive impact—even before one rupee leaves your
-          account.
-        </p>
-        <p>
-          <strong>Contribution is always optional.</strong> The habit is the first contribution.
-        </p>
-        <a className="button buttonPrimary buttonWide" href="#habit-cards">
-          Choose a habit to join
-        </a>
-        <Link className="habitOwnerLink" href="/owner/">
-          <LockKeyhole size={13} aria-hidden="true" /> Only the owner can edit these cards
-        </Link>
-      </aside>
     </div>
   );
 }

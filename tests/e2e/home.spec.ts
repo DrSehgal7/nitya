@@ -128,9 +128,13 @@ test("habit participation requires an account and exposes one toggle per habit",
   await expect(
     page.getByRole("heading", { level: 1, name: /Make your life better with me/i }),
   ).toBeVisible();
-  await expect(page.getByText(/tap the thumbs-up on any habit/i)).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 2, name: /Choose one small thing to do alongside me/i }),
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: /sign in to join/i })).toHaveCount(6);
-  await expect(page.getByText("0 people are joining")).toHaveCount(6);
+  await expect(page.getByText("Be the first to join", { exact: true })).toHaveCount(6);
+  await expect(page.getByText(/money saved this month/i)).toHaveCount(0);
+  await expect(page.locator(".challengeHabitCardJoined")).toHaveCount(0);
 
   if (process.env.CAPTURE_SCREENSHOT) {
     await page.screenshot({ path: `/tmp/nitya-habits-${testInfo.project.name}.png` });
