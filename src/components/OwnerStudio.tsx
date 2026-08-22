@@ -371,7 +371,10 @@ export function OwnerStudio({
         </p>
         <div className="ownerEditorList">
           {content.ledger.map((entry, index) => (
-            <article className="ownerEditorRow" key={`${entry.month}-${index}`}>
+            // Ledger rows are not reordered in this editor, so the position is the stable identity.
+            // Do not include `entry.month` in the key: changing it would remount the row and make
+            // the input lose focus after every keystroke.
+            <article className="ownerEditorRow" key={`ledger-${index}`}>
               <div className="ownerFieldGrid ownerFieldGridThree">
                 <label>
                   Month
