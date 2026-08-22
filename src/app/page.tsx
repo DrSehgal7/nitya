@@ -3,6 +3,8 @@ import {
   AtSign,
   Check,
   Coffee,
+  Flag,
+  HeartHandshake,
   LockKeyhole,
   ShieldCheck,
   Sparkles,
@@ -10,9 +12,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ContactForm } from "@/components/ContactForm";
-import { HabitChallenge } from "@/components/HabitChallenge";
-import { RaceIdeasBoard } from "@/components/RaceIdeasBoard";
-import { RaceTrail } from "@/components/RaceTrail";
 import { RunnerScene } from "@/components/RunnerScene";
 import { SectionMotion } from "@/components/SectionMotion";
 import { SponsorStrava } from "@/components/SponsorStrava";
@@ -34,7 +33,7 @@ const strava = stravaRaw as StravaSnapshot;
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const { goals, habits, ledger, races, runningSnapshot } = await getSiteContent();
+  const { goals, habits, ledger, runningSnapshot } = await getSiteContent();
   const pledgeLabel =
     project.baselinePledge !== null ? `₹${project.baselinePledge.toLocaleString("en-IN")}` : "₹X";
   const runningDistance = strava.connected ? strava.stats.distanceKm : runningSnapshot.distanceKm;
@@ -553,10 +552,44 @@ export default async function HomePage() {
               })}
             </div>
           </div>
+        </div>
+      </section>
 
-          <div id="races" className="homeRaceSection motionHost">
-            <SectionMotion />
-            <RaceTrail races={races} />
+      <section className="section sectionDirectory motionHost" aria-labelledby="explore-nitya">
+        <SectionMotion />
+        <div className="shell">
+          <p className="sectionSticker">🧭 Choose your path</p>
+          <p className="eyebrow">Explore Nitya</p>
+          <h2 className="artifactSectionTitle" id="explore-nitya">
+            Pick the part you came for.
+          </h2>
+          <p className="sectionIntro">
+            The longer interactive sections now have their own pages, so the homepage stays easier
+            to scan—especially on a phone.
+          </p>
+          <div className="directoryGrid">
+            <Link className="directoryCard directoryCardHabits" href="/habits">
+              <span className="directoryIcon" aria-hidden="true">
+                <HeartHandshake size={25} />
+              </span>
+              <span className="eyebrow">Join me for the habits</span>
+              <strong>Make your life better with me.</strong>
+              <p>Choose a habit, tap the thumbs-up and join everyone working on it alongside me.</p>
+              <span className="directoryAction">
+                Choose a habit <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
+            <Link className="directoryCard directoryCardRaces" href="/races">
+              <span className="directoryIcon" aria-hidden="true">
+                <Flag size={25} />
+              </span>
+              <span className="eyebrow">Race calendar + community</span>
+              <strong>Every race becomes a checkpoint.</strong>
+              <p>Follow my race trail, then suggest a race, challenge or weirdly fun idea.</p>
+              <span className="directoryAction">
+                Explore the races <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
           </div>
         </div>
       </section>
@@ -604,40 +637,6 @@ export default async function HomePage() {
             <strong>on top of my own {pledgeLabel} commitment</strong>.
           </p>
           <SponsorStrava runningSnapshot={runningSnapshot} />
-        </div>
-      </section>
-
-      <section className="section raceIdeasSection motionHost" id="race-ideas">
-        <SectionMotion />
-        <div className="shell">
-          <div>
-            <p className="sectionSticker">🏁 Community checkpoints</p>
-            <p className="eyebrow">What should I race next?</p>
-            <h2 className="artifactSectionTitle">Suggest a race, challenge or weirdly fun idea.</h2>
-            <p>
-              Think I&apos;m missing a cool trail, hybrid race, ultra, city run or slightly
-              questionable challenge? Add it. People can vote and the most interesting ideas rise to
-              the top.
-            </p>
-          </div>
-          <RaceIdeasBoard />
-        </div>
-      </section>
-
-      <section className="section sideQuestSection motionHost">
-        <SectionMotion />
-        <div className="shell">
-          <div>
-            <p className="sectionSticker">🎮 Pick your side quest</p>
-            <p className="eyebrow">Join me for the habits</p>
-            <h2 className="artifactSectionTitle">Make your life better with me.</h2>
-            <p>
-              You don&apos;t need to donate anything to join Nitya. Pick one habit that makes your
-              own life better and work on it alongside me. If you contribute ₹0 and simply become
-              healthier, more organised or less wasteful, that is still a win for both of us.
-            </p>
-          </div>
-          <HabitChallenge />
         </div>
       </section>
 

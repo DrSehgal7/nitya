@@ -2,6 +2,7 @@
 
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
@@ -9,12 +10,13 @@ import { ThemeToggle } from "./ThemeToggle";
 const navigation = [
   { href: "/#mission", label: "Mission" },
   { href: "/#numbers", label: "Numbers" },
-  { href: "/#habits", label: "Habits" },
-  { href: "/#races", label: "Race calendar" },
+  { href: "/habits", label: "Habits" },
+  { href: "/races", label: "Races" },
 ];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   return (
     <header className="siteHeader">
       <div className="shell headerInner">
@@ -25,11 +27,20 @@ export function SiteHeader() {
             className={open ? "primaryNav primaryNavOpen" : "primaryNav"}
             aria-label="Primary"
           >
-            {navigation.map((item) => (
-              <Link href={item.href} key={item.href} onClick={() => setOpen(false)}>
-                {item.label}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const route = item.href.split("#")[0] || "/";
+              const isActive = route !== "/" && pathname === route.replace(/\/$/, "");
+              return (
+                <Link
+                  href={item.href}
+                  key={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <Link className="navCta" href="/#contact" onClick={() => setOpen(false)}>
               Let&apos;s talk
             </Link>

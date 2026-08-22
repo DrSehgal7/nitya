@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { project } from "../../src/data/content";
 import { projectDaysSince } from "../../src/lib/project-time";
 
-test("shows the artifact story, contact form, and inline race trail", async ({
+test("shows the artifact story, contact form, and compact route directory", async ({
   page,
 }, testInfo) => {
   await page.goto("./");
@@ -40,11 +40,14 @@ test("shows the artifact story, contact form, and inline race trail", async ({
     });
   }
 
-  await expect(page.getByRole("heading", { name: "My race calendar" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Make your life better with me/i })).toHaveAttribute(
+    "href",
+    "/habits",
+  );
   await expect(
-    page.getByRole("heading", { name: "Every race becomes a checkpoint" }),
-  ).toBeVisible();
-  await expect(page.getByText("Tata Steel World 25K", { exact: true })).toBeVisible();
+    page.getByRole("link", { name: /Every race becomes a checkpoint/i }),
+  ).toHaveAttribute("href", "/races");
+  await expect(page.getByRole("heading", { name: "My race calendar" })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: /Sponsor a kilometre/i })).toBeVisible();
   const viewport = await page.evaluate(() => ({
     innerWidth: window.innerWidth,
@@ -75,7 +78,7 @@ test("contact form requires only name and note and confirms private delivery", a
   await expect(privateInbox.json()).resolves.toEqual({ error: "Owner access required." });
 });
 
-test("mobile navigation opens and reaches the race calendar", async ({ page }, testInfo) => {
+test("mobile navigation opens and reaches the races page", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.startsWith("mobile"), "Mobile-only navigation check");
   await page.goto("./");
 
@@ -83,8 +86,8 @@ test("mobile navigation opens and reaches the race calendar", async ({ page }, t
   await expect(menu).toHaveAccessibleName("Open navigation");
   await menu.click();
   await expect(menu).toHaveAttribute("aria-expanded", "true");
-  await page.getByRole("link", { name: "Race calendar", exact: true }).click();
-  await expect(page).toHaveURL(/\/#races$/);
+  await page.getByRole("link", { name: "Races", exact: true }).click();
+  await expect(page).toHaveURL(/\/races\/?$/);
   await expect(
     page.getByRole("heading", { name: "Every race becomes a checkpoint" }),
   ).toBeVisible();
@@ -120,11 +123,18 @@ test("public habits are read-only and owner controls are reserved for the dashbo
 
 test("habit participation requires an account and exposes one toggle per habit", async ({
   page,
-}) => {
-  await page.goto("./#habit-challenge");
+}, testInfo) => {
+  await page.goto("./habits/#habit-challenge");
+  await expect(
+    page.getByRole("heading", { level: 1, name: /Make your life better with me/i }),
+  ).toBeVisible();
   await expect(page.getByText(/tap the thumbs-up on any habit/i)).toBeVisible();
   await expect(page.getByRole("button", { name: /sign in to join/i })).toHaveCount(6);
   await expect(page.getByText("0 people are joining")).toHaveCount(6);
+
+  if (process.env.CAPTURE_SCREENSHOT) {
+    await page.screenshot({ path: `/tmp/nitya-habits-${testInfo.project.name}.png` });
+  }
 
   const response = await page.request.post("./api/habit-joins", {
     data: { habitId: "plan-food-better" },
@@ -135,7 +145,7 @@ test("habit participation requires an account and exposes one toggle per habit",
   });
 });
 
-test("restored motion, protected race voting, and habit challenge work", async ({ page }) => {
+test("restored motion and homepage content work", async ({ page }) => {
   await page.goto("./");
   const motionCounter = page.locator(".sectionMotionCounter");
   const expectedDays = projectDaysSince(project.startedOn);
@@ -152,7 +162,7 @@ test("restored motion, protected race voting, and habit challenge work", async (
 
   await expect(page.getByText(/average hybrid athlete · runner · always exploring/i)).toBeVisible();
   await expect(page.getByText(/mango espresso tonics/i)).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Plan food better" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Eat what I actually need" })).toBeVisible();
 
   const runGoal = page.locator(".artifactGoalCard").filter({
     has: page.getByRole("heading", { name: "Run 1,000 km this year" }),
@@ -169,6 +179,20 @@ test("restored motion, protected race voting, and habit challenge work", async (
   await expect(page.getByText(/Brewing this section for you/)).toBeVisible();
   await expect(page.getByRole("button", { name: /Analyse my spending/i })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /Food & eating out/i })).toHaveCount(0);
+});
+
+test("race trail and protected community voting live on the races page", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./races/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: /Every race a checkpoint/i }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "My race calendar" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Every race becomes a checkpoint" }),
+  ).toBeVisible();
+  await expect(page.getByText("Tata Steel World 25K", { exact: true })).toBeVisible();
 
   const trailMap = page.locator(".trailMap");
   const mumbaiCard = trailMap
@@ -197,6 +221,10 @@ test("restored motion, protected race voting, and habit challenge work", async (
   await expect(page.getByLabel("Race or challenge name")).toBeDisabled();
   await expect(page.getByRole("button", { name: "Suggest", exact: true })).toBeDisabled();
   await expect(page.getByRole("button", { name: /google sign-in unavailable/i })).toBeDisabled();
+
+  if (process.env.CAPTURE_SCREENSHOT) {
+    await page.screenshot({ path: `/tmp/nitya-races-${testInfo.project.name}.png` });
+  }
 
   const response = await page.request.post("./api/race-ideas", {
     data: { action: "vote", id: "test-race" },

@@ -55,7 +55,7 @@ export function HabitChallenge() {
         setMessage("Google sign-in is not configured in this environment.");
         return;
       }
-      await signIn("google", { redirectTo: "/#habit-challenge" });
+      await signIn("google", { redirectTo: "/habits#habit-challenge" });
       return;
     }
 

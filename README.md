@@ -18,7 +18,8 @@ npm run dev
 Open:
 
 - Home: `http://127.0.0.1:3000/`
-- Race trail: `http://127.0.0.1:3000/#races`
+- Habit challenge: `http://127.0.0.1:3000/habits`
+- Race trail and community suggestions: `http://127.0.0.1:3000/races`
 - Owner content studio: `http://127.0.0.1:3000/owner`
 
 ## Verify

@@ -101,7 +101,7 @@ export function RaceIdeasBoard() {
           <button
             type="button"
             disabled={!authAvailable}
-            onClick={() => void signIn("google", { redirectTo: "/#race-ideas" })}
+            onClick={() => void signIn("google", { redirectTo: "/races#race-ideas" })}
           >
             {authAvailable ? "Continue with Google" : "Google sign-in unavailable"}
           </button>
