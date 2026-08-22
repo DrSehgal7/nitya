@@ -15,7 +15,6 @@ import { RaceIdeasBoard } from "@/components/RaceIdeasBoard";
 import { RaceTrail } from "@/components/RaceTrail";
 import { RunnerScene } from "@/components/RunnerScene";
 import { SectionMotion } from "@/components/SectionMotion";
-import { SpendingAnalyzer } from "@/components/SpendingAnalyzer";
 import { SponsorStrava } from "@/components/SponsorStrava";
 import {
   goalProgressFromSubgoals,
@@ -77,7 +76,7 @@ export default async function HomePage() {
             </p>
             <div className="buttonRow">
               <a className="button buttonPrimary" href="#optimise">
-                Analyse my spending <ArrowRight size={17} aria-hidden="true" />
+                See what I’m brewing <ArrowRight size={17} aria-hidden="true" />
               </a>
               <a className="button buttonGhost" href="#numbers">
                 See the numbers
@@ -568,18 +567,30 @@ export default async function HomePage() {
           <h2 className="artifactSectionTitle">
             Tell me where the money leaks—I&apos;ll help you plug it
           </h2>
-          <p className="sectionIntro">
-            Brewing this section for you :) The quick analyser below is an early draft for spotting
-            one useful next step. For immediate help, send me a note or message me directly and
-            we&apos;ll look at the leak together.
-          </p>
-          <div className="toolContactLinks">
-            <a href="#contact">Leave me a note</a>
-            <a href={site.instagramUrl} target="_blank" rel="noreferrer">
-              Message me on Instagram
-            </a>
+          <div className="brewingCard">
+            <div className="brewingVisual" aria-hidden="true">
+              <span className="steam steamOne" />
+              <span className="steam steamTwo" />
+              <span className="steam steamThree" />
+              <Coffee size={66} strokeWidth={1.35} />
+            </div>
+            <div className="brewingCopy">
+              <p className="eyebrow">A useful little tool is steeping</p>
+              <h3>Brewing this section for you :)</h3>
+              <p>
+                I&apos;m working on a simple way to spot everyday money leaks without turning your
+                life into a spreadsheet. No forms or spending inputs here until it is genuinely
+                useful.
+              </p>
+              <p className="brewingHelp">Need help sooner? Let&apos;s look at it together.</p>
+              <div className="toolContactLinks">
+                <a href="#contact">Leave me a note</a>
+                <a href={site.instagramUrl} target="_blank" rel="noreferrer">
+                  Message me on Instagram
+                </a>
+              </div>
+            </div>
           </div>
-          <SpendingAnalyzer />
         </div>
       </section>
 

@@ -167,6 +167,8 @@ test("restored motion, protected race voting, and habit challenge work", async (
 
   await expect(page.locator('input[type="number"]')).toHaveCount(0);
   await expect(page.getByText(/Brewing this section for you/)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Analyse my spending/i })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Food & eating out/i })).toHaveCount(0);
 
   const trailMap = page.locator(".trailMap");
   const mumbaiCard = trailMap
