@@ -12,6 +12,7 @@ import {
   Target,
   UserRound,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { ContactForm } from "@/components/ContactForm";
 import { RunnerScene } from "@/components/RunnerScene";
@@ -39,18 +40,23 @@ export default async function HomePage() {
         <SectionMotion />
         <div className="shell artifactHeroGrid">
           <div className="artifactHeroCopy">
-            <p className="eyebrow">One person. One promise. Practical help.</p>
-            <h1>
-              Small everyday wins, turned into <em>real help.</em>
-            </h1>
+            <p className="eyebrow">A personal, public experiment in everyday impact</p>
+            <h1>Build a better life. Use what it frees up to help someone else.</h1>
             <p className="heroLead">
-              Nitya is my personal promise to help <strong>100 people</strong> in practical, visible
-              ways. I&apos;m Hritik <span lang="hi">सरोच</span>. I fund the work myself, invite
-              useful skills and ideas, and publish the results here.
+              Nitya is my personal, public experiment in turning better everyday choices into more
+              money, time and skills that can help other people. I&apos;m Hritik{" "}
+              <span lang="hi">सरोच</span>, and my first measurable target is to positively impact{" "}
+              <strong>100 lives</strong>.
             </p>
             <p>
-              This website does not collect donations. If you know someone who needs practical
-              help—or you can offer time, skills or a useful introduction—tell me.
+              I have already committed <strong>{pledgeLabel}</strong> of my own money. The “X” means
+              the amount is real but intentionally private. It does not depend on donations or
+              public support.
+            </p>
+            <p>
+              Next, I track savings created by better habits and add what I can on top. Visitors can
+              join a habit, suggest an event, offer time or skills, or simply follow along. Nitya is
+              not a charity or payment platform, and contributing money is never required.
             </p>
             <div className="buttonRow">
               <a className="button buttonPrimary" href="#commitment">
@@ -64,7 +70,7 @@ export default async function HomePage() {
 
           <aside className="artifactImpactCard" aria-label="First impact milestone">
             <div className="impactCardTop">
-              <span>People helped so far</span>
+              <span>Verified impact so far</span>
               <Sparkles size={17} aria-hidden="true" />
             </div>
             <div className="artifactRing" aria-hidden="true">
@@ -164,29 +170,41 @@ export default async function HomePage() {
           <p className="sectionSticker">🤝 My baseline</p>
           <p className="eyebrow">The commitment</p>
           <h2 className="baselineTitle">The baseline starts with me.</h2>
-          <div className="baselinePanel baselinePanelSimple">
+          <div className="baselinePanel">
+            <figure className="avatarStage baselinePhoto">
+              <Image
+                src="/images/hritik-snow-tea.jpg"
+                alt="Hritik Saroch playfully leaning into a snowy chai break"
+                width={900}
+                height={1600}
+                sizes="(max-width: 920px) min(100vw - 3rem, 520px), 390px"
+                priority
+              />
+              <figcaption>A serious mission, an unserious chai break.</figcaption>
+            </figure>
             <div className="commitmentCopy">
               <p>
-                Nitya starts with money I have already set aside. I show it as{" "}
-                <strong>{pledgeLabel}</strong> because the exact amount is personal; where it goes
-                and what it achieves will be public.
+                Nitya begins with money I have committed myself: <strong>{pledgeLabel}</strong> is
+                already pledged. I show it as {pledgeLabel} because I want the commitment to be real
+                without making the private amount the story.
               </p>
               <p>
-                Better planning and less waste may create more to add later. Other people can help
-                with time, skills or ideas, but nobody is being asked to fund this project.
+                Anything created through better planning, less waste or professional growth can be
+                added on top. Other people may join with money, time or skills, but the project does
+                not depend on them doing so.
               </p>
               <div className="pledgeStack">
                 <article>
                   <strong>{pledgeLabel}</strong>
-                  <span>money I have already committed</span>
+                  <span>my private committed baseline</span>
                 </article>
                 <article>
                   <strong>+ savings</strong>
-                  <span>extra capacity I create over time</span>
+                  <span>extra value created by better habits</span>
                 </article>
                 <article>
                   <strong>+ people</strong>
-                  <span>optional time, skills and ideas</span>
+                  <span>optional support, time or skills</span>
                 </article>
               </div>
             </div>
@@ -196,16 +214,17 @@ export default async function HomePage() {
 
       <section className="section experimentSection">
         <div className="shell narrowStory">
-          <p className="sectionSticker">✨ How it works</p>
-          <p className="eyebrow">A simple loop</p>
-          <h2>Find a real need. Help clearly. Share the result.</h2>
+          <p className="sectionSticker">✨ The experiment</p>
+          <p className="eyebrow">The question I am testing</p>
+          <h2>Can improving my own systems create more capacity to help?</h2>
           <p>
-            I start with a specific person or need, decide what useful support looks like, help, and
-            record the confirmed outcome here. Money is only one tool; time, skills and the right
-            introduction can matter just as much.
+            I want to keep getting fitter, better at work and more intentional with money—then see
+            whether those improvements leave me with more resources to share. The aim is to remove
+            waste, not joy, so I can still travel, race, eat well and enjoy what I work for.
           </p>
           <p>
-            <strong>Nitya is a public record of small choices becoming practical help.</strong>
+            Success is not one large donation. It is a repeatable way to improve my life and make
+            someone else&apos;s life better at the same time.
           </p>
         </div>
       </section>
@@ -234,71 +253,6 @@ export default async function HomePage() {
                 <div className="initiativeGoal">Goal: {initiative.goal}</div>
               </article>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="manifestoSection section">
-        <div className="shell manifestoGrid">
-          <div>
-            <p className="eyebrow eyebrowLight">The reason</p>
-            <h2>Giving should never feel like guilt.</h2>
-          </div>
-          <div className="manifestoCopy">
-            <p>
-              I&apos;ve given to causes before—as much as I could at the time. But too often it
-              curdled into guilt: the follow-ups, the pressure, the feeling that saying “not right
-              now” made me the villain.
-            </p>
-            <blockquote>
-              Money is one way to contribute. Your time, skills and attention can change a life too.
-            </blockquote>
-            <p>
-              So here&apos;s my alternative: make help voluntary, specific and easy to understand. A
-              doctor offering a consultation, an engineer mentoring a student, someone connecting a
-              family to the right resource, or a friend giving an hour to solve a real problem can
-              all make a meaningful difference.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section transparencySection">
-        <div className="shell transparencyCard artifactMoneyCard">
-          <div>
-            <p className="eyebrow">The honest bit</p>
-            <h2>Money is kept separate until there is a clear use</h2>
-            <p>
-              <strong>
-                This website does not collect payments. Money I personally set aside for Nitya is
-                kept separate from everyday spending.
-              </strong>{" "}
-              It stays untouched until there is a specific recipient, a documented purpose and a
-              result I can report honestly.
-            </p>
-          </div>
-          <div className="moneyFlow">
-            <article>
-              <span>₹</span>
-              <div>
-                <strong>Money comes in</strong>
-                <p>My private pledge, plus savings I choose to add.</p>
-              </div>
-            </article>
-            <article>
-              <span>👩</span>
-              <div>
-                <strong>Held separately</strong>
-                <p>Kept away from normal spending until a real need is confirmed.</p>
-              </div>
-            </article>
-            <article>
-              <span>📍</span>
-              <div>
-                <strong>Deployed publicly later</strong>
-                <p>The recipient, purpose and confirmed outcome will be recorded here.</p>
-              </div>
-            </article>
           </div>
         </div>
       </section>

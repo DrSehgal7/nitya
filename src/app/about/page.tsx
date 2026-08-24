@@ -7,7 +7,7 @@ import { site } from "@/data/site";
 export const metadata: Metadata = {
   title: "About Hritik | Nitya",
   description:
-    "The personal story behind Nitya: why Hritik Saroch started a public promise to turn small, consistent actions into practical help.",
+    "Meet Hritik Saroch and read why he started Nitya: a personal experiment in building a better life and using the capacity it creates to help others.",
 };
 
 export default function AboutPage() {
@@ -18,12 +18,9 @@ export default function AboutPage() {
           <Link className="subpageBackLink" href="/">
             <ArrowLeft size={16} aria-hidden="true" /> Back to Nitya
           </Link>
-          <p className="eyebrow">The person behind the promise</p>
-          <h1>Why I started Nitya.</h1>
-          <p>
-            This page is simply my story—how an ordinary person arrived at a small, public promise
-            to help more deliberately.
-          </p>
+          <p className="eyebrow">About me</p>
+          <h1>Why Nitya—and why me.</h1>
+          <p>The person, the ordinary life and the question behind this public experiment.</p>
         </div>
       </section>
 
@@ -39,35 +36,45 @@ export default function AboutPage() {
                 priority
                 sizes="(max-width: 920px) min(100vw - 3rem, 520px), 360px"
               />
-              <figcaption>Hritik Saroch · Gurugram, India</figcaption>
+              <figcaption>Average hybrid athlete · runner · always exploring</figcaption>
             </figure>
             <h2>
               Hritik <span lang="hi">सरोच</span>
             </h2>
             <p className="profileBioIntro">
-              Software engineer, average hybrid athlete and enthusiastic beginner at several
-              unrelated things.
+              Hritik <span lang="hi">सरोच</span> · Gurugram, India
             </p>
             <ul className="profileBioList" aria-label="A few things about Hritik">
               <li>
+                <span aria-hidden="true">💻</span>
+                <span>Software engineer by day; average hybrid athlete after hours.</span>
+              </li>
+              <li>
                 <span aria-hidden="true">🏃</span>
-                <span>Exploring my physical limits through running and strength.</span>
+                <span>Exploring my physical limits, one run and strength session at a time.</span>
               </li>
               <li>
                 <span aria-hidden="true">🍳</span>
-                <span>Occasional chef—still an average cook, but confidently experimenting.</span>
+                <span>Occasional chef. “Average cook” is probably more accurate.</span>
               </li>
               <li>
                 <span aria-hidden="true">☕</span>
-                <span>Currently mixing espresso tonics with coconut, orange and mango.</span>
+                <span>
+                  Mixing coffee, cocktails and ideas—currently testing coconut, orange and mango
+                  espresso tonics.
+                </span>
               </li>
               <li>
                 <span aria-hidden="true">💪</span>
-                <span>Happy to help with your first kilometre, chin-up or pull-up.</span>
+                <span>I can help you unlock your first kilometre, chin-up or pull-up.</span>
               </li>
               <li>
-                <span aria-hidden="true">✨</span>
-                <span>Up for fun challenges in tech or sport—and a good documentary after.</span>
+                <span aria-hidden="true">🎯</span>
+                <span>Always up for a fun challenge—tech, sport or something in between.</span>
+              </li>
+              <li>
+                <span aria-hidden="true">🎬</span>
+                <span>Crime and sports documentaries are my comfort watch.</span>
               </li>
             </ul>
             <a
@@ -87,35 +94,32 @@ export default function AboutPage() {
           </article>
 
           <article className="aboutStory aboutNarrative">
-            <p className="eyebrow">The beginning</p>
-            <h2>Useful help should feel clear, voluntary and human.</h2>
+            <p className="eyebrow">
+              <span lang="hi">नित्य</span> · Nitya
+            </p>
+            <h2>Small things, repeated every day.</h2>
             <p>
-              I have supported causes before, but I often found the experience wrapped in pressure,
-              follow-ups and guilt. That bothered me. Helping someone should not require a grand
-              identity or a perfect organisation; it can begin with one person noticing a real need
-              and choosing to act.
+              The name reflects the idea: meaningful change is usually not one grand gesture. It is
+              small things, repeated every day.
             </p>
             <p>
-              So I started Nitya as a personal promise. I set aside my own money, look for specific
-              ways it can be useful, and keep a public record of what actually happened. My first
-              measurable goal is to positively impact <strong>100 lives</strong>.
+              Nitya is a personal project, not a registered charity. My first goal is to positively
+              impact <strong>100 lives</strong> through practical, measurable support: better access
+              to sport for underprivileged children and specific education costs for girls who need
+              support.
             </p>
             <p>
-              I chose the name because it reminds me that meaningful change is usually built through
-              small actions repeated consistently—not one dramatic gesture.
+              I&apos;m not pretending I already know the perfect way to do this. Part of Nitya is
+              figuring that out in public—which causes create real value, how to measure the
+              outcome, and where my money or time can genuinely change something.
             </p>
             <aside>
-              <strong>I am learning in public.</strong>
+              <strong>This is not about becoming a saint.</strong>
               <p>
-                Nitya is a personal project, not a registered charity. I do not have every process
-                solved yet. I would rather be honest about that, start carefully and improve the
-                structure as the work becomes real.
+                It is about seeing how much good can fit inside an ambitious, enjoyable, ordinary
+                life.
               </p>
             </aside>
-            <p>
-              The idea is simple: keep living an ambitious, enjoyable, ordinary life—and make
-              practical room in it for other people too.
-            </p>
             <div className="buttonRow">
               <Link className="button buttonPrimary" href="/#contribute">
                 See how to contribute <ArrowRight size={17} aria-hidden="true" />

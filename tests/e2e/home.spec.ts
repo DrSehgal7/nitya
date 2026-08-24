@@ -7,11 +7,16 @@ test("shows the focused impact story, contribution paths, and contact form", asy
 }, testInfo) => {
   await page.goto("./");
 
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Small everyday wins");
-  await expect(page.getByText(/personal promise to help/i)).toBeVisible();
-  await expect(page.getByText(/does not collect donations/i)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Build a better life");
+  await expect(page.getByText(/personal, public experiment/i).first()).toBeVisible();
+  await expect(page.getByText(/does not depend on donations or public support/i)).toBeVisible();
   await expect(
-    page.getByText(/public record of small choices becoming practical help/i),
+    page.getByRole("heading", {
+      name: "Can improving my own systems create more capacity to help?",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: /playfully leaning into a snowy chai break/i }),
   ).toBeVisible();
   await expect(page.getByText(/Sanskrit—daily, constant, eternal/)).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "The numbers, kept honest" })).toBeVisible();
@@ -94,18 +99,20 @@ test("mobile navigation opens and reaches the about page", async ({ page }, test
   await expect(menu).toHaveAttribute("aria-expanded", "true");
   await page.locator(".primaryNav").getByRole("link", { name: "About", exact: true }).click();
   await expect(page).toHaveURL(/\/about\/?$/);
-  await expect(page.getByRole("heading", { name: "Why I started Nitya." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Why Nitya—and why me." })).toBeVisible();
 });
 
 test("about tells Hritik's story without presenting running as contribution", async ({ page }) => {
   await page.goto("./about/");
 
-  await expect(page.getByRole("heading", { level: 1, name: "Why I started Nitya." })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Useful help should feel clear, voluntary and human." }),
+    page.getByRole("heading", { level: 1, name: "Why Nitya—and why me." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Small things, repeated every day." }),
   ).toBeVisible();
   await expect(page.getByText(/positively impact 100 lives/i)).toBeVisible();
-  await expect(page.getByText(/Software engineer, average hybrid athlete/i)).toBeVisible();
+  await expect(page.getByText(/Software engineer by day; average hybrid athlete/i)).toBeVisible();
   await expect(page.getByText(/first kilometre, chin-up or pull-up/i)).toBeVisible();
   await expect(
     page.getByRole("img", { name: /Hritik Saroch smiling beside a snowy mountain stream/i }),

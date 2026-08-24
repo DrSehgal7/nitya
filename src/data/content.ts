@@ -61,15 +61,15 @@ export const runningSnapshot = {
 export const principles = [
   {
     title: "I commit first",
-    text: "I have already set aside my own money, shown as ₹X because the amount is personal.",
+    text: "A real baseline amount—shown publicly as ₹X—is already committed by me.",
   },
   {
-    title: "The outcome is public",
-    text: "When help is delivered, I record who it was for, what it did and what it cost.",
+    title: "Better habits add more",
+    text: "I track genuine savings from reducing waste and can add that value on top of my baseline.",
   },
   {
-    title: "You do not need to donate",
-    text: "Follow the work, share a real need or offer a useful skill. Money is never required.",
+    title: "Your participation is optional",
+    text: "Join a habit, offer a skill or simply follow along. No donation is required.",
   },
 ] as const;
 
