@@ -4109,9 +4109,9 @@ h3 {
 }
 
 .sectionMotion.sectionMotionPersistent {
-  position: fixed;
-  z-index: 90;
-  overflow: visible;
+  position: absolute;
+  z-index: 3;
+  overflow: hidden;
 }
 
 .sectionRunnerGhosts {
@@ -4153,8 +4153,7 @@ h3 {
 }
 
 .sectionMotionPersistent .sectionMotionCounter {
-  position: fixed;
-  top: 86px;
+  position: absolute;
   padding: 0.55rem 0.65rem 0.4rem;
   border: 0;
   background: transparent;
@@ -5691,7 +5690,6 @@ h3 {
   }
 
   .sectionMotionPersistent .sectionMotionCounter {
-    top: 82px;
     right: 0.5rem;
     width: 176px;
     padding: 0.4rem 0.5rem 0.3rem;

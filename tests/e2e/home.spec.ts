@@ -186,14 +186,35 @@ test("restored motion and focused personal pages remain available directly", asy
   const expectedDays = projectDaysSince(project.startedOn);
   await expect(motionCounter).toHaveCount(1);
   await expect(motionCounter.locator("strong")).toHaveText(expectedDays.toLocaleString("en-IN"));
-  await expect(motionCounter).toHaveCSS("position", "fixed");
+  await expect(motionCounter).toHaveCSS("position", "absolute");
   await expect(motionCounter).toHaveCSS("border-top-width", "0px");
 
   const counterBeforeScroll = await motionCounter.boundingBox();
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
-  await page.waitForTimeout(100);
+  const targetScrollY = await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+    const nextScrollY = Math.floor(document.documentElement.scrollHeight / 2);
+    window.scrollTo(0, nextScrollY);
+    return nextScrollY;
+  });
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY))
+    .toBeGreaterThan(Math.min(100, targetScrollY - 1));
   const counterAfterScroll = await motionCounter.boundingBox();
-  expect(Math.abs((counterBeforeScroll?.y ?? 0) - (counterAfterScroll?.y ?? 0))).toBeLessThan(2);
+  expect(counterBeforeScroll).not.toBeNull();
+  expect(counterAfterScroll).not.toBeNull();
+  expect(counterAfterScroll?.y ?? 0).toBeLessThan((counterBeforeScroll?.y ?? 0) - 100);
+  expect((counterAfterScroll?.y ?? 0) + (counterAfterScroll?.height ?? 0)).toBeLessThan(0);
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await expect
+    .poll(async () => {
+      const box = await motionCounter.boundingBox();
+      return box ? box.y + box.height : Number.POSITIVE_INFINITY;
+    })
+    .toBeLessThan(0);
+  if (process.env.CAPTURE_SCREENSHOT) {
+    await page.screenshot({ path: `/tmp/nitya-home-scrolled-${test.info().project.name}.png` });
+  }
 
   await page.goto("./work/");
   await expect(
@@ -246,12 +267,15 @@ test("event trail and protected community voting live on the events page", async
   const mumbaiCard = trailMap
     .getByRole("link", { name: /Tata Mumbai Marathon/i })
     .locator(".checkpointCard");
-  await mumbaiCard.scrollIntoViewIfNeeded();
-  const trailBox = await trailMap.boundingBox();
-  const mumbaiBox = await mumbaiCard.boundingBox();
-  expect((mumbaiBox?.x ?? 0) + (mumbaiBox?.width ?? 0)).toBeLessThanOrEqual(
-    (trailBox?.x ?? 0) + (trailBox?.width ?? 0) + 1,
-  );
+  await expect(mumbaiCard).toBeAttached();
+  await expect
+    .poll(async () => {
+      const trailBox = await trailMap.boundingBox();
+      const mumbaiBox = await mumbaiCard.boundingBox();
+      if (!trailBox || !mumbaiBox) return false;
+      return mumbaiBox.x + mumbaiBox.width <= trailBox.x + trailBox.width + 1;
+    })
+    .toBe(true);
 
   const trailRunnerBox = await trailMap.locator(".trailRunner").boundingBox();
   const nextTrailCheckpointBox = await trailMap.locator(".trailCheckpoint-next").boundingBox();

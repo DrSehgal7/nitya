@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     description: "A self-funded public project to help 100 people in practical, measurable ways.",
     images: [
       {
-        url: `${site.siteUrl}/social-card.png`,
+        url: "/social-card.png",
         width: 1200,
         height: 630,
         alt: "Nitya — small things, done daily",
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nitya — a small daily mission",
     description: "A self-funded public project to help 100 people in practical, measurable ways.",
-    images: [`${site.siteUrl}/social-card.png`],
+    images: ["/social-card.png"],
   },
-  icons: { icon: `${site.siteUrl}/favicon.svg` },
+  icons: { icon: "/favicon.svg" },
 };
 
 export const viewport: Viewport = {

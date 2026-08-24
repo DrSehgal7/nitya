@@ -34,10 +34,10 @@ export default async function HomePage() {
 
   return (
     <main id="main-content">
-      <SectionMotion persistent />
       <section className="artifactHero motionHost" id="mission">
         <RunnerScene />
         <SectionMotion />
+        <SectionMotion persistent />
         <div className="shell artifactHeroGrid">
           <div className="artifactHeroCopy">
             <p className="eyebrow">A personal, public experiment in everyday impact</p>

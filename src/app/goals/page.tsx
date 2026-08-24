@@ -23,9 +23,9 @@ export default async function GoalsPage() {
 
   return (
     <main id="main-content" className="subpageMain">
-      <SectionMotion persistent />
       <section className="subpageHero motionHost">
         <SectionMotion />
+        <SectionMotion persistent />
         <div className="shell subpageHeroInner">
           <Link className="subpageBackLink" href="/">
             <ArrowLeft size={16} aria-hidden="true" /> Back to Nitya
