@@ -2,6 +2,15 @@ import { expect, test } from "@playwright/test";
 import { project } from "../../src/data/content";
 import { projectDaysSince } from "../../src/lib/project-time";
 
+test("denies browser access to local network services", async ({ request }) => {
+  const response = await request.get("./");
+  const permissionsPolicy = response.headers()["permissions-policy"];
+
+  expect(permissionsPolicy).toContain("local-network=()");
+  expect(permissionsPolicy).toContain("loopback-network=()");
+  expect(permissionsPolicy).toContain("local-network-access=()");
+});
+
 test("shows the focused impact story, contribution paths, and contact form", async ({
   page,
 }, testInfo) => {
