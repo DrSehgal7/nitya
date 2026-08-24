@@ -44,6 +44,32 @@ export default function AboutPage() {
             <h2>
               Hritik <span lang="hi">सरोच</span>
             </h2>
+            <p className="profileBioIntro">
+              Software engineer, average hybrid athlete and enthusiastic beginner at several
+              unrelated things.
+            </p>
+            <ul className="profileBioList" aria-label="A few things about Hritik">
+              <li>
+                <span aria-hidden="true">🏃</span>
+                <span>Exploring my physical limits through running and strength.</span>
+              </li>
+              <li>
+                <span aria-hidden="true">🍳</span>
+                <span>Occasional chef—still an average cook, but confidently experimenting.</span>
+              </li>
+              <li>
+                <span aria-hidden="true">☕</span>
+                <span>Currently mixing espresso tonics with coconut, orange and mango.</span>
+              </li>
+              <li>
+                <span aria-hidden="true">💪</span>
+                <span>Happy to help with your first kilometre, chin-up or pull-up.</span>
+              </li>
+              <li>
+                <span aria-hidden="true">✨</span>
+                <span>Up for fun challenges in tech or sport—and a good documentary after.</span>
+              </li>
+            </ul>
             <a
               className="profileInstagram"
               href={site.instagramUrl}

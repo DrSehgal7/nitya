@@ -9,9 +9,10 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
   { href: "/", label: "Home" },
-  { href: "/#contribute", label: "Contribute" },
   { href: "/about", label: "About" },
-  { href: "/#numbers", label: "Results" },
+  { href: "/work", label: "Habits" },
+  { href: "/goals", label: "Goals" },
+  { href: "/events", label: "Events" },
 ];
 
 export function SiteHeader() {
@@ -44,8 +45,8 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <Link className="navCta" href="/#contact" onClick={() => setOpen(false)}>
-              Let&apos;s talk
+            <Link className="navCta" href="/#contribute" onClick={() => setOpen(false)}>
+              Contribute
             </Link>
           </nav>
           <ThemeToggle />

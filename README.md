@@ -2,9 +2,9 @@
 
 A self-funded public promise to help 100 people in practical, measurable ways.
 
-This repository contains a **Next.js + TypeScript** application deployed on Vercel. The main public journey is deliberately small: the homepage explains Nitya, its self-funded commitment, verified results and ways to contribute without donating; `/about` tells Hritik's story. A private collaboration inbox and Google-authenticated owner studio are backed by private Vercel Blob storage.
+This repository contains a **Next.js + TypeScript** application deployed on Vercel. The homepage explains Nitya, its self-funded commitment, verified results and ways to contribute without donating. It also acts as the directory for Hritik's separate About, Habits, Goals and Events pages. A private collaboration inbox and Google-authenticated owner studio are backed by private Vercel Blob storage.
 
-Personal goals, habits and event tools still exist at direct routes for Hritik's own use, but they are not promoted in the main navigation and are never presented as Nitya contributions.
+Personal goals, habits and events are linked clearly from the homepage and navigation, while remaining explicitly separate from Nitya contributions.
 
 ## Run locally
 
@@ -21,6 +21,9 @@ Open:
 
 - Home: `http://127.0.0.1:3000/`
 - About Hritik: `http://127.0.0.1:3000/about`
+- Habits Hritik is building: `http://127.0.0.1:3000/work`
+- Public personal goals: `http://127.0.0.1:3000/goals`
+- Events and suggestions: `http://127.0.0.1:3000/events`
 - Owner content studio: `http://127.0.0.1:3000/owner`
 
 ## Verify

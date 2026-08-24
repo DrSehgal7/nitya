@@ -21,6 +21,22 @@ test("shows the focused impact story, contribution paths, and contact form", asy
   await expect(page.getByText("Tell me who could use practical help.")).toBeVisible();
   await expect(page.getByText("Bring time, a skill or an introduction.")).toBeVisible();
   await expect(page.getByText("Verify a need or help report the result.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pick the part you came for." })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Meet the person behind Nitya/i })).toHaveAttribute(
+    "href",
+    "/about",
+  );
+  await expect(page.getByRole("link", { name: /See what I'm working on/i })).toHaveAttribute(
+    "href",
+    "/work",
+  );
+  await expect(page.getByRole("link", { name: /Follow the goals I'm chasing/i })).toHaveAttribute(
+    "href",
+    "/goals",
+  );
+  await expect(
+    page.getByRole("link", { name: /See what is next on my calendar/i }),
+  ).toHaveAttribute("href", "/events");
   await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toHaveCount(0);
   if (process.env.CAPTURE_SCREENSHOT) {
     await page.screenshot({
@@ -33,9 +49,9 @@ test("shows the focused impact story, contribution paths, and contact form", asy
   }
 
   await expect(page.locator('.primaryNav a[href="/about"]')).toHaveAttribute("href", "/about");
-  await expect(page.getByText(/Small experiments I'm trying/i)).toHaveCount(0);
-  await expect(page.getByText(/Side goals I'm tracking in public/i)).toHaveCount(0);
-  await expect(page.getByText(/Events, races and public challenges/i)).toHaveCount(0);
+  await expect(page.locator('.primaryNav a[href="/work"]')).toHaveAttribute("href", "/work");
+  await expect(page.locator('.primaryNav a[href="/goals"]')).toHaveAttribute("href", "/goals");
+  await expect(page.locator('.primaryNav a[href="/events"]')).toHaveAttribute("href", "/events");
   await expect(page.getByText(/Brewing this section for you/i)).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "My race calendar" })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: /Sponsor a kilometre/i })).toHaveCount(0);
@@ -89,6 +105,8 @@ test("about tells Hritik's story without presenting running as contribution", as
     page.getByRole("heading", { name: "Useful help should feel clear, voluntary and human." }),
   ).toBeVisible();
   await expect(page.getByText(/positively impact 100 lives/i)).toBeVisible();
+  await expect(page.getByText(/Software engineer, average hybrid athlete/i)).toBeVisible();
+  await expect(page.getByText(/first kilometre, chin-up or pull-up/i)).toBeVisible();
   await expect(
     page.getByRole("img", { name: /Hritik Saroch smiling beside a snowy mountain stream/i }),
   ).toBeVisible();

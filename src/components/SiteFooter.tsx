@@ -10,6 +10,9 @@ export function SiteFooter() {
         <p>A self-funded public promise to turn small actions into practical, measurable help.</p>
         <nav aria-label="Footer">
           <Link href="/about/">About</Link>
+          <Link href="/work/">Habits</Link>
+          <Link href="/goals/">Goals</Link>
+          <Link href="/events/">Events</Link>
           <a href={site.instagramUrl} target="_blank" rel="noreferrer">
             Instagram
           </a>

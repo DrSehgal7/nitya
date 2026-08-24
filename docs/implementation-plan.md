@@ -11,16 +11,20 @@ Nitya is Hritik's self-funded public promise to help 100 people in practical, vi
 
 The mission is practical help. The homepage explains the promise, where the help is intended to go, the current verified numbers and how someone can share a need, useful skill or introduction.
 
-The site does not collect donations or payments. It is not a coaching service, fundraising campaign or workout tracker. Hritik's habits, personal goals and events do not count as impact and are not part of the main public navigation.
+The site does not collect donations or payments. It is not a coaching service, fundraising campaign or workout tracker. Hritik's habits, personal goals and events do not count as impact; they are linked as clearly labelled personal pages rather than mixed into the contribution story.
 
 ## Public routes
 
 - `/` — the mission, simple process, focus areas, verified numbers, contribution options, transparency notes and contact form.
 - `/about` — Hritik's personal story and reason for starting Nitya. It contains no running pitch, fitness tracker or sponsored-distance contribution.
+- `/work` — the habits Hritik is building and updating in public.
+- `/goals` — Hritik's personal goals and their smaller checkpoints.
+- `/events` — Hritik's event calendar and account-protected event suggestions.
+- `/habits` — the separate account-protected page where visitors can join a habit.
 - `/owner` — authenticated owner dashboard for public content, events and submitted notes.
 - `/privacy` and `/thanks` — privacy details and form confirmation.
 
-Legacy personal tools remain available at direct routes for Hritik, but they are intentionally absent from the header, footer, homepage directory and sitemap.
+The homepage, header, footer and sitemap link to the personal pages, while their copy keeps them distinct from Nitya's verified impact.
 
 ## Product hierarchy
 

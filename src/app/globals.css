@@ -3844,6 +3844,23 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.projectDirectoryGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.projectDirectoryGrid .directoryCard {
+  min-height: 335px;
+}
+
+.projectDirectoryGrid .directoryCard > strong {
+  font-size: clamp(1.95rem, 2.8vw, 3rem);
+  line-height: 1;
+}
+
+.projectDirectoryGrid .directoryCard > p {
+  font-size: 0.74rem;
+}
+
 .contributionGrid .directoryCard {
   min-height: 320px;
 }
@@ -3946,6 +3963,18 @@ h3 {
 .directoryCardGoals .directoryIcon {
   background: color-mix(in srgb, var(--accent) 14%, var(--surface));
   color: var(--accent);
+}
+
+.directoryCardAbout .directoryIcon {
+  background: color-mix(in srgb, var(--blue) 10%, var(--surface));
+  color: var(--text);
+}
+
+.profileBioIntro {
+  margin: 0.75rem 0 0;
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  line-height: 1.65;
 }
 
 /* Dedicated experience pages */
@@ -5451,6 +5480,10 @@ h3 {
   .contributionGrid {
     grid-template-columns: 1fr;
   }
+
+  .projectDirectoryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 920px) {
@@ -5522,6 +5555,10 @@ h3 {
   .directoryGrid {
     grid-template-columns: 1fr;
   }
+
+  .projectDirectoryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 760px) {
@@ -5558,6 +5595,10 @@ h3 {
 
   .directoryCard {
     min-height: 310px;
+  }
+
+  .projectDirectoryGrid {
+    grid-template-columns: 1fr;
   }
 
   .directoryCard > strong {

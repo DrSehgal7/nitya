@@ -3,10 +3,14 @@ import {
   AtSign,
   Check,
   Coffee,
+  Flag,
   HeartHandshake,
+  ListChecks,
   LockKeyhole,
   ShieldCheck,
   Sparkles,
+  Target,
+  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { ContactForm } from "@/components/ContactForm";
@@ -92,6 +96,65 @@ export default async function HomePage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="section sectionDirectory projectDirectory motionHost" id="explore">
+        <SectionMotion />
+        <div className="shell">
+          <p className="sectionSticker">🧭 Explore Nitya</p>
+          <p className="eyebrow">Choose your path</p>
+          <h2 className="artifactSectionTitle">Pick the part you came for.</h2>
+          <p className="sectionIntro">
+            The contribution story stays on this homepage. These separate pages show who I am and
+            the personal habits, goals and events I am building in public alongside Nitya.
+          </p>
+          <div className="directoryGrid projectDirectoryGrid">
+            <Link className="directoryCard directoryCardAbout" href="/about/">
+              <span className="directoryIcon" aria-hidden="true">
+                <UserRound size={25} />
+              </span>
+              <span className="eyebrow">About me</span>
+              <strong>Meet the person behind Nitya.</strong>
+              <p>My story, interests and the reason I chose to make this promise public.</p>
+              <span className="directoryAction">
+                Read my story <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
+            <Link className="directoryCard directoryCardWork" href="/work/">
+              <span className="directoryIcon" aria-hidden="true">
+                <ListChecks size={25} />
+              </span>
+              <span className="eyebrow">Habits in public</span>
+              <strong>See what I&apos;m working on.</strong>
+              <p>The everyday routines I am testing, learning from and updating honestly.</p>
+              <span className="directoryAction">
+                Explore my habits <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
+            <Link className="directoryCard directoryCardGoals" href="/goals/">
+              <span className="directoryIcon" aria-hidden="true">
+                <Target size={25} />
+              </span>
+              <span className="eyebrow">Goals in public</span>
+              <strong>Follow the goals I&apos;m chasing.</strong>
+              <p>Longer personal goals, divided into smaller checkpoints I can actually finish.</p>
+              <span className="directoryAction">
+                View my goals <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
+            <Link className="directoryCard directoryCardRaces" href="/events/">
+              <span className="directoryIcon" aria-hidden="true">
+                <Flag size={25} />
+              </span>
+              <span className="eyebrow">Events</span>
+              <strong>See what is next on my calendar.</strong>
+              <p>My races and challenges, plus a place to suggest the next interesting one.</p>
+              <span className="directoryAction">
+                Open events <ArrowRight size={17} aria-hidden="true" />
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
 
