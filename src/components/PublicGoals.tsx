@@ -6,10 +6,9 @@ import { formatDate } from "@/lib/format";
 interface PublicGoalsProps {
   goals: PublicGoal[];
   runningDistance: number;
-  pledgeLabel: string;
 }
 
-export function PublicGoals({ goals, runningDistance, pledgeLabel }: PublicGoalsProps) {
+export function PublicGoals({ goals, runningDistance }: PublicGoalsProps) {
   return (
     <div className="shell">
       <div className="ownerHeading publicGoalsHeading">
@@ -18,8 +17,8 @@ export function PublicGoals({ goals, runningDistance, pledgeLabel }: PublicGoals
           <h2 className="artifactSectionTitle">Every big goal gets smaller checkpoints.</h2>
           <p className="sectionIntro">
             These are Hritik&apos;s personal goals, broken into smaller milestones. He updates their
-            status and date from the owner dashboard. Completing a meaningful goal unlocks an extra
-            contribution on top of his private {pledgeLabel} baseline.
+            status and date from the owner dashboard. They are shown for accountability only; they
+            do not count as Nitya impact and do not ask anyone else to contribute.
           </p>
         </div>
         <Link className="ownerEditLink" href="/owner/">

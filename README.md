@@ -1,8 +1,10 @@
 # Nitya
 
-A small daily mission: improve life deliberately, give without guilt, and keep the numbers honest.
+A self-funded public promise to help 100 people in practical, measurable ways.
 
-This repository contains a **Next.js + TypeScript** application deployed on Vercel. It includes a fixed animated Project Nitya counter, an inline trail-style race calendar, a shared race-idea board, a read-only public habit challenge, dark and light themes, a browser-only spending exercise, a private collaboration inbox, and a Google-authenticated owner studio backed by private Vercel Blob storage.
+This repository contains a **Next.js + TypeScript** application deployed on Vercel. The main public journey is deliberately small: the homepage explains Nitya, its self-funded commitment, verified results and ways to contribute without donating; `/about` tells Hritik's story. A private collaboration inbox and Google-authenticated owner studio are backed by private Vercel Blob storage.
+
+Personal goals, habits and event tools still exist at direct routes for Hritik's own use, but they are not promoted in the main navigation and are never presented as Nitya contributions.
 
 ## Run locally
 
@@ -18,8 +20,7 @@ npm run dev
 Open:
 
 - Home: `http://127.0.0.1:3000/`
-- Habit challenge: `http://127.0.0.1:3000/habits`
-- Race trail and community suggestions: `http://127.0.0.1:3000/races`
+- About Hritik: `http://127.0.0.1:3000/about`
 - Owner content studio: `http://127.0.0.1:3000/owner`
 
 ## Verify
@@ -34,9 +35,10 @@ npm run test:e2e:local
 
 ## Content
 
-- Current typed habits, goals, initiatives, and public claims: `src/data/content.ts`
+- Current typed initiatives and public claims: `src/data/content.ts`
 - Manual weekend running total and as-of date: `runningSnapshot` in `src/data/content.ts`
 - Homepage composition: `src/app/page.tsx`
+- About story: `src/app/about/page.tsx`
 - Race track and trail: `src/components/RaceTrail.tsx`
 - Animated section treatment: `src/components/SectionMotion.tsx`
 - Shared race suggestions and voting: `src/components/RaceIdeasBoard.tsx`

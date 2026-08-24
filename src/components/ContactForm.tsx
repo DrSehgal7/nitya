@@ -61,7 +61,7 @@ export function ContactForm() {
         </span>
         <div>
           <h3>Leave a note</h3>
-          <p>Ideas, skills, runs, or coffee.</p>
+          <p>Ideas, skills, practical help, or coffee.</p>
         </div>
       </div>
 
@@ -93,8 +93,8 @@ export function ContactForm() {
           <option value="">Choose if useful</option>
           <option>Help with Nitya</option>
           <option>Offer a skill</option>
-          <option>Join a run</option>
-          <option>Suggest a race</option>
+          <option>Know a cause or need</option>
+          <option>Suggest an event or challenge</option>
           <option>Coffee or a chat</option>
           <option>Something else</option>
         </select>

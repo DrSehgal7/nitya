@@ -25,7 +25,7 @@ export function RaceIdeasBoard() {
   useEffect(() => {
     void fetch("/api/race-ideas")
       .then(async (response) => {
-        if (!response.ok) throw new Error("Race ideas are temporarily unavailable.");
+        if (!response.ok) throw new Error("Event ideas are temporarily unavailable.");
         return (await response.json()) as {
           ideas: PublicRaceIdea[];
           authenticated: boolean;
@@ -39,7 +39,7 @@ export function RaceIdeasBoard() {
       })
       .catch((error: unknown) =>
         setMessage(
-          error instanceof Error ? error.message : "Race ideas are temporarily unavailable.",
+          error instanceof Error ? error.message : "Event ideas are temporarily unavailable.",
         ),
       )
       .finally(() => setReady(true));
@@ -94,14 +94,14 @@ export function RaceIdeasBoard() {
           <span>
             {authenticated
               ? "Each Google account gets one vote per idea—even across browsers. Tap Voted again to remove it."
-              : "Sign in with Google to suggest a race or cast your one vote."}
+              : "Sign in with Google to suggest an event or cast your one vote."}
           </span>
         </div>
         {!authenticated && (
           <button
             type="button"
             disabled={!authAvailable}
-            onClick={() => void signIn("google", { redirectTo: "/races#race-ideas" })}
+            onClick={() => void signIn("google", { redirectTo: "/events#event-ideas" })}
           >
             {authAvailable ? "Continue with Google" : "Google sign-in unavailable"}
           </button>
@@ -112,8 +112,8 @@ export function RaceIdeasBoard() {
           name="name"
           required
           maxLength={80}
-          placeholder="Race / challenge name"
-          aria-label="Race or challenge name"
+          placeholder="Event or challenge name"
+          aria-label="Event or challenge name"
           disabled={!authenticated || busy}
         />
         <input
@@ -121,13 +121,13 @@ export function RaceIdeasBoard() {
           required
           maxLength={80}
           placeholder="Where?"
-          aria-label="Race location"
+          aria-label="Event location"
           disabled={!authenticated || busy}
         />
         <select
           name="type"
           defaultValue="trail"
-          aria-label="Race type"
+          aria-label="Event type"
           disabled={!authenticated || busy}
         >
           <option value="trail">Trail</option>
@@ -151,8 +151,8 @@ export function RaceIdeasBoard() {
       {ready && ideas.length === 0 ? (
         <div className="raceIdeasEmpty">
           <span aria-hidden="true">🏁</span>
-          <h3>No race suggestions yet.</h3>
-          <p>Add the first real race or challenge and it will begin with one vote.</p>
+          <h3>No event suggestions yet.</h3>
+          <p>Add the first real event or challenge and it will begin with one vote.</p>
         </div>
       ) : (
         <div className="raceIdeaGrid">

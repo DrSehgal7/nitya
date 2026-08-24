@@ -38,6 +38,15 @@ export interface PublicRaceIdea {
   canDelete: boolean;
 }
 
+export interface OwnerRaceIdea {
+  id: string;
+  name: string;
+  location: string;
+  type: RaceIdeaType;
+  votes: number;
+  createdAt: string;
+}
+
 export interface HabitJoinSummary {
   habitId: string;
   participantCount: number;

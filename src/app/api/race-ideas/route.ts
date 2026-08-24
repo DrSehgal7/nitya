@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { authConfigured } from "@/auth";
 import { signedInAccountId } from "@/lib/account-identity";
@@ -9,6 +10,12 @@ import {
 } from "@/lib/race-idea-store";
 
 export const dynamic = "force-dynamic";
+
+function refreshEventPages() {
+  revalidatePath("/events");
+  revalidatePath("/races");
+  revalidatePath("/owner");
+}
 
 export async function GET() {
   const currentVisitor = await signedInAccountId("race-voter");
@@ -30,30 +37,34 @@ export async function POST(request: Request) {
     const currentVisitor = await signedInAccountId("race-voter");
     if (!currentVisitor) {
       return NextResponse.json(
-        { error: "Sign in with Google to suggest a race or vote." },
+        { error: "Sign in with Google to suggest an event or vote." },
         { status: 401 },
       );
     }
 
     if (body.action === "suggest") {
-      return NextResponse.json(
-        await suggestRaceIdea({
-          visitorId: currentVisitor,
-          name: body.name,
-          location: body.location,
-          type: body.type,
-        }),
-      );
+      const result = await suggestRaceIdea({
+        visitorId: currentVisitor,
+        name: body.name,
+        location: body.location,
+        type: body.type,
+      });
+      refreshEventPages();
+      return NextResponse.json(result);
     }
     if (body.action === "vote") {
-      return NextResponse.json(await voteForRaceIdea(body.id, currentVisitor));
+      const result = await voteForRaceIdea(body.id, currentVisitor);
+      refreshEventPages();
+      return NextResponse.json(result);
     }
     if (body.action === "delete") {
-      return NextResponse.json({ ideas: await deleteRaceIdea(body.id, currentVisitor) });
+      const ideas = await deleteRaceIdea(body.id, currentVisitor);
+      refreshEventPages();
+      return NextResponse.json({ ideas });
     }
-    throw new Error("Unknown race idea action.");
+    throw new Error("Unknown event idea action.");
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unable to update race ideas.";
+    const message = error instanceof Error ? error.message : "Unable to update event ideas.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

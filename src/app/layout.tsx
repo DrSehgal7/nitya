@@ -30,13 +30,12 @@ export const metadata: Metadata = {
     template: "%s — Nitya",
   },
   description:
-    "Hritik सरोच's public experiment in turning better everyday habits into measurable help for other people.",
+    "Hritik Saroch's self-funded public project to help 100 people in practical, measurable ways.",
   openGraph: {
     type: "website",
     siteName: "Nitya",
     title: "Nitya — a small daily mission",
-    description:
-      "A public experiment in turning better everyday habits into measurable help for other people.",
+    description: "A self-funded public project to help 100 people in practical, measurable ways.",
     images: [
       {
         url: `${site.siteUrl}/social-card.png`,
@@ -49,8 +48,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Nitya — a small daily mission",
-    description:
-      "A public experiment in turning better everyday habits into measurable help for other people.",
+    description: "A self-funded public project to help 100 people in practical, measurable ways.",
     images: [`${site.siteUrl}/social-card.png`],
   },
   icons: { icon: `${site.siteUrl}/favicon.svg` },

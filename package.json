@@ -16,7 +16,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:local": "PLAYWRIGHT_SYSTEM_CHROME=1 playwright test",
-    "review:visual": "CAPTURE_SCREENSHOT=1 PLAYWRIGHT_SYSTEM_CHROME=1 playwright test --grep 'shows the artifact|theme toggle'",
+    "review:visual": "CAPTURE_SCREENSHOT=1 PLAYWRIGHT_SYSTEM_CHROME=1 playwright test --grep 'shows the focused impact|about tells Hritik|theme toggle'",
     "sync:strava": "node --import tsx scripts/sync-strava.ts"
   },
   "dependencies": {

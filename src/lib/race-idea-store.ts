@@ -3,7 +3,7 @@ import "server-only";
 import { get, list, put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
 import { addVoterOnce, toggleVoter, uniqueVoterIds } from "@/lib/race-idea-votes";
-import type { PublicRaceIdea, RaceIdeaType, StoredRaceIdea } from "@/types/content";
+import type { OwnerRaceIdea, PublicRaceIdea, RaceIdeaType, StoredRaceIdea } from "@/types/content";
 
 const IDEAS_PREFIX = "nitya-content/race-ideas-";
 const raceTypes = new Set<RaceIdeaType>(["trail", "road", "hyrox", "ultra", "triathlon", "fun"]);
@@ -60,6 +60,13 @@ function parseIdeas(value: unknown): StoredRaceIdea[] {
   });
 }
 
+function normaliseIdeas(ideas: StoredRaceIdea[]): StoredRaceIdea[] {
+  return ideas.slice(0, 100).map((idea) => ({
+    ...idea,
+    voterIds: uniqueVoterIds(idea.voterIds),
+  }));
+}
+
 async function readIdeas(): Promise<StoredRaceIdea[]> {
   if (!blobConfigured()) {
     return process.env.NODE_ENV === "production"
@@ -77,14 +84,15 @@ async function readIdeas(): Promise<StoredRaceIdea[]> {
 }
 
 async function writeIdeas(ideas: StoredRaceIdea[]): Promise<void> {
+  const normalisedIdeas = normaliseIdeas(ideas);
   if (!blobConfigured()) {
     if (process.env.NODE_ENV === "production") {
-      throw new Error("Race suggestion storage is not configured.");
+      throw new Error("Event suggestion storage is not configured.");
     }
-    localRaceState.__nityaRaceIdeas = structuredClone(ideas.slice(0, 100));
+    localRaceState.__nityaRaceIdeas = structuredClone(normalisedIdeas);
     return;
   }
-  await put(`${IDEAS_PREFIX}${Date.now()}.json`, JSON.stringify(ideas.slice(0, 100)), {
+  await put(`${IDEAS_PREFIX}${Date.now()}.json`, JSON.stringify(normalisedIdeas), {
     access: "private",
     contentType: "application/json",
     addRandomSuffix: true,
@@ -113,9 +121,26 @@ export async function getPublicRaceIdeas(visitorId: string): Promise<PublicRaceI
   try {
     return publicIdeas(await readIdeas(), visitorId);
   } catch (error) {
-    console.error("Unable to read race ideas.", error);
+    console.error("Unable to read event ideas.", error);
     return [];
   }
+}
+
+export async function getOwnerRaceIdeas(): Promise<OwnerRaceIdea[]> {
+  return ownerIdeas(await readIdeas());
+}
+
+function ownerIdeas(ideas: StoredRaceIdea[]): OwnerRaceIdea[] {
+  return normaliseIdeas(ideas)
+    .map((idea) => ({
+      id: idea.id,
+      name: idea.name,
+      location: idea.location,
+      type: idea.type,
+      votes: idea.voterIds.length,
+      createdAt: idea.createdAt,
+    }))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export async function suggestRaceIdea(input: {
@@ -129,7 +154,7 @@ export async function suggestRaceIdea(input: {
   const location = cleanText(input.location, 80);
   const type = raceTypes.has(input.type as RaceIdeaType) ? (input.type as RaceIdeaType) : null;
   if (!visitorId || !name || !location || !type)
-    throw new Error("Please complete every race field.");
+    throw new Error("Please complete every event field.");
 
   const ideas = await readIdeas();
   const duplicate = ideas.find(
@@ -154,12 +179,7 @@ export async function suggestRaceIdea(input: {
     });
     message = `${name} was added with one vote.`;
   }
-  await writeIdeas(
-    ideas.map((idea) => ({
-      ...idea,
-      voterIds: uniqueVoterIds(idea.voterIds),
-    })),
-  );
+  await writeIdeas(ideas);
   return { ideas: publicIdeas(ideas, visitorId), message };
 }
 
@@ -172,7 +192,7 @@ export async function voteForRaceIdea(
   if (!id || !visitorId) throw new Error("Unable to record this vote.");
   const ideas = await readIdeas();
   const idea = ideas.find((candidate) => candidate.id === id);
-  if (!idea) throw new Error("That race idea no longer exists.");
+  if (!idea) throw new Error("That event idea no longer exists.");
   const change = toggleVoter(idea.voterIds, visitorId);
   await writeIdeas(ideas);
   return {
@@ -200,4 +220,38 @@ export async function deleteRaceIdea(
   const next = ideas.filter((candidate) => candidate.id !== id);
   await writeIdeas(next);
   return publicIdeas(next, visitorId);
+}
+
+export async function updateRaceIdeaAsOwner(
+  idValue: unknown,
+  input: { name: unknown; location: unknown; type: unknown },
+): Promise<OwnerRaceIdea[]> {
+  const id = cleanText(idValue, 100);
+  const name = cleanText(input.name, 80);
+  const location = cleanText(input.location, 80);
+  const type = raceTypes.has(input.type as RaceIdeaType) ? (input.type as RaceIdeaType) : null;
+  if (!id || !name || !location || !type) {
+    throw new Error("Please complete every event field.");
+  }
+
+  const ideas = await readIdeas();
+  const index = ideas.findIndex((idea) => idea.id === id);
+  if (index < 0) throw new Error("That event idea no longer exists.");
+  const current = ideas[index];
+  if (!current) throw new Error("That event idea no longer exists.");
+  ideas[index] = { ...current, name, location, type };
+  await writeIdeas(ideas);
+  return ownerIdeas(ideas);
+}
+
+export async function deleteRaceIdeaAsOwner(idValue: unknown): Promise<OwnerRaceIdea[]> {
+  const id = cleanText(idValue, 100);
+  if (!id) throw new Error("Unable to remove this event idea.");
+  const ideas = await readIdeas();
+  if (!ideas.some((idea) => idea.id === id)) {
+    throw new Error("That event idea no longer exists.");
+  }
+  const next = ideas.filter((idea) => idea.id !== id);
+  await writeIdeas(next);
+  return ownerIdeas(next);
 }

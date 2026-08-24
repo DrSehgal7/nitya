@@ -1,72 +1,57 @@
-# Nitya public site — implementation plan
+# Nitya — product and implementation direction
 
-Status: **Vercel migration prepared; deployment and owner dashboard authentication pending**  
-Stack: **Next.js 16, React 19, TypeScript, Vercel server runtime**  
-Target: **Vercel production URL to be assigned**
+Status: **public MVP on Vercel; owner-managed content enabled**
+Stack: **Next.js, React, TypeScript, Vercel Functions and private Vercel Blob storage**
 
-## Product direction
+## One-sentence purpose
 
-Nitya is a personal public ledger and an invitation, not a fundraising campaign. It explains Hritik's mission, the habits behind it, how giving is handled, the next races, and how someone can help or meet for coffee.
+Nitya is Hritik's self-funded public promise to help 100 people in practical, visible ways and share the results honestly.
 
-The implementation uses the supplied artifact as its editorial direction: oversized Instrument Serif display type, Manrope body type, deep charcoal as the default theme, warm paper as the optional light theme, brick-red accents, thin borders, purposeful icons, and restrained runner motion.
+## What the site is—and is not
 
-## Implemented routes
+The mission is practical help. The homepage explains the promise, where the help is intended to go, the current verified numbers and how someone can share a need, useful skill or introduction.
 
-- `/` — the complete artifact story, repeated animated day counters and runners, illustrated commitment, founder story, initiatives, money handling and ledger, animated goals, horizontal race timeline, winding checkpoint trail, private spending analyser, live Strava/kilometre sponsor pairing, Google-account-protected race voting, account-protected habit participation and live join counts, Instagram, and coffee/help form.
-- `/owner` — a no-index reserved owner dashboard; authentication and form persistence are the next implementation phase.
-- `/privacy/` — plain-language form, Strava, and external-link privacy details.
-- `/thanks/` — form success page.
-- Static not-found page, sitemap, robots, sharing card, and favicon.
+The site does not collect donations or payments. It is not a coaching service, fundraising campaign or workout tracker. Hritik's habits, personal goals and events do not count as impact and are not part of the main public navigation.
 
-## Public-data rules
+## Public routes
 
-- Public totals and impact wording follow the owner-supplied artifact and must receive an explicit factual review before launch; `₹X` remains a visible placeholder until the baseline is entered.
-- Every race date links to an official organiser and is maintained in typed source data.
-- Strava publishes only activities visible to everyone and only name, date, distance, moving time, elevation, type, and activity URL.
-- Maps, coordinates, heart rate, devices, notes, and private/followers-only activities are excluded.
-- Spending-analyser values stay in the visitor's browser.
-- The contact form collects only the details needed to reply and requires explicit consent.
+- `/` — the mission, simple process, focus areas, verified numbers, contribution options, transparency notes and contact form.
+- `/about` — Hritik's personal story and reason for starting Nitya. It contains no running pitch, fitness tracker or sponsored-distance contribution.
+- `/owner` — authenticated owner dashboard for public content, events and submitted notes.
+- `/privacy` and `/thanks` — privacy details and form confirmation.
 
-## Race calendar decision
+Legacy personal tools remain available at direct routes for Hritik, but they are intentionally absent from the header, footer, homepage directory and sitemap.
 
-The race calendar belongs in the homepage story. A horizontal season overview leads into a winding trail map where every typed race becomes a checkpoint, links to its official organiser, and participates in the next-race countdown.
+## Product hierarchy
 
-Confirmed calendar:
+1. **Lead with the mission:** help 100 people in practical, measurable ways.
+2. **Explain the loop once:** find a real need, help clearly, share the result.
+3. **Show evidence:** verified savings and people helped, without exposing the private baseline amount.
+4. **Invite useful contact:** needs, skills, introductions, collaboration or coffee.
+5. **Keep the main journey small:** Home is the contribution story; About is the founder story.
 
-| Race                        |  Distance | Date              | Official source                      |
-| --------------------------- | --------: | ----------------- | ------------------------------------ |
-| Ladakh Marathon             | 42.195 km | 13 September 2026 | `ladakhmarathon.com`                 |
-| Vedanta Delhi Half Marathon | 21.097 km | 18 October 2026   | `vedantadelhihalfmarathon.procam.in` |
-| Tata Steel World 25K        |     25 km | 20 December 2026  | `tatasteelworld25k.procam.in`        |
-| Tata Mumbai Marathon        | 42.195 km | 17 January 2027   | `tatamumbaimarathon.procam.in`       |
+## Data and safety rules
 
-Suggested follow-up: TCS World 10K Bengaluru on 25 April 2027—a shorter speed-focused goal after the marathon block.
+- The exact self-funded baseline remains private and is displayed only as `₹X`.
+- Public totals must come from owner-reviewed monthly entries.
+- Contact notes are private owner records; only name and note are required.
+- Community participation uses Google accounts for one toggle per account and item.
+- Spending-analysis values stay in the visitor's browser.
+- Event dates link to official organisers and are maintained through typed owner content.
+- Public running data remains manually updated until a privacy-filtered Strava connection is approved.
 
-## Technical delivery
+## Review gates
 
-- Server-capable Next.js deployment at the domain root on Vercel.
-- Typed content in `src/data` with race validation tests.
-- CSS custom properties for persistent light/dark themes, with dark as the first-visit default.
-- Dated manual running snapshot with the dormant privacy-filtered Strava sync retained for later.
-- Reserved owner dashboard with server-side authorization to be implemented after Vercel setup and field review.
-- Private owner-inbox delivery through one Blob record per note, with a honeypot and direct Instagram/email alternatives.
-- Vitest unit tests and Playwright desktop/mobile smoke tests.
-- GitHub Actions verification plus Vercel Git deployments and previews.
+1. A first-time visitor can explain Nitya after reading the hero and three-step loop.
+2. The homepage never asks the visitor to fund a run or treats exercise as impact.
+3. The About page explains the founder story without turning running or fitness into contribution.
+4. Only verified help is added to the public numbers.
+5. Desktop and mobile flows pass automated accessibility, layout and interaction checks.
+6. Hritik reviews copy and public data before each material production update.
 
-## Review and launch gates
+## Later, only when the mission needs it
 
-1. **Local owner review:** design, copy, light/dark themes, mobile layout, race details, and public fields.
-2. **Real-data review:** replace blank ledger values only with verified records and an agreed methodology.
-3. **Vercel connection:** import the repository, set the canonical production URL, and review the generated domain.
-4. **Owner dashboard:** agree all owner-managed fields, then add the single-owner login, validated forms, and persistence.
-5. **Integration review:** submit and review a note in the private owner inbox; keep Strava manual until its API access is available.
-6. **Release candidate:** test the Vercel production URL, authentication boundary, links, metadata, form, and mobile layouts.
-7. **Public launch:** owner explicitly approves the content and data; tag the reviewed commit.
-
-## Later phases
-
-- A dated, itemised public ledger with supporting records.
-- Moderated community/provider profiles; never auto-publish submissions.
-- Race reports and past results.
-- Near-real-time Strava webhooks through a small serverless receiver, only if the hourly build sync is too slow.
-- Contributions only after payment, receipts, reconciliation, refunds, legal language, and cause verification are designed.
+- A dated, itemised impact ledger with supporting records.
+- Moderated provider profiles with explicit consent.
+- Privacy-filtered Strava sync for the optional events page.
+- Payment collection only after legal language, receipts, reconciliation and refunds are designed; it is not part of the current product.

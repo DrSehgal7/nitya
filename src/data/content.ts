@@ -61,15 +61,15 @@ export const runningSnapshot = {
 export const principles = [
   {
     title: "I commit first",
-    text: "A real baseline amount—shown publicly as ₹X—is already committed by me.",
+    text: "I have already set aside my own money, shown as ₹X because the amount is personal.",
   },
   {
-    title: "Better habits add more",
-    text: "I track genuine savings from reducing waste and can add that value on top of my baseline.",
+    title: "The outcome is public",
+    text: "When help is delivered, I record who it was for, what it did and what it cost.",
   },
   {
-    title: "Your participation is optional",
-    text: "Join a habit, offer a skill or simply follow along. No donation is required.",
+    title: "You do not need to donate",
+    text: "Follow the work, share a real need or offer a useful skill. Money is never required.",
   },
 ] as const;
 
@@ -141,8 +141,7 @@ export const goals: PublicGoal[] = [
     id: "run-1000-km",
     category: "Body",
     title: "Run 1,000 km this year",
-    description:
-      "Run a total of 1,000 km during the calendar year. The distance is updated from public Strava data or my latest manual entry.",
+    description: "A personal consistency goal, separate from Nitya's public impact work.",
     status: "in-progress",
     progress: 0,
     currentLabel: "0.0 / 1,000 km. Strava will update this after the first successful sync.",
@@ -158,7 +157,7 @@ export const goals: PublicGoal[] = [
     id: "deadlift-140",
     category: "Body",
     title: "Deadlift 150 kg",
-    description: "Build strength steadily without letting the running disappear.",
+    description: "A personal strength goal, separate from Nitya's public impact work.",
     status: "in-progress",
     progress: 87,
     currentLabel: "Building towards 150 kg",

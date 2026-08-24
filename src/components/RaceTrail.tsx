@@ -63,8 +63,8 @@ export function RaceTrail({ races }: { races: Race[] }) {
     return (
       <div className="raceExperience raceExperienceEmpty">
         <p className="eyebrow">Next on the start line</p>
-        <h3>My race calendar</h3>
-        <p>No races are on the calendar yet. The next owner-added race will appear here.</p>
+        <h3>My event calendar</h3>
+        <p>No events are on the calendar yet. The next owner-added event will appear here.</p>
       </div>
     );
   }
@@ -78,14 +78,14 @@ export function RaceTrail({ races }: { races: Race[] }) {
         <div className="raceCalendarHead">
           <div>
             <p className="eyebrow">Next on the start line</p>
-            <h3>My race calendar</h3>
+            <h3>My event calendar</h3>
           </div>
           <div className="raceCountdown" aria-live="polite">
             <strong>{daysToGo ?? "—"}</strong> days
             <span>to {nextRace.name}</span>
           </div>
         </div>
-        <div className="raceRail" aria-label="Race calendar timeline">
+        <div className="raceRail" aria-label="Event calendar timeline">
           <div className="raceRailLine" aria-hidden="true" />
           {races.map((race, index) => {
             const state =
@@ -116,15 +116,15 @@ export function RaceTrail({ races }: { races: Race[] }) {
 
       <div className="trailHeading">
         <div>
-          <p className="eyebrow">Dynamic race path</p>
-          <h3>Every race becomes a checkpoint</h3>
+          <p className="eyebrow">A personal side quest</p>
+          <h3>Every event becomes a checkpoint</h3>
           <p>
-            Past races appear behind the runner. The runner stops before the next unfinished race,
-            and future races continue along the trail. Dates and countdowns update automatically.
+            This is my personal calendar, separate from Nitya&apos;s help-people mission. Completed
+            events sit behind the runner; the next unfinished event stays ahead.
           </p>
         </div>
         <a className="ownerEditLink" href="/owner">
-          <LockKeyhole size={14} aria-hidden="true" /> Owner: add a race
+          <LockKeyhole size={14} aria-hidden="true" /> Owner: add an event
         </a>
       </div>
 

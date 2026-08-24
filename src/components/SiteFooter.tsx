@@ -7,13 +7,11 @@ export function SiteFooter() {
     <footer className="siteFooter">
       <div className="shell footerInner">
         <Logo />
-        <p>A personal experiment in better habits, honest progress and measurable help.</p>
+        <p>A self-funded public promise to turn small actions into practical, measurable help.</p>
         <nav aria-label="Footer">
+          <Link href="/about/">About</Link>
           <a href={site.instagramUrl} target="_blank" rel="noreferrer">
             Instagram
-          </a>
-          <a href={site.stravaUrl} target="_blank" rel="noreferrer">
-            Strava
           </a>
           <Link href="/privacy/">Privacy</Link>
           <a href={site.repositoryUrl} target="_blank" rel="noreferrer">

@@ -12,7 +12,7 @@ import {
 } from "@/data/content";
 import type { Race } from "@/data/races";
 import { parseNumberDraft } from "@/lib/number-input";
-import type { ContactSubmission, SiteContent } from "@/types/content";
+import type { ContactSubmission, OwnerRaceIdea, RaceIdeaType, SiteContent } from "@/types/content";
 
 const goalStatusOptions = [
   ["not-started", "Yet to pick up"],
@@ -92,12 +92,22 @@ function NumericDraftInput({
 export function OwnerStudio({
   initialContent,
   initialSubmissions,
+  initialEventSuggestions,
 }: {
   initialContent: SiteContent;
   initialSubmissions: ContactSubmission[];
+  initialEventSuggestions: OwnerRaceIdea[];
 }) {
   const [content, setContent] = useState<SiteContent>(initialContent);
   const [submissions, setSubmissions] = useState<ContactSubmission[]>(initialSubmissions);
+  const [eventSuggestions, setEventSuggestions] =
+    useState<OwnerRaceIdea[]>(initialEventSuggestions);
+  const [eventSuggestionsBusy, setEventSuggestionsBusy] = useState(false);
+  const [eventSuggestionsMessage, setEventSuggestionsMessage] = useState(
+    initialEventSuggestions.length
+      ? "Community suggestions are ready to review."
+      : "No community event suggestions yet.",
+  );
   const [inboxLoading, setInboxLoading] = useState(false);
   const [inboxMessage, setInboxMessage] = useState(
     initialSubmissions.length
@@ -148,6 +158,57 @@ export function OwnerStudio({
       setInboxMessage(error instanceof Error ? error.message : "Unable to delete this note.");
     } finally {
       setInboxLoading(false);
+    }
+  }
+
+  function updateEventSuggestion(index: number, patch: Partial<OwnerRaceIdea>) {
+    setEventSuggestions((current) =>
+      current.map((idea, ideaIndex) => (ideaIndex === index ? { ...idea, ...patch } : idea)),
+    );
+  }
+
+  async function saveEventSuggestion(idea: OwnerRaceIdea) {
+    setEventSuggestionsBusy(true);
+    setEventSuggestionsMessage(`Saving ${idea.name}…`);
+    try {
+      const response = await fetch("/api/owner/event-suggestions", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(idea),
+      });
+      const result = (await response.json()) as { ideas?: OwnerRaceIdea[]; error?: string };
+      if (!response.ok) throw new Error(result.error || "Unable to save that event suggestion.");
+      setEventSuggestions(result.ideas ?? []);
+      setEventSuggestionsMessage(`${idea.name} was updated.`);
+    } catch (error) {
+      setEventSuggestionsMessage(
+        error instanceof Error ? error.message : "Unable to save that event suggestion.",
+      );
+    } finally {
+      setEventSuggestionsBusy(false);
+    }
+  }
+
+  async function deleteEventSuggestion(idea: OwnerRaceIdea) {
+    if (!window.confirm(`Delete the community suggestion “${idea.name}” permanently?`)) return;
+    setEventSuggestionsBusy(true);
+    setEventSuggestionsMessage(`Deleting ${idea.name}…`);
+    try {
+      const response = await fetch("/api/owner/event-suggestions", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: idea.id }),
+      });
+      const result = (await response.json()) as { ideas?: OwnerRaceIdea[]; error?: string };
+      if (!response.ok) throw new Error(result.error || "Unable to delete that event suggestion.");
+      setEventSuggestions(result.ideas ?? []);
+      setEventSuggestionsMessage(`${idea.name} was deleted.`);
+    } catch (error) {
+      setEventSuggestionsMessage(
+        error instanceof Error ? error.message : "Unable to delete that event suggestion.",
+      );
+    } finally {
+      setEventSuggestionsBusy(false);
     }
   }
 
@@ -300,6 +361,96 @@ export function OwnerStudio({
                     </div>
                   )}
                 </dl>
+              </article>
+            ))}
+          </div>
+        )}
+      </details>
+
+      <details className="ownerEditorSection" open>
+        <summary>Community event suggestions ({eventSuggestions.length})</summary>
+        <div className="ownerInboxToolbar">
+          <p aria-live="polite">{eventSuggestionsMessage}</p>
+        </div>
+        <p className="ownerSectionHint">
+          These are submitted from the public Events page. You can correct or remove a suggestion;
+          its account-based vote total is read-only.
+        </p>
+        {eventSuggestions.length === 0 ? (
+          <div className="ownerInboxEmpty">
+            <p>New community suggestions will appear here automatically.</p>
+          </div>
+        ) : (
+          <div className="ownerEditorList">
+            {eventSuggestions.map((idea, index) => (
+              <article className="ownerEditorCard" key={idea.id}>
+                <div className="ownerEditorCardHead">
+                  <strong>💡 {idea.name || "Untitled event"}</strong>
+                  <button
+                    className="ownerDelete"
+                    type="button"
+                    disabled={eventSuggestionsBusy}
+                    aria-label={`Delete ${idea.name}`}
+                    onClick={() => void deleteEventSuggestion(idea)}
+                  >
+                    <Trash2 size={15} aria-hidden="true" />
+                  </button>
+                </div>
+                <div className="ownerFieldGrid ownerFieldGridFour">
+                  <label className="ownerFieldWide">
+                    Event or challenge name
+                    <input
+                      value={idea.name}
+                      maxLength={80}
+                      onChange={(event) =>
+                        updateEventSuggestion(index, { name: event.target.value })
+                      }
+                    />
+                  </label>
+                  <label>
+                    Location
+                    <input
+                      value={idea.location}
+                      maxLength={80}
+                      onChange={(event) =>
+                        updateEventSuggestion(index, { location: event.target.value })
+                      }
+                    />
+                  </label>
+                  <label>
+                    Type
+                    <select
+                      value={idea.type}
+                      onChange={(event) =>
+                        updateEventSuggestion(index, {
+                          type: event.target.value as RaceIdeaType,
+                        })
+                      }
+                    >
+                      <option value="trail">Trail</option>
+                      <option value="road">Road</option>
+                      <option value="hyrox">Hyrox</option>
+                      <option value="ultra">Ultra</option>
+                      <option value="triathlon">Triathlon</option>
+                      <option value="fun">Just for fun</option>
+                    </select>
+                  </label>
+                  <label>
+                    Votes
+                    <input value={idea.votes} readOnly aria-readonly="true" />
+                  </label>
+                </div>
+                <div className="ownerEventSuggestionActions">
+                  <small>Suggested {new Date(idea.createdAt).toLocaleDateString("en-IN")}</small>
+                  <button
+                    className="ownerAdd ownerAddCompact"
+                    type="button"
+                    disabled={eventSuggestionsBusy}
+                    onClick={() => void saveEventSuggestion(idea)}
+                  >
+                    <Save size={14} aria-hidden="true" /> Save suggestion
+                  </button>
+                </div>
               </article>
             ))}
           </div>
@@ -752,9 +903,9 @@ export function OwnerStudio({
       </details>
 
       <details className="ownerEditorSection" open>
-        <summary>Race calendar</summary>
+        <summary>Event calendar</summary>
         <p className="ownerSectionHint">
-          Saved races are automatically ordered by date and added to the public trail.
+          Saved events are automatically ordered by date and added to your optional public trail.
         </p>
         <div className="ownerEditorList">
           {content.races.map((race, index) => (
@@ -777,7 +928,7 @@ export function OwnerStudio({
               </div>
               <div className="ownerFieldGrid ownerFieldGridFour">
                 <label className="ownerFieldWide">
-                  Race name
+                  Event name
                   <input
                     value={race.name}
                     maxLength={120}
@@ -869,9 +1020,9 @@ export function OwnerStudio({
               races: [
                 ...current.races,
                 {
-                  slug: freshId("race"),
-                  name: "New race",
-                  shortName: "New race",
+                  slug: freshId("event"),
+                  name: "New event",
+                  shortName: "New event",
                   distanceKm: 10,
                   location: "Location",
                   date: new Date().toISOString().slice(0, 10),
@@ -884,7 +1035,7 @@ export function OwnerStudio({
             }))
           }
         >
-          <Plus size={15} /> Add race
+          <Plus size={15} /> Add event
         </button>
       </details>
 

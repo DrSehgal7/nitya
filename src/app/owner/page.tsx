@@ -4,6 +4,7 @@ import { auth, authConfigured, isOwnerEmail, signOut } from "@/auth";
 import { OwnerStudio } from "@/components/OwnerStudio";
 import { getContactSubmissions } from "@/lib/contact-store";
 import { getSiteContent } from "@/lib/content-store";
+import { getOwnerRaceIdeas } from "@/lib/race-idea-store";
 
 export const metadata: Metadata = {
   title: "Owner content studio",
@@ -16,10 +17,14 @@ export default async function OwnerPage() {
   if (!authConfigured) redirect("/owner/sign-in?error=Configuration");
   const session = await auth();
   if (!session?.user.owner || !isOwnerEmail(session.user.email)) redirect("/owner/sign-in");
-  const [content, submissions] = await Promise.all([
+  const [content, submissions, eventSuggestions] = await Promise.all([
     getSiteContent(),
     getContactSubmissions().catch((error) => {
       console.error("Unable to load the owner message inbox.", error);
+      return [];
+    }),
+    getOwnerRaceIdeas().catch((error) => {
+      console.error("Unable to load community event suggestions.", error);
       return [];
     }),
   ]);
@@ -45,7 +50,11 @@ export default async function OwnerPage() {
           </button>
         </form>
       </section>
-      <OwnerStudio initialContent={content} initialSubmissions={submissions} />
+      <OwnerStudio
+        initialContent={content}
+        initialSubmissions={submissions}
+        initialEventSuggestions={eventSuggestions}
+      />
     </main>
   );
 }

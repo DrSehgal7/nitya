@@ -2,31 +2,26 @@ import { expect, test } from "@playwright/test";
 import { project } from "../../src/data/content";
 import { projectDaysSince } from "../../src/lib/project-time";
 
-test("shows the artifact story, contact form, and compact route directory", async ({
+test("shows the focused impact story, contribution paths, and contact form", async ({
   page,
 }, testInfo) => {
   await page.goto("./");
 
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Build a better life");
-  await expect(page.getByText(/Nitya is my personal, public experiment/i)).toBeVisible();
-  await expect(page.getByText(/amount is real but intentionally private/i)).toBeVisible();
-  await expect(page.getByText(/not a charity or payment platform/i)).toBeVisible();
-  await expect(page.getByText(/I'm Hritik सरोच/)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Small everyday wins");
+  await expect(page.getByText(/personal promise to help/i)).toBeVisible();
+  await expect(page.getByText(/does not collect donations/i)).toBeVisible();
+  await expect(
+    page.getByText(/public record of small choices becoming practical help/i),
+  ).toBeVisible();
   await expect(page.getByText(/Sanskrit—daily, constant, eternal/)).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "The numbers, kept honest" })).toBeVisible();
   await expect(page.getByRole("heading", { name: /collaboration—or coffee/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Send my note" })).toBeVisible();
-  await expect(
-    page.getByRole("img", { name: /Hritik Saroch smiling beside a snowy mountain stream/i }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("img", { name: /Hritik Saroch playfully leaning into a snowy chai break/i }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: /message Hritik.*Instagram/i })).toHaveAttribute(
-    "href",
-    "https://www.instagram.com/hritik_saroch/",
-  );
-  await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Three ways you can help." })).toBeVisible();
+  await expect(page.getByText("Tell me who could use practical help.")).toBeVisible();
+  await expect(page.getByText("Bring time, a skill or an introduction.")).toBeVisible();
+  await expect(page.getByText("Verify a need or help report the result.")).toBeVisible();
+  await expect(page.getByText(/as of 10 Aug 2026.*updated manually/i)).toHaveCount(0);
   if (process.env.CAPTURE_SCREENSHOT) {
     await page.screenshot({
       path: `/tmp/nitya-home-top-${testInfo.project.name}.png`,
@@ -37,26 +32,13 @@ test("shows the artifact story, contact form, and compact route directory", asyn
     });
   }
 
-  await expect(page.getByRole("link", { name: /Make your life better with me/i })).toHaveAttribute(
-    "href",
-    "/habits",
-  );
-  await expect(page.getByRole("link", { name: /What I'm working on/i })).toHaveAttribute(
-    "href",
-    "/work",
-  );
-  await expect(page.getByRole("link", { name: /Goals I'm chasing in public/i })).toHaveAttribute(
-    "href",
-    "/goals",
-  );
-  await expect(
-    page.getByRole("link", { name: /Every race becomes a checkpoint/i }),
-  ).toHaveAttribute("href", "/races");
+  await expect(page.locator('.primaryNav a[href="/about"]')).toHaveAttribute("href", "/about");
+  await expect(page.getByText(/Small experiments I'm trying/i)).toHaveCount(0);
+  await expect(page.getByText(/Side goals I'm tracking in public/i)).toHaveCount(0);
+  await expect(page.getByText(/Events, races and public challenges/i)).toHaveCount(0);
+  await expect(page.getByText(/Brewing this section for you/i)).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "My race calendar" })).toHaveCount(0);
-  await expect(page.getByRole("heading", { name: /Sponsor a kilometre/i })).toBeVisible();
-  await expect(
-    page.getByText(/calculator only shows an amount; it does not take payment/i),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Sponsor a kilometre/i })).toHaveCount(0);
   const viewport = await page.evaluate(() => ({
     innerWidth: window.innerWidth,
     scrollWidth: document.documentElement.scrollWidth,
@@ -86,7 +68,7 @@ test("contact form requires only name and note and confirms private delivery", a
   await expect(privateInbox.json()).resolves.toEqual({ error: "Owner access required." });
 });
 
-test("mobile navigation opens and reaches the races page", async ({ page }, testInfo) => {
+test("mobile navigation opens and reaches the about page", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.startsWith("mobile"), "Mobile-only navigation check");
   await page.goto("./");
 
@@ -94,11 +76,28 @@ test("mobile navigation opens and reaches the races page", async ({ page }, test
   await expect(menu).toHaveAccessibleName("Open navigation");
   await menu.click();
   await expect(menu).toHaveAttribute("aria-expanded", "true");
-  await page.getByRole("link", { name: "Races", exact: true }).click();
-  await expect(page).toHaveURL(/\/races\/?$/);
+  await page.locator(".primaryNav").getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL(/\/about\/?$/);
+  await expect(page.getByRole("heading", { name: "Why I started Nitya." })).toBeVisible();
+});
+
+test("about tells Hritik's story without presenting running as contribution", async ({ page }) => {
+  await page.goto("./about/");
+
+  await expect(page.getByRole("heading", { level: 1, name: "Why I started Nitya." })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Every race becomes a checkpoint" }),
+    page.getByRole("heading", { name: "Useful help should feel clear, voluntary and human." }),
   ).toBeVisible();
+  await expect(page.getByText(/positively impact 100 lives/i)).toBeVisible();
+  await expect(
+    page.getByRole("img", { name: /Hritik Saroch smiling beside a snowy mountain stream/i }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /message Hritik.*Instagram/i })).toHaveAttribute(
+    "href",
+    "https://www.instagram.com/hritik_saroch/",
+  );
+  await expect(page.getByText(/Strava|deadlift|workout|race calendar/i)).toHaveCount(0);
+  await expect(page.locator(".sectionMotionCounter")).toHaveCount(0);
 });
 
 test("theme toggle starts in dark mode and can be changed", async ({ page }, testInfo) => {
@@ -157,7 +156,7 @@ test("habit participation requires an account and exposes one toggle per habit",
   });
 });
 
-test("restored motion and focused work and goals pages work", async ({ page }) => {
+test("restored motion and focused personal pages remain available directly", async ({ page }) => {
   await page.goto("./");
   const motionCounter = page.locator(".sectionMotionCounter");
   const expectedDays = projectDaysSince(project.startedOn);
@@ -172,16 +171,15 @@ test("restored motion and focused work and goals pages work", async ({ page }) =
   const counterAfterScroll = await motionCounter.boundingBox();
   expect(Math.abs((counterBeforeScroll?.y ?? 0) - (counterAfterScroll?.y ?? 0))).toBeLessThan(2);
 
-  await expect(page.getByText(/average hybrid athlete · runner · always exploring/i)).toBeVisible();
-  await expect(page.getByText(/mango espresso tonics/i)).toBeVisible();
-
   await page.goto("./work/");
-  await expect(page.getByRole("heading", { level: 1, name: /What I'm working on/i })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: /Small experiments I'm trying/i }),
+  ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Eat what I actually need" })).toBeVisible();
 
   await page.goto("./goals/");
   await expect(
-    page.getByRole("heading", { level: 1, name: /Goals I'm chasing in public/i }),
+    page.getByRole("heading", { level: 1, name: /Side goals I'm tracking in public/i }),
   ).toBeVisible();
 
   const runGoal = page.locator(".artifactGoalCard").filter({
@@ -189,7 +187,7 @@ test("restored motion and focused work and goals pages work", async ({ page }) =
   });
   const statusBox = await runGoal.locator(".workStatus").boundingBox();
   const descriptionBox = await runGoal
-    .getByText(/Run a total of 1,000 km during the calendar year/i)
+    .getByText(/personal consistency goal, separate from Nitya's public impact work/i)
     .boundingBox();
   expect((statusBox?.y ?? 0) + (statusBox?.height ?? 0)).toBeLessThanOrEqual(
     (descriptionBox?.y ?? 0) + 1,
@@ -199,21 +197,24 @@ test("restored motion and focused work and goals pages work", async ({ page }) =
 
   await page.goto("./");
   await expect(page.locator('input[type="number"]')).toHaveCount(0);
-  await expect(page.getByText(/Brewing this section for you/)).toBeVisible();
+  await expect(page.getByText(/Brewing this section for you/)).toHaveCount(0);
   await expect(page.getByRole("button", { name: /Analyse my spending/i })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /Food & eating out/i })).toHaveCount(0);
 });
 
-test("race trail and protected community voting live on the races page", async ({
+test("event trail and protected community voting live on the events page", async ({
   page,
 }, testInfo) => {
-  await page.goto("./races/");
+  await page.goto("./events/");
   await expect(
-    page.getByRole("heading", { level: 1, name: /Every race a checkpoint/i }),
+    page.getByRole("heading", {
+      level: 1,
+      name: /Personal checkpoints, separate from the mission/i,
+    }),
   ).toBeVisible();
-  await expect(page.getByRole("heading", { name: "My race calendar" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "My event calendar" })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Every race becomes a checkpoint" }),
+    page.getByRole("heading", { name: "Every event becomes a checkpoint" }),
   ).toBeVisible();
   await expect(page.getByText("Tata Steel World 25K", { exact: true })).toBeVisible();
 
@@ -241,12 +242,12 @@ test("race trail and protected community voting live on the races page", async (
   );
 
   await expect(page.getByText("One person. One vote.", { exact: true })).toBeVisible();
-  await expect(page.getByLabel("Race or challenge name")).toBeDisabled();
+  await expect(page.getByLabel("Event or challenge name")).toBeDisabled();
   await expect(page.getByRole("button", { name: "Suggest", exact: true })).toBeDisabled();
   await expect(page.getByRole("button", { name: /google sign-in unavailable/i })).toBeDisabled();
 
   if (process.env.CAPTURE_SCREENSHOT) {
-    await page.screenshot({ path: `/tmp/nitya-races-${testInfo.project.name}.png` });
+    await page.screenshot({ path: `/tmp/nitya-events-${testInfo.project.name}.png` });
   }
 
   const response = await page.request.post("./api/race-ideas", {
@@ -254,6 +255,6 @@ test("race trail and protected community voting live on the races page", async (
   });
   expect(response.status()).toBe(401);
   await expect(response.json()).resolves.toEqual({
-    error: "Sign in with Google to suggest a race or vote.",
+    error: "Sign in with Google to suggest an event or vote.",
   });
 });

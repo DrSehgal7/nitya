@@ -8,11 +8,10 @@ import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navigation = [
-  { href: "/#mission", label: "Start here" },
-  { href: "/work", label: "Work" },
-  { href: "/goals", label: "Goals" },
-  { href: "/habits", label: "Habits" },
-  { href: "/races", label: "Races" },
+  { href: "/", label: "Home" },
+  { href: "/#contribute", label: "Contribute" },
+  { href: "/about", label: "About" },
+  { href: "/#numbers", label: "Results" },
 ];
 
 export function SiteHeader() {
@@ -30,7 +29,10 @@ export function SiteHeader() {
           >
             {navigation.map((item) => {
               const route = item.href.split("#")[0] || "/";
-              const isActive = route !== "/" && pathname === route.replace(/\/$/, "");
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : route !== "/" && pathname === route.replace(/\/$/, "");
               return (
                 <Link
                   href={item.href}

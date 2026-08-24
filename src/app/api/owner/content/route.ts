@@ -27,6 +27,11 @@ export async function PUT(request: Request) {
   try {
     const content = await saveSiteContent(await request.json());
     revalidatePath("/");
+    revalidatePath("/work");
+    revalidatePath("/goals");
+    revalidatePath("/habits");
+    revalidatePath("/events");
+    revalidatePath("/races");
     revalidatePath("/owner");
     return NextResponse.json(content, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {

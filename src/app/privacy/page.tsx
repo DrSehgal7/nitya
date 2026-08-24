@@ -32,15 +32,15 @@ export default function PrivacyPage() {
 
       <h2>Google sign-in and participation</h2>
       <p>
-        Google sign-in is used to keep race votes and habit participation to one action per account.
-        Nitya does not store your Google email in its participation records. It converts the email
-        into a private, non-reversible identifier, stores that identifier in private Vercel Blob
-        storage, and publicly displays only aggregate vote and participant counts.
+        Google sign-in is used to keep event-idea votes and habit participation to one action per
+        account. Nitya does not store your Google email in its participation records. It converts
+        the email into a private, non-reversible identifier, stores that identifier in private
+        Vercel Blob storage, and publicly displays only aggregate vote and participant counts.
       </p>
 
       <h2>External links</h2>
       <p>
-        Links to Instagram, Strava, GitHub, and race organisers take you to services with their own
+        Links to Instagram, Strava, GitHub, and event organisers take you to services with their own
         privacy practices. Nitya cannot control those services.
       </p>
     </main>
