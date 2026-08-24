@@ -15,6 +15,7 @@ test("shows the focused impact story, contribution paths, and contact form", asy
       name: "Can improving my own systems create more capacity to help?",
     }),
   ).toBeVisible();
+  await expect(page.getByText(/a really cool experiment to test in public/i)).toBeVisible();
   await expect(
     page.getByRole("img", { name: /playfully leaning into a snowy chai break/i }),
   ).toBeVisible();

@@ -224,7 +224,8 @@ export default async function HomePage() {
           </p>
           <p>
             Success is not one large donation. It is a repeatable way to improve my life and make
-            someone else&apos;s life better at the same time.
+            someone else&apos;s life better at the same time. And honestly, I think that is a really
+            cool experiment to test in public.
           </p>
         </div>
       </section>
