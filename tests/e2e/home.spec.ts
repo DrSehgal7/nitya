@@ -22,10 +22,9 @@ test("shows the focused impact story, contribution paths, and contact form", asy
   await expect(page.getByRole("heading", { name: "The numbers, kept honest" })).toBeVisible();
   await expect(page.getByRole("heading", { name: /collaboration—or coffee/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Send my note" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Three ways you can help." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Two ways you can help." })).toBeVisible();
   await expect(page.getByText("Tell me who could use practical help.")).toBeVisible();
   await expect(page.getByText("Bring time, a skill or an introduction.")).toBeVisible();
-  await expect(page.getByText("Verify a need or help report the result.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Pick the part you came for." })).toBeVisible();
   await expect(page.getByRole("link", { name: /Meet the person behind Nitya/i })).toHaveAttribute(
     "href",

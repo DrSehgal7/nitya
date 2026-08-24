@@ -317,7 +317,7 @@ export default async function HomePage() {
         <div className="shell">
           <p className="sectionSticker">🤝 Contribute without donating</p>
           <p className="eyebrow">A useful next step</p>
-          <h2 className="artifactSectionTitle">Three ways you can help.</h2>
+          <h2 className="artifactSectionTitle">Two ways you can help.</h2>
           <p className="sectionIntro">
             You do not need to send money. A specific need, the right skill or a thoughtful
             introduction can be the contribution that unlocks real help.
@@ -343,17 +343,6 @@ export default async function HomePage() {
               <p>A small, specific offer is easier to turn into action than a general promise.</p>
               <span className="directoryAction">
                 Tell me what you can offer <ArrowRight size={17} aria-hidden="true" />
-              </span>
-            </a>
-            <a className="directoryCard" href="#contact">
-              <span className="directoryIcon" aria-hidden="true">
-                <Check size={25} />
-              </span>
-              <span className="eyebrow">03 · Help keep it honest</span>
-              <strong>Verify a need or help report the result.</strong>
-              <p>Good documentation makes the help understandable, accountable and repeatable.</p>
-              <span className="directoryAction">
-                Help me verify it <ArrowRight size={17} aria-hidden="true" />
               </span>
             </a>
           </div>
