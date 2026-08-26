@@ -51,7 +51,6 @@ export const metadata: Metadata = {
     description: "A self-funded public project to help 100 people in practical, measurable ways.",
     images: ["/social-card.png"],
   },
-  icons: { icon: "/favicon.svg" },
 };
 
 export const viewport: Viewport = {

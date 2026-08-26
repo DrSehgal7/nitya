@@ -6,7 +6,7 @@ interface LogoProps {
 
 export function Logo({ compact = false }: LogoProps) {
   return (
-    <Link className="brand" href="/" aria-label="Nitya home">
+    <Link className="brand" href="/" aria-label="Nitya home — a small daily mission">
       <span className="brandMark" aria-hidden="true">
         न
       </span>

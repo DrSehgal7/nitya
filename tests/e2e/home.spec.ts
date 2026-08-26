@@ -36,6 +36,18 @@ test("shows the focused impact story, contribution paths, and contact form", asy
   await expect(page.getByText("Tell me who could use practical help.")).toBeVisible();
   await expect(page.getByText("Bring time, a skill or an introduction.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Pick the part you came for." })).toBeVisible();
+  const personalDirectoryFollowsTheMission = await page.evaluate(() => {
+    const contact = document.querySelector("#contact");
+    const directory = document.querySelector("#explore");
+
+    return Boolean(
+      contact &&
+      directory &&
+      (contact.compareDocumentPosition(directory) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+    );
+  });
+  expect(personalDirectoryFollowsTheMission).toBe(true);
+  await expect(page.getByText(/Nitya's impact mission is the main story/i)).toBeVisible();
   await expect(page.getByRole("link", { name: /Meet the person behind Nitya/i })).toHaveAttribute(
     "href",
     "/about",
@@ -74,6 +86,17 @@ test("shows the focused impact story, contribution paths, and contact form", asy
     scrollWidth: document.documentElement.scrollWidth,
   }));
   expect(viewport.scrollWidth).toBeLessThanOrEqual(viewport.innerWidth + 1);
+});
+
+test("uses the Nitya mark for the header brand and browser icon", async ({ page }) => {
+  await page.goto("./");
+
+  const brand = page.getByRole("banner").getByRole("link", {
+    name: /Nitya home.*small daily mission/i,
+  });
+  await expect(brand).toBeVisible();
+  await expect(brand.locator(".brandMark")).toHaveText("न");
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", /\/icon\.svg/);
 });
 
 test("contact form requires only name and note and confirms private delivery", async ({ page }) => {

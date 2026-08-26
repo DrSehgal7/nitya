@@ -5922,7 +5922,16 @@ h3 {
   }
 
   .brandCopy {
-    display: none;
+    display: grid;
+  }
+
+  .brandCopy strong {
+    font-size: 1.45rem;
+  }
+
+  .brandCopy small {
+    font-size: 0.44rem;
+    letter-spacing: 0.12em;
   }
 
   .statGrid,
