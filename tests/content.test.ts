@@ -22,8 +22,8 @@ describe("owner-managed public content", () => {
     }
   });
 
-  it("starts Project Nitya on 12 August 2026 with a private baseline", () => {
-    expect(project.startedOn).toBe("2026-08-12");
+  it("starts Project Nitya on 29 August 2026 with a private baseline", () => {
+    expect(project.startedOn).toBe("2026-08-29");
     expect(project.baselinePledge).toBeNull();
   });
 

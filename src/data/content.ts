@@ -46,7 +46,7 @@ export const ledger: LedgerEntry[] = [
 ];
 
 export const project = {
-  startedOn: "2026-08-12",
+  startedOn: "2026-08-29",
   firstImpactGoal: 100,
   verifiedLives: ledger.reduce((total, entry) => total + entry.peopleImpacted, 0) as number | null,
   baselinePledge: null as number | null,
