@@ -1,6 +1,7 @@
 import "@fontsource-variable/manrope";
 import "@fontsource/instrument-serif";
 import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource/rozha-one/devanagari-400.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/SiteFooter";

@@ -95,7 +95,10 @@ export default function AboutPage() {
 
           <article className="aboutStory aboutNarrative">
             <p className="eyebrow">
-              <span lang="hi">नित्य</span> · Nitya
+              <span className="nityaHindi" lang="hi">
+                नित्य
+              </span>{" "}
+              · Nitya
             </p>
             <h2>Small things, repeated every day.</h2>
             <p>

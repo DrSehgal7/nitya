@@ -7,12 +7,14 @@ interface LogoProps {
 export function Logo({ compact = false }: LogoProps) {
   return (
     <Link className="brand" href="/" aria-label="Nitya home — a small daily mission">
-      <span className="brandMark" aria-hidden="true">
+      <span className="brandMark nityaHindi" aria-hidden="true">
         न
       </span>
       {!compact && (
         <span className="brandCopy">
-          <strong lang="hi">नित्य</strong>
+          <strong className="nityaHindi" lang="hi">
+            नित्य
+          </strong>
           <small>Nitya · daily</small>
         </span>
       )}
