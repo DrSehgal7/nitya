@@ -12,7 +12,7 @@ export function Logo({ compact = false }: LogoProps) {
       </span>
       {!compact && (
         <span className="brandCopy">
-          <strong className="nityaHindi" lang="hi">
+          <strong className="brandWordmark nityaHindi" lang="hi">
             नित्य
           </strong>
           <small>Nitya · daily</small>

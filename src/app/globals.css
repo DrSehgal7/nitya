@@ -284,38 +284,101 @@ h3 {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.72rem;
   text-decoration: none;
 }
 
 .brandMark {
+  position: relative;
+  isolation: isolate;
   display: grid;
   width: 39px;
   height: 39px;
+  overflow: hidden;
   place-items: center;
+  border: 1px solid color-mix(in srgb, white 20%, transparent);
   border-radius: 10px;
-  background: var(--accent);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent) 84%, white),
+    var(--accent) 62%,
+    color-mix(in srgb, var(--accent) 86%, black)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
+    0 8px 22px color-mix(in srgb, var(--accent) 18%, transparent);
   color: white;
   font-size: 1.5rem;
+  line-height: 1;
+  transform: rotate(-2deg);
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.brandMark::after {
+  position: absolute;
+  z-index: -1;
+  top: -45%;
+  left: 44%;
+  width: 55%;
+  height: 190%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.13), transparent);
+  content: "";
+  transform: rotate(18deg);
+}
+
+.brand:hover .brandMark {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 32%, transparent),
+    0 10px 26px color-mix(in srgb, var(--accent) 24%, transparent);
+  transform: rotate(0deg) translateY(-1px);
 }
 
 .nityaHindi {
   font-family: var(--font-devanagari);
   font-weight: 400;
-  letter-spacing: 0.015em;
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
 }
 
 .brandCopy {
   display: grid;
+  gap: 0.28rem;
   line-height: 1;
 }
 
 .brandCopy strong {
-  font-size: 1.8rem;
+  font-size: 1.92rem;
+}
+
+.brandWordmark {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  width: max-content;
+  line-height: 0.82;
+  text-shadow: 0 0 24px color-mix(in srgb, var(--accent) 13%, transparent);
+}
+
+.brandWordmark::after {
+  position: absolute;
+  z-index: -1;
+  bottom: -0.16rem;
+  left: 0.08rem;
+  width: 1.05rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent) 15%, transparent)
+  );
+  content: "";
+  transform: rotate(-2deg);
 }
 
 .brandCopy small {
-  margin-top: 0.25rem;
   color: var(--text-soft);
   font-size: 0.54rem;
   font-weight: 760;
