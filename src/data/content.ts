@@ -46,7 +46,7 @@ export const ledger: LedgerEntry[] = [
 ];
 
 export const project = {
-  startedOn: "2026-08-29",
+  startedOn: "2026-09-24",
   firstImpactGoal: 100,
   verifiedLives: ledger.reduce((total, entry) => total + entry.peopleImpacted, 0) as number | null,
   baselinePledge: null as number | null,
@@ -54,8 +54,8 @@ export const project = {
 
 // Update these after your weekend run. A connected Strava sync takes precedence automatically.
 export const runningSnapshot = {
-  distanceKm: 0,
-  asOf: "2026-08-10",
+  distanceKm: 778,
+  asOf: "2026-10-24",
 } as const;
 
 export const principles = [
@@ -143,13 +143,13 @@ export const goals: PublicGoal[] = [
     title: "Run 1,000 km this year",
     description: "A personal consistency goal, separate from Nitya's public impact work.",
     status: "in-progress",
-    progress: 0,
-    currentLabel: "0.0 / 1,000 km. Strava will update this after the first successful sync.",
-    lastUpdated: "2026-08-11",
+    progress: 77.8,
+    currentLabel: "778 / 1,000 km",
+    lastUpdated: "2026-10-24",
     subgoals: [
-      { id: "run-250", title: "Run 250 km", completed: false },
-      { id: "run-500", title: "Run 500 km", completed: false },
-      { id: "run-750", title: "Run 750 km", completed: false },
+      { id: "run-250", title: "Run 250 km", completed: true },
+      { id: "run-500", title: "Run 500 km", completed: true },
+      { id: "run-750", title: "Run 750 km", completed: true },
       { id: "run-1000", title: "Run 1,000 km", completed: false },
     ],
   },
