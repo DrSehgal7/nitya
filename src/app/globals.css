@@ -1,7 +1,7 @@
 :root {
-  --bg: #f4f1ea;
-  --bg-soft: #ebe7de;
-  --surface: #fbf9f4;
+  --bg: #faf9f5;
+  --bg-soft: #f2f0e9;
+  --surface: #ffffff;
   --surface-raised: #ffffff;
   --text: #171713;
   --text-soft: #65635c;
@@ -22,7 +22,7 @@
   --radius-small: 14px;
   --shell: 1180px;
   --font-body: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Instrument Serif", Georgia, serif;
+  --font-display: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-devanagari: "Rozha One", "Noto Serif Devanagari", serif;
   color-scheme: light;
 }
@@ -121,9 +121,9 @@ h3,
 h4 {
   color: var(--text);
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 0.98;
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
 }
 
 h1 {
